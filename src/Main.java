@@ -11,9 +11,9 @@ import java.io.*;
 public class Main {
 
 	/** Input HTML file. */
-	private static String _inputFile = "data/Catalogue-17_18-new_processed_copy.html";
+	private static String _inputFile = "data/Catalogue-17_18_processed_strong_em.html";
 	/** Output LaTeX file. */
-	private static String _outputFile = "output/output_new_processed.tex";
+	private static String _outputFile = "output/output_new_processed_strong_em.tex";
 	/** Configuration file. */
 	private static String _configFile = "config/config.xml";
 	/** File with CSS. */

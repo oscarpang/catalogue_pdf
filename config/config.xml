@@ -79,7 +79,7 @@
   
   <elements>
     <element name='html'>
-        <start>\documentclass[a4paper,11pt]{article}@NL\usepackage{ulem}@NL\usepackage{a4wide}@NL\usepackage[dvipsnames,svgnames]{xcolor}@NL\usepackage[pdftex]{graphicx}@NL\usepackage{tabularx}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}@NL\usepackage[document]{ragged2e}@NL\usepackage{indentfirst}@NL\setlength\RaggedRightParindent{15pt}@NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}@NL\usepackage{paralist}@NL\usepackage[compact]{titlesec}@NL\titlespacing{\section}{0pt}{0pt}{0pt}@NL\titlespacing{\subsection}{0pt}{0pt}{0pt}@NL\titlespacing{\subsubsection}{0pt}{0pt}{0pt}@NL\setlength{\parskip}{0cm}@NL\setcounter{secnumdepth}{-2}</start>
+        <start>\documentclass[a4paper,11pt,twoside]{book}@NL\usepackage{ulem}@NL\usepackage{a4wide}@NL\usepackage[dvipsnames,svgnames]{xcolor}@NL\usepackage[pdftex]{graphicx}@NL\usepackage{tabularx}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}@NL\usepackage[document]{ragged2e}@NL\usepackage{indentfirst}@NL\setlength\RaggedRightParindent{15pt}@NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}@NL\usepackage{paralist}@NL\usepackage[compact]{titlesec}@NL\titlespacing{\section}{0pt}{0pt}{0pt}@NL\titlespacing{\subsection}{0pt}{1em}{1em}@NL\titlespacing{\subsubsection}{0pt}{1em}{0pt}@NL\titleformat*{\paragraph}{\sffamily\bfseries\scriptsize}@NL\titleformat{\section}{\rmfamily\LARGE\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]@NL\titleformat{\subsection}{\sffamily\large\bfseries}{\thesection}{1em}{}[]@NL\titleformat{\subsubsection}{\sffamily\small\itshape}{\thesection}{1em}{}[]@NL\setlength{\parskip}{0cm}@NL\setcounter{secnumdepth}{-2}@NL\setcounter{tocdepth}{2}@NL\renewcommand{\familydefault}{\sfdefault}@NL\usepackage{fancyhdr}@NL\pagestyle{fancy}@NL\fancyhf{}@NL\fancyhead[RE,LO]{\thepage / \rightmark}@NL</start>
         <end>@NL</end>
     </element>
     <element name='a'>
@@ -95,8 +95,8 @@
         <end>@NL</end>
     </element>
     <element name='body'>
-        <start>@NL@NL\begin{document}@NL\tiny@NL\begin{multicols*}{2}</start>
-        <end>@NL\end{multicols*}@NL\end{document}</end>
+        <start>@NL@NL\begin{document}@NL\tiny@NL\begin{multicols}{2}</start>
+        <end>@NL\end{multicols}@NL\end{document}</end>
     </element>
     <element name='acronym'>
         <start>\texttt{</start>
@@ -135,8 +135,8 @@
         <end>@NL\end{quotation}</end>
     </element>
     <element name='br'>
-        <start></start>
-        <end></end>
+        <start>@NL</start>
+        <end>@NL</end>
     </element>
     <element name='button'>
         <start></start>
@@ -180,12 +180,12 @@
         <end>}</end>
     </element>
     <element name='dir'>
-        <start>@NL\begin{compactitem}</start>
-        <end>@NL\end{compactitem}</end>
+        <start>@NL\begin{itemize}@NL\itemsep0pt</start>
+        <end>@NL\end{itemize}</end>
     </element>
     <element name='menu'>
-        <start>@NL\begin{compactitem}</start>
-        <end>@NL\end{compactitem}</end>
+        <start>@NL\begin{itemize}@NL\itemsep0pt</start>
+        <end>@NL\end{itemize}</end>
     </element>
     <element name='em'>
         <start>\textit{</start>
@@ -212,8 +212,8 @@
         <end></end>
     </element>
     <element name='h1'>
-        <start>@NL@NL\end{multicols*}@NL@NL\section{</start>
-        <end>}@NL@NL\begin{multicols*}{2}@NL@NL</end>
+        <start>@NL@NL\end{multicols}@NL@NL\section{</start>
+        <end>}@NL@NL\begin{multicols}{2}@NL@NL</end>
     </element>
     <element name='h2'>
         <start>@NL@NL\subsection{</start>
@@ -277,7 +277,7 @@
         <end></end>
     </element>
     <element name='li'>
-        <start>@NL@TAB\item </start>
+        <start>@NL@TAB\item[] </start>
         <end></end>
     </element>
     <element name='map'>
@@ -297,12 +297,12 @@
         <end></end>
     </element>
     <element name='ol'>
-        <start>@NL\begin{enumerate}</start>
-        <end>@NL\end{enumerate}</end>
+        <start>@NL\begin{itemize}@NL\itemsep0pt</start>
+        <end>@NL\end{itemize}</end>
     </element>
     <element name='ul'>
-        <start>@NL\begin{compactitem}</start>
-        <end>@NL\end{compactitem}</end>
+        <start>@NL\begin{itemize}@NL\itemsep0pt</start>
+        <end>@NL\end{itemize}</end>
     </element>
     <element name='optgroup'>
         <start></start>
@@ -413,8 +413,8 @@
         <end></end>
     </element>
     <element name='table'>
-        <start>@NL\begin{tabularx}{\linewidth}{X}</start>
-        <end>@NL\end{tabularx}</end>
+        <start>@NL@NL\end{multicols}@NL@NL\begin{tabularx}{\linewidth}{X}</start>
+        <end>@NL\end{tabularx}@NL@NL\begin{multicols}{2}@NL@NL</end>
     </element>  
     <element name='tr'>
         <start></start>
