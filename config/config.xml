@@ -79,7 +79,7 @@
   
   <elements>
     <element name='html'>
-        <start>\documentclass[a4paper,11pt]{article}@NL\usepackage{ulem}@NL\usepackage{a4wide}@NL\usepackage[dvipsnames,svgnames]{xcolor}@NL\usepackage[pdftex]{graphicx}@NL\usepackage{tabularx}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}@NL\usepackage[document]{ragged2e}@NL\usepackage{indentfirst}@NL\setlength\RaggedRightParindent{15pt}@NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}</start>
+        <start>\documentclass[a4paper,11pt]{article}@NL\usepackage{ulem}@NL\usepackage{a4wide}@NL\usepackage[dvipsnames,svgnames]{xcolor}@NL\usepackage[pdftex]{graphicx}@NL\usepackage{tabularx}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}@NL\usepackage[document]{ragged2e}@NL\usepackage{indentfirst}@NL\setlength\RaggedRightParindent{15pt}@NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}@NL\usepackage{paralist}@NL\usepackage[compact]{titlesec}@NL\titlespacing{\section}{0pt}{0pt}{0pt}@NL\titlespacing{\subsection}{0pt}{0pt}{0pt}@NL\titlespacing{\subsubsection}{0pt}{0pt}{0pt}@NL\setlength{\parskip}{0cm}@NL\setcounter{secnumdepth}{-2}</start>
         <end>@NL</end>
     </element>
     <element name='a'>
@@ -180,15 +180,15 @@
         <end>}</end>
     </element>
     <element name='dir'>
-        <start>@NL\begin{itemize}</start>
-        <end>@NL\end{itemize}</end>
+        <start>@NL\begin{compactitem}</start>
+        <end>@NL\end{compactitem}</end>
     </element>
     <element name='menu'>
-        <start>@NL\begin{itemize}</start>
-        <end>@NL\end{itemize}</end>
+        <start>@NL\begin{compactitem}</start>
+        <end>@NL\end{compactitem}</end>
     </element>
     <element name='em'>
-        <start>\emph{</start>
+        <start>\textit{</start>
         <end>}</end>
     </element>
     <element name='form'>
@@ -212,29 +212,29 @@
         <end></end>
     </element>
     <element name='h1'>
-        <start>@NL@NL\section*{</start>
-        <end>}</end>
+        <start>@NL@NL\end{multicols*}@NL@NL\section{</start>
+        <end>}@NL@NL\begin{multicols*}{2}@NL@NL</end>
     </element>
     <element name='h2'>
-        <start>@NL@NL\subsection*{</start>
+        <start>@NL@NL\subsection{</start>
         <end>}</end>
     </element>
     <element name='h3'>
-        <start>@NL@NL\subsubsection*{</start>
+        <start>@NL@NL\subsubsection{</start>
         <end>}</end>
     </element>
     <element name='h4'>
         <start>@NL@NL\paragraph{</start>
-        <end>}</end>
+        <end>}\mbox{}\\</end>
     </element>
     <element name='h5'>
         <start>@NL@NL\subparagraph{</start>
-        <end>}</end>
+        <end>}\mbox{}\\</end>
     </element>
     <!-- subsubsub -->
     <element name='h6'>
         <start>@NL@NL\subparagraph{</start>
-        <end>}</end>
+        <end>}\mbox{}\\</end>
     </element>
     <element name='head'>
         <start></start>
@@ -301,8 +301,8 @@
         <end>@NL\end{enumerate}</end>
     </element>
     <element name='ul'>
-        <start>@NL\begin{itemize}</start>
-        <end>@NL\end{itemize}</end>
+        <start>@NL\begin{compactitem}</start>
+        <end>@NL\end{compactitem}</end>
     </element>
     <element name='optgroup'>
         <start></start>
