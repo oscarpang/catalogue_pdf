@@ -42,6 +42,13 @@ class Convertor {
     /** Shall border be printed in current table. */
     private boolean _printBorder = false;    
     
+    private boolean _multicol_cell = false;
+    private boolean _multirow_cell = false;
+    private int _curr_row = 0;
+    private int _curr_col = 0;
+    private HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> filled_cells;
+    
+    
     /**
      *  Document's bibliography. <br />
      *  key :  bibitem name <br />
@@ -66,6 +73,7 @@ class Convertor {
         } catch (IOException e) {
             throw new FatalErrorException("Can't open the output file: " + _outputFile.getName());
         }
+        filled_cells = new HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>>();
     }
     
     
@@ -472,7 +480,9 @@ class Convertor {
     public void tableRowEnd(ElementEnd e, ElementStart es) throws IOException {
        if (_printBorder) 
             _writer.write(" \\\\ \n\\hline\n");           
-        _firstCell = true;        
+        _firstCell = true;
+        _curr_row++;
+        _curr_col = 0;
     }
     
     
@@ -485,20 +495,69 @@ class Convertor {
     public void tableCellStart(ElementStart e)
         throws IOException, NoItemException {
 
-    	
         if (!_firstCell)
-            _writer.write(" \\hfill ");
+            _writer.write(" & ");
         else
             _firstCell = false;
-       
-//        if(e.getAttributes().containsKey("colspan")) {
-//        	int colspan = Integer.parseInt(e.getAttributes().get("colspan"));
-//        	System.out.println("Column Span: " + colspan);
-//        	for(int i = 0; i < colspan - 1; i++) {
-//                _writer.write(" & ");
-//        	}
-//        }
+        System.out.println("Curr: " + _curr_row + " " + _curr_col);
+        Pair<Integer, Integer> p = filled_cells.get(new Pair<Integer, Integer>(_curr_row, _curr_col));
+        for(Pair key : filled_cells.keySet()) {
+        	if(key.equals(p)) {
+        		System.out.println("Find");
+        	}
+        }
+        if(p != null) {
+        	int filled_row_span = p.getFirst();
+        	int filled_col_span = p.getSecond();
+    		System.out.println("Fill empty. " + filled_col_span);
 
+        	if(filled_col_span > 1) {
+        		_writer.write("\\multicolumn{");
+        		_writer.write(Integer.toString(filled_col_span));
+        		_writer.write("}{*}{} &");
+        	} else {
+        		_writer.write(" & ");
+        	}
+        	_curr_col += filled_col_span;
+        }
+        
+        
+	    if(e.getAttributes().containsKey("colspan")) {
+	    	String colspan_str = e.getAttributes().get("colspan");
+	    	int colspan = 0;
+	    	if(colspan_str != null) {
+	    		colspan = Integer.parseInt(colspan_str);
+				if(colspan > 1) {
+					_writer.write("\\multicolumn{");
+					_writer.write(Integer.toString(colspan));
+					double max_colspan_pagewidth_ratio = 1.0 / (double)colspan;
+					_writer.write("}{L{" + Double.toString(max_colspan_pagewidth_ratio) + "\\columnwidth}}{");
+					_multicol_cell = true;
+				}
+	    	}
+
+			String rowspan_str = e.getAttributes().get("rowspan");
+			if(rowspan_str != null) {
+				int rowspan = Integer.parseInt(rowspan_str);
+				if(rowspan > 1) {
+					_writer.write("\\multirow{");
+					_writer.write(Integer.toString(rowspan));
+					_writer.write("}{*}{");
+					_multirow_cell = true;
+					for(int i = _curr_col; i < _curr_col + colspan; i++) {
+						for(int j = _curr_row+1; j < _curr_row + rowspan; j++) {
+							System.out.println("Put: " + j + " " + i);
+							if(i == _curr_col)
+								filled_cells.put(new Pair<Integer, Integer>(j, i), new Pair<Integer, Integer>(1, colspan));
+							else
+								filled_cells.put(new Pair<Integer, Integer>(j, i), new Pair<Integer, Integer>(0, 0));
+						}
+					}
+				}
+			}
+	    }
+	    
+       
         _writer.write(_config.getElement(e.getElementName()).getStart());
 
     }
@@ -513,7 +572,19 @@ class Convertor {
     */        
     public void tableCellEnd(ElementEnd element, ElementStart e)
         throws IOException, NoItemException {
-               
+    	if(_multirow_cell) {
+    		_writer.write("}");
+    		_multirow_cell = false;
+    	}
+    	
+         if(_multicol_cell) {
+ 			_writer.write("}");
+ 			_multicol_cell = false;
+    		int colspan = Integer.parseInt(e.getAttributes().get("colspan"));
+    		_curr_col += colspan;
+         } else {
+        	 _curr_col++;
+         }
         _writer.write(_config.getElement(e.getElementName()).getEnd());
     }    
     
@@ -526,15 +597,16 @@ class Convertor {
     */       
     public void tableStart(ElementStart e)
         throws IOException, NoItemException {
-        System.out.println(_config.getElement(e.getElementName()).getStart());
         _writer.write(_config.getElement(e.getElementName()).getStart());
         String str;
+        _curr_col = 0;
+        _curr_row = 0;
 
         if ( (str = e.getAttributes().get("latexcols")) != null)
             _writer.write("{" + str + "}\n");
         
-        if ( (str = e.getAttributes().get("border")) != null)
-            if (!str.equals("0")) _printBorder = true;
+//        if ( (str = e.getAttributes().get("border")) != null)
+//            if (!str.equals("0")) _printBorder = true;
         
         if (_printBorder) 
             _writer.write("\\hline \n");
@@ -554,6 +626,7 @@ class Convertor {
         _writer.write(_config.getElement(e.getElementName()).getEnd());
         _firstRow = true;
         _printBorder = false;
+        filled_cells.clear();
     }
     
     
@@ -703,4 +776,58 @@ class Convertor {
         commonElementEnd(element, es);
     }
     
+}
+
+class Pair<A, B> {
+    private A first;
+    private B second;
+
+    public Pair(A first, B second) {
+        super();
+        this.first = first;
+        this.second = second;
+    }
+
+    public int hashCode() {
+        int hashFirst = first != null ? first.hashCode() : 0;
+        int hashSecond = second != null ? second.hashCode() : 0;
+
+        return (hashFirst + hashSecond) * hashSecond + hashFirst;
+    }
+
+    public boolean equals(Object other) {
+        if (other instanceof Pair) {
+            Pair otherPair = (Pair) other;
+            return 
+            ((  this.first == otherPair.first ||
+                ( this.first != null && otherPair.first != null &&
+                  this.first.equals(otherPair.first))) &&
+             (  this.second == otherPair.second ||
+                ( this.second != null && otherPair.second != null &&
+                  this.second.equals(otherPair.second))) );
+        }
+
+        return false;
+    }
+
+    public String toString()
+    { 
+           return "(" + first + ", " + second + ")"; 
+    }
+
+    public A getFirst() {
+        return first;
+    }
+
+    public void setFirst(A first) {
+        this.first = first;
+    }
+
+    public B getSecond() {
+        return second;
+    }
+
+    public void setSecond(B second) {
+        this.second = second;
+    }
 }

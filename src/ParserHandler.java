@@ -32,7 +32,7 @@ class ParserHandler implements IParserHandler {
      * for <code>&lt;table&gt;</table>)
      * @param element start element reached 
      */
-    public void startElement(ElementStart element) {
+	public void startElement(ElementStart element) {
         try {
             String name = element.getElementName();
             if (element.getAttributes().containsKey("class") && element.getAttributes().get("class").equals("Course")) {
