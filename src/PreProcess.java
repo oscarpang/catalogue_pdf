@@ -23,6 +23,11 @@ public class PreProcess {
 											"<p></p>", "<p> </p>", "<h4> </h4>", "<h3> </h3>", "<h2> </h2>",
 											"<br>", "", "	", "<p><br></p>"}; // � is the encoding of UTF8 none breaking space.
 	
+	private static String[] _chapterName = {"Catalogue Home", "A Message from the President", "Admission and Orientation",
+										"Tuition and Fees", "The Schools and Academic Units", "Programs, Minors and Certificates",
+										"Academic and University Policies", "Undergraduate Education", 
+										"Graduate and Professional Education", "The Graduate School"};
+	
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
 		_processedFile = processedFile;
@@ -50,6 +55,10 @@ public class PreProcess {
 						line = _bufferedReader.readLine();
 					}
 				} else if (!shouldIgnore(line)) {
+					if (line.contains("<h1 class=\"Page\">") && isChapter(line)) {
+						line = line.replaceAll("h1", "h0");
+						System.out.println(line);
+					}
 					_bufferedWriter.write(line);
 					_bufferedWriter.newLine();
 				}
@@ -87,22 +96,22 @@ public class PreProcess {
 						- ( countOccurence(line, "</h") + countOccurence(line,"</html>") ) ;
 				
 				if (line.contains("<br>")) {
-					System.out.println(numStrong + "**" + numEm + "**" + numUnderline + "**" + numHeader + "*" + line);
+//					System.out.println(numStrong + "**" + numEm + "**" + numUnderline + "**" + numHeader + "*" + line);
 					if (numStrong > 0) {
 						line = line.replaceAll("<br>", "</strong><br><strong>");
 //						line = line.substring(0, line.indexOf("<br>")) + "</strong><br><strong>" + line.substring(line.indexOf("<br>")+4);
-						System.out.println("-----------" + line);
+//						System.out.println("-----------" + line);
 					} else if (numEm > 0) {
 						line = line.replaceAll("<br>", "</em><br><em>");
 //						line = line.substring(0, line.indexOf("<br>")) + "</em><br><em>" + line.substring(line.indexOf("<br>")+4);
-						System.out.println("~~~~~~~~~~~" + line);
+//						System.out.println("~~~~~~~~~~~" + line);
 					} else if (numUnderline > 0) {
 						line = line.replaceAll("<br>", "</u><br><u>");
 //						line = line.substring(0, line.indexOf("<br>")) + "</u><br><u>" + line.substring(line.indexOf("<br>")+4);
-						System.out.println("^^^^^^^^^^^" + line);
+//						System.out.println("^^^^^^^^^^^" + line);	
 					} else if (numHeader > 0) {
 						line = line.replaceAll("<br>", "");
-						System.out.println("%%%%%%%%%%%" + line);
+//						System.out.println("%%%%%%%%%%%" + line);
 					}
 				}
 				
@@ -135,6 +144,15 @@ public class PreProcess {
 	private boolean shouldIgnore(String line) {
 		for (String str : _prefixIgnored) {
 			if (line.equals(str)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean isChapter(String line) {
+		for (String str: _chapterName) {
+			if (line.contains(str)) {
 				return true;
 			}
 		}
