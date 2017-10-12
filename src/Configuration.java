@@ -86,7 +86,6 @@ class Configuration {
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
             String elementName = e.getAttribute("name");
-            System.out.println(elementName);
             String leaveText = e.getAttribute("leaveText");
             String ignoreContent = e.getAttribute("ignoreContent");
             String ignoreStyles = e.getAttribute("ignoreStyle");

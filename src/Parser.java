@@ -99,10 +99,6 @@ public class Parser {
         char ch;
         while ((c = _reader.read()) != -1) {
             ch = (char)c;
-            if(ch >= 128) {
-            	System.out.println(ch);
-            	continue;
-            }
             if (ch == '<')
                 readElement();
             else
@@ -125,9 +121,9 @@ public class Parser {
         
         while ((c = _reader.read()) != -1) {
             ch = (char)c;
-            if(ch >= 128) {
-            	System.out.println(ch);
-            }
+//            if(ch >= 128) {
+//            	System.out.println((int)c);
+//            }
             
             
             // i'm at the end of the element
@@ -165,8 +161,13 @@ public class Parser {
                 }
                 return;
             }
+            if(ch >= 128) {
+                strb.append(String.format("&#%d;", (int)ch));
+            } else {
+            	strb.append(ch);
+            }
             
-            strb.append(ch);
+//            strb.append(ch);
         }
     }
     
@@ -224,20 +225,28 @@ public class Parser {
     private void readContent(char firstChar) throws IOException {
         int c;
         char ch;
-        String str = ""; str += firstChar;
+        String str = ""; 
+        if(firstChar > 128) {
+        	str += String.format("&#%d;", (int)firstChar);
+        } else {
+            str += firstChar;
+        }
         
         while ((c = _reader.read()) != -1) {
             ch = (char)c;
-            if(ch >= 128) {
-            	continue;
-            }
             if (ch == '<') {
                 _handler.characters(str);
                 readElement();
                 return;
             }
-            
-            str += ch;        
+            if(str.contains("Students may use EE 494")) {
+            	System.out.println("Contains");
+            }
+            if(ch >= 128) {
+                str += String.format("&#%d;", (int)ch);
+            } else {
+                str += ch;        
+            }
         }        
     }
     

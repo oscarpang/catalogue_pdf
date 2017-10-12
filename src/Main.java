@@ -13,7 +13,7 @@ public class Main {
 	/** Input HTML file. */
 	private static String _inputFile = "data/Catalogue_17_18_new_processed_29.html";
 	/** Output LaTeX file. */
-	private static String _outputFile = "output/Catalogue_17_18_new_processed_29_table.tex";
+	private static String _outputFile = "output/Catalogue_17_18_new_processed_29_table_non-ascii.tex";
 	/** Configuration file. */
 	private static String _configFile = "config/config.xml";
 	/** File with CSS. */
@@ -27,6 +27,11 @@ public class Main {
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
+//		String unknown = "Â";
+//		for(int i = 0; i < unknown.length(); i++) {
+//			System.out.println("unknown " +(int)unknown.charAt(i));
+//		}
+		
 		String current;
 		try {
 			current = new java.io.File(".").getCanonicalPath();

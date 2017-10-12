@@ -233,7 +233,7 @@ class Convertor {
                             }
                             repl = _config.getChar(entityNum);
                         } catch (NumberFormatException ex) {
-                            System.out.println("Not a number in entity.");
+                            System.out.println("Not a number in entity." + ex.toString());
                             ok = false;
                         }
                     } else {
@@ -604,9 +604,6 @@ class Convertor {
 
         if ( (str = e.getAttributes().get("latexcols")) != null)
             _writer.write("{" + str + "}\n");
-        
-//        if ( (str = e.getAttributes().get("border")) != null)
-//            if (!str.equals("0")) _printBorder = true;
         
         if (_printBorder) 
             _writer.write("\\hline \n");
