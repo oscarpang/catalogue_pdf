@@ -9,9 +9,11 @@ import java.io.*;
  * Program main class.
  */
 public class Main {
-
-	/** Input HTML file. */
-	private static String _inputFile = "data/Catalogue_17_18_new_processed_29.html";
+	
+	/** Input HTML file*/
+	private static String _inputFile = "data/Catalogue-17_18-5.html";
+	/** pre-processed HTML file. */
+	private static String _processedFile = "data/Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
 	private static String _outputFile = "output/Catalogue_17_18_new_processed_29_table_non-ascii.tex";
 	/** Configuration file. */
@@ -27,10 +29,9 @@ public class Main {
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
-//		String unknown = "Â";
-//		for(int i = 0; i < unknown.length(); i++) {
-//			System.out.println("unknown " +(int)unknown.charAt(i));
-//		}
+
+		PreProcess preProcess= new PreProcess();
+		preProcess.preProcess(_inputFile, _processedFile);
 		
 		String current;
 		try {
@@ -46,13 +47,13 @@ public class Main {
 		try {
 			processCmdLineArgs(args);
 
-			if (_inputFile.equals("") || _outputFile.equals("")) {
+			if (_processedFile.equals("") || _outputFile.equals("")) {
 				System.err.println("Input or (and) output file not specified.");
 				return;
 			}
 
 			Parser parser = new Parser();
-			parser.parse(new File(_inputFile), new ParserHandler(new File(_outputFile)));
+			parser.parse(new File(_processedFile), new ParserHandler(new File(_outputFile)));
 
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());

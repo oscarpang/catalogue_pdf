@@ -715,6 +715,8 @@
     <charNum num='160' convertTo=' '/>
     <charNum num='173' convertTo='\-' />
     <charNum num='8209' convertTo='\-' />
+    <charNum num='8208' convertTo='\-' />
+    <charNum num='64257' convertTo='fi'/>
     <charNum num='8243' convertTo="''" />
     <charNum num='186' convertTo='\guillemotright' />
     <charNum num='8480' convertTo='\textservicemark' />
