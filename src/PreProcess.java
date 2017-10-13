@@ -50,15 +50,15 @@ public class PreProcess {
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
 				line = line.replaceAll("<br></h", "</h");
+				if (line.contains("<h1 class=\"Page\">") && isChapter(line)) {
+					line = line.replaceAll("h1", "h0");
+					System.out.println(line);
+				}
 				if (line.contains("class=\"Course\"")) {
 					while (!line.contains("</")) {
 						line = _bufferedReader.readLine();
 					}
 				} else if (!shouldIgnore(line)) {
-					if (line.contains("<h1 class=\"Page\">") && isChapter(line)) {
-						line = line.replaceAll("h1", "h0");
-						System.out.println(line);
-					}
 					_bufferedWriter.write(line);
 					_bufferedWriter.newLine();
 				}
@@ -93,21 +93,18 @@ public class PreProcess {
 				numEm += countOccurence(line, "<em>") - countOccurence(line, "</em>");
 				numUnderline += countOccurence(line, "<u>") - countOccurence(line, "</u>");
 				numHeader += countOccurence(line, "<h") - countOccurence(line,"<html>") 
-						- ( countOccurence(line, "</h") + countOccurence(line,"</html>") ) ;
+						- ( countOccurence(line, "</h") - countOccurence(line,"</html>") ) ;
 				
 				if (line.contains("<br>")) {
-//					System.out.println(numStrong + "**" + numEm + "**" + numUnderline + "**" + numHeader + "*" + line);
+					System.out.println(numStrong + "**" + numEm + "**" + numUnderline + "**" + numHeader + "*" + line);
 					if (numStrong > 0) {
 						line = line.replaceAll("<br>", "</strong><br><strong>");
-//						line = line.substring(0, line.indexOf("<br>")) + "</strong><br><strong>" + line.substring(line.indexOf("<br>")+4);
 //						System.out.println("-----------" + line);
 					} else if (numEm > 0) {
 						line = line.replaceAll("<br>", "</em><br><em>");
-//						line = line.substring(0, line.indexOf("<br>")) + "</em><br><em>" + line.substring(line.indexOf("<br>")+4);
 //						System.out.println("~~~~~~~~~~~" + line);
 					} else if (numUnderline > 0) {
 						line = line.replaceAll("<br>", "</u><br><u>");
-//						line = line.substring(0, line.indexOf("<br>")) + "</u><br><u>" + line.substring(line.indexOf("<br>")+4);
 //						System.out.println("^^^^^^^^^^^" + line);	
 					} else if (numHeader > 0) {
 						line = line.replaceAll("<br>", "");
@@ -160,14 +157,12 @@ public class PreProcess {
 	}
 
 	private int countOccurence(String str, String target) {
-		int Index = 0, count = 0;
-
-		while (Index != -1) {
-		    Index = str.indexOf(target, Index);
-		    if (Index != -1) {
-		        count++;
-		        Index += target.length();
-		    }
+		int index = str.indexOf(target, 0);
+		int count = 0;
+		
+		while (index != -1) {
+			count ++;
+			index = str.indexOf(target, index + target.length());
 		}
 		return count;
 	}
