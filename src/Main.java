@@ -15,7 +15,7 @@ public class Main {
 	/** pre-processed HTML file. */
 	private static String _processedFile = "data/Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
-	private static String _outputFile = "output/Catalogue_17_18_new_processed_29_table_non-ascii.tex";
+	private static String _outputFile = "output/Catalogue_17_18_.tex";
 	/** Configuration file. */
 	private static String _configFile = "config/config.xml";
 	/** File with CSS. */

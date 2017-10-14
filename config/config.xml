@@ -226,6 +226,10 @@
         <start></start>
         <end></end>
     </element>
+    <element name='h0'>
+        <start>@NL@NL\end{multicols}@NL@NL\chapter{</start>
+        <end>}@NL@NL\begin{multicols}{2}@NL@NL</end>
+    </element>
     <element name='h1'>
         <start>@NL@NL\end{multicols}@NL@NL\section{</start>
         <end>}@NL@NL\begin{multicols}{2}@NL@NL</end>
