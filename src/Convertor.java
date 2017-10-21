@@ -555,6 +555,34 @@ class Convertor {
 					}
 				}
 			}
+	    } else {
+	    	// By default colspan = 1
+	    	int colspan = 1;
+			_writer.write("\\multicolumn{");
+			_writer.write(Integer.toString(colspan));
+			double max_colspan_pagewidth_ratio = 0.5;
+			_writer.write("}{L{" + Double.toString(max_colspan_pagewidth_ratio) + "\\columnwidth}}{");
+			_multicol_cell = true;
+			
+			String rowspan_str = e.getAttributes().get("rowspan");
+			if(rowspan_str != null) {
+				int rowspan = Integer.parseInt(rowspan_str);
+				if(rowspan > 1) {
+					_writer.write("\\multirow{");
+					_writer.write(Integer.toString(rowspan));
+					_writer.write("}{*}{");
+					_multirow_cell = true;
+					for(int i = _curr_col; i < _curr_col + colspan; i++) {
+						for(int j = _curr_row+1; j < _curr_row + rowspan; j++) {
+							System.out.println("Put: " + j + " " + i);
+							if(i == _curr_col)
+								filled_cells.put(new Pair<Integer, Integer>(j, i), new Pair<Integer, Integer>(1, colspan));
+							else
+								filled_cells.put(new Pair<Integer, Integer>(j, i), new Pair<Integer, Integer>(0, 0));
+						}
+					}
+				}
+			}
 	    }
 	    
        
@@ -580,7 +608,11 @@ class Convertor {
          if(_multicol_cell) {
  			_writer.write("}");
  			_multicol_cell = false;
-    		int colspan = Integer.parseInt(e.getAttributes().get("colspan"));
+ 			String colspan_str = e.getAttributes().get("colspan");
+ 			int colspan = 1;
+ 			if(colspan_str != null) {
+ 				colspan = Integer.parseInt(colspan_str);
+ 			}
     		_curr_col += colspan;
          } else {
         	 _curr_col++;
