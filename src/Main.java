@@ -2,17 +2,21 @@
 /*
  * Main.java
  */
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.*;
+import java.io.File;
 
-import java.io.*;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- * Program main class.
- */
-public class Main {
+public class Main extends JPanel implements ActionListener{
+	
+	private static final long serialVersionUID = 1L;
 	
 	/** Input HTML file*/
-	private static String _inputFile = "data/Catalogue-17_18-5.html";
-	/** pre-processed HTML file. */
+	private static String _inputFile = "";
+	/** Pre-processed HTML file. */
 	private static String _processedFile = "data/Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
 	private static String _outputFile = "output/Catalogue_17_18_.tex";
@@ -20,7 +24,15 @@ public class Main {
 	private static String _configFile = "config/config.xml";
 	/** File with CSS. */
 	private static String _cssFile = "";
-
+	
+	private static JFrame _frame;
+	private static Main _mainPanel;
+	private static JFileChooser _fileChooser;
+	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _startBtn;
+	private static JPanel _btnPanel;
+	private static JScrollPane _sectionNameScrollPane;
+	
+	
 	/**
 	 * Creates {@link Parser Parser} instance and runs its
 	 * {@link Parser#parse(File, IParserHandler) parse()} method.
@@ -29,32 +41,74 @@ public class Main {
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
+		_frame = new JFrame("USC Catalogue Print to PDF");
+		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.setBounds(50, 50, 1000, 1000);
+		
+		_mainPanel = new Main();
+		_frame.add(_mainPanel);
+		
+//		_frame.pack();
+		_frame.setVisible(true);
+	}
+	
+	public Main() {
+		super(new BorderLayout());
+		_fileChooser = new JFileChooser();
+		_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		
+		_chooseHtmlBtn = new JButton("Choose the html Catalogue file...");
+		_chooseHtmlBtn.addActionListener(this);
+		_chooseXlsBtn = new JButton("Choose the Xls Course file...");
+		_chooseXlsBtn.addActionListener(this);
+		_startBtn = new JButton("Start Conversion");
+		_startBtn.addActionListener(this);
+		
+		_btnPanel = new JPanel();
+		_btnPanel.add(_chooseHtmlBtn);
+		_btnPanel.add(_chooseXlsBtn);
+		_btnPanel.add(_startBtn);
+		
+		this.add(_btnPanel, BorderLayout.NORTH);
+	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == _chooseHtmlBtn) {
+			_fileChooser.setFileFilter(new FileNameExtensionFilter("html","html"));
+			int returnVal = _fileChooser.showOpenDialog(Main.this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				_inputFile = _fileChooser.getSelectedFile().getPath();
+				System.out.println("Input File is: " + _inputFile);
+			}
+		}else if (e.getSource() == _chooseXlsBtn) {
+			_fileChooser.setFileFilter(new FileNameExtensionFilter("xls","xls", "xlsx"));
+			int returnVal = _fileChooser.showOpenDialog(Main.this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				_cssFile = _fileChooser.getSelectedFile().getPath();
+				System.out.println("Css File is: " + _inputFile);
+			}
+		}else if (e.getSource() == _startBtn) {
+			System.out.println("Should Start Conversion now. Maybe add error etc.");
+			startConversion();
+			JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Where do you want to save the file?");
+		}
+	}
+	
+	public void startConversion() {
 		PreProcess preProcess= new PreProcess();
 		preProcess.preProcess(_inputFile, _processedFile);
 		
-		String current;
+		JTree sectionNamesTree = new JTree(preProcess.getSectionNamesTree());
+		_sectionNameScrollPane = new JScrollPane(sectionNamesTree);
+		this.add(_sectionNameScrollPane, BorderLayout.CENTER);
+//		_frame.pack();
+		this.revalidate();
+		this.repaint();
+		
 		try {
-			current = new java.io.File(".").getCanonicalPath();
-			System.out.println("Current dir:" + current);
-			String currentDir = System.getProperty("user.dir");
-			System.out.println("Current dir using System:" + currentDir);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try {
-			processCmdLineArgs(args);
-
-			if (_processedFile.equals("") || _outputFile.equals("")) {
-				System.err.println("Input or (and) output file not specified.");
-				return;
-			}
-
 			Parser parser = new Parser();
 			parser.parse(new File(_processedFile), new ParserHandler(new File(_outputFile)));
-
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);
@@ -63,51 +117,16 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
-	 * Processes command line arguments.
-	 * <ul>
-	 * <li>-input &lt;fileName&gt;</li>
-	 * <li>-output &lt;fileName&gt;</li>
-	 * <li>-config &lt;fileName&gt;</li>
-	 * <li>-css &lt;fileName&gt;</li>
-	 * </ul>
+	 * Returns name of the file with HTML.
 	 * 
-	 * @param args
-	 *            command line arguments
+	 * @return name of the file with HTML
 	 */
-	private static void processCmdLineArgs(String[] args) {
-		for (int i = 0; i < args.length; ++i) {
-			if (args[i].equals("-input")) {
-				if (i < (args.length - 1)) {
-					_inputFile = args[i + 1];
-					++i;
-				}
-			}
-
-			if (args[i].equals("-output")) {
-				if (i < (args.length - 1)) {
-					_outputFile = args[i + 1];
-					++i;
-				}
-			}
-
-			if (args[i].equals("-config")) {
-				if (i < (args.length - 1)) {
-					_configFile = args[i + 1];
-					++i;
-				}
-			}
-
-			if (args[i].equals("-css")) {
-				if (i < (args.length - 1)) {
-					_cssFile = args[i + 1];
-					++i;
-				}
-			}
-		}
+	public static String getHtmlFile() {
+		return _inputFile;
 	}
-
+	
 	/**
 	 * Returns name of the file with CSS.
 	 * 
@@ -116,7 +135,7 @@ public class Main {
 	public static String getCSSFile() {
 		return _cssFile;
 	}
-
+	
 	/**
 	 * Returns name of the file with configuration.
 	 * 
@@ -125,5 +144,4 @@ public class Main {
 	public static String getConfigFile() {
 		return _configFile;
 	}
-
 }
