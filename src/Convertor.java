@@ -78,7 +78,7 @@ class Convertor {
 		_config = new Configuration();
 		_table_colnum = preprocess_info.getTableColNum();
 		_table_column_width = preprocess_info.getTableColWidth();
-		_section_colnums = preprocess_info.getSectionColNums();
+		_section_colnums = preprocess_info.getCustomizedSectionColNums();
 
 		try {
 			_outputFile = outputFile;

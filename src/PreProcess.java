@@ -39,7 +39,9 @@ public class PreProcess {
 	
 	private static ArrayList<ArrayList<Double>> _tableColWidth;
 	
-	private static ArrayList<Map.Entry<String, Integer>> _sectionColNums;
+	private static ArrayList<Map.Entry<String, Integer>> _defaultSectionColNums;
+	
+	private static ArrayList<Map.Entry<String, Integer>> _customizedSectionColNums;
 	
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
@@ -47,7 +49,7 @@ public class PreProcess {
 		_tableColNum = new ArrayList<Integer>();
 		_tableColWidth = new ArrayList<ArrayList<Double>>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
-		_sectionColNums = new ArrayList<Map.Entry<String, Integer>>();
+		_defaultSectionColNums = new ArrayList<Map.Entry<String, Integer>>();
 		
 		firstRoundPreProcessing();
 		secondRoundPreProcessing();
@@ -96,14 +98,16 @@ public class PreProcess {
 					} else {
 						currentChapterNode.add(new DefaultMutableTreeNode(curSectionName));
 					}
-					_sectionColNums.add(new AbstractMap.SimpleEntry<String, Integer>(curSectionName, 2));
+					
+					_defaultSectionColNums.add(new AbstractMap.SimpleEntry<String, Integer>(curSectionName, 2));
 				}
 				
 				//By default, sections with tables should be shown in one column.
 				if (line.contains("<tbody>")) {
-					for (Map.Entry<String, Integer> entr : _sectionColNums) {
+					for (Map.Entry<String, Integer> entr : _defaultSectionColNums) {
 						if (entr.getKey().equals(curSectionName)) {
 							entr.setValue(1);
+							break;
 						}
 					}
 				}
@@ -122,7 +126,8 @@ public class PreProcess {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(_sectionColNums);
+		resetCustomizedSectionColNums();
+		System.out.println(_defaultSectionColNums);
 		System.out.println("Finish first round processing.");
 	}
 
@@ -237,8 +242,6 @@ public class PreProcess {
 		try {
 			_fileReader = new FileReader(_processedFile);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -392,7 +395,28 @@ public class PreProcess {
 		return _tableColWidth;
 	}
 	
-	public ArrayList<Map.Entry<String, Integer>> getSectionColNums() {
-		return _sectionColNums;
+	public ArrayList<Map.Entry<String, Integer>> getDefaultSectionColNums() {
+		return _defaultSectionColNums;
+	}
+	
+	public ArrayList<Map.Entry<String, Integer>> getCustomizedSectionColNums() {
+		return _customizedSectionColNums;
+	}
+	
+	public void setCustomizedSectionColNums(String key, int value) {
+		for (Map.Entry<String, Integer> entr : _customizedSectionColNums) {
+			if (entr.getKey().equals(key)) {
+				entr.setValue(value);
+				break;
+			}
+		}
+	}
+	
+	public void resetCustomizedSectionColNums() {
+		_customizedSectionColNums = new ArrayList<Map.Entry<String, Integer>>();
+		for (Map.Entry<String, Integer> entr : _defaultSectionColNums) {
+			_customizedSectionColNums.add(
+					new AbstractMap.SimpleEntry<String, Integer>(entr.getKey(), entr.getValue()));
+		}
 	}
 }
