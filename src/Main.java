@@ -27,13 +27,13 @@ public class Main extends JPanel implements ActionListener{
 	/** File with CSS. */
 	private static String _cssFile = "";
 	
-	private static JFrame _frame;
+	private static JFrame _frame, _sectionColChoiceFrame;
 	private static Main _mainPanel;
+	private static SectionColChoicePanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _startBtn;
 	private static JPanel _btnPanel;
-	private static JScrollPane _sectionNameScrollPane;
-	private static PreProcess preProcess;
+	private static PreProcess _preProcess;
 	
 	/**
 	 * Creates {@link Parser Parser} instance and runs its
@@ -45,12 +45,12 @@ public class Main extends JPanel implements ActionListener{
 	public static void main(String[] args) {
 		_frame = new JFrame("USC Catalogue Print to PDF");
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_frame.setBounds(50, 50, 1000, 1000);
+//		_frame.setBounds(50, 50, 1000, 1000);
 		
 		_mainPanel = new Main();
 		_frame.add(_mainPanel);
 		
-//		_frame.pack();
+		_frame.pack();
 		_frame.setVisible(true);
 	}
 	
@@ -92,44 +92,29 @@ public class Main extends JPanel implements ActionListener{
 			}
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
-			startConversion();
-			JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Where do you want to save the file?");
+			startPreProcess();
 		}
 	}
 	
-	public void startConversion() {
-		preProcess= new PreProcess();
-		preProcess.preProcess(_inputFile, _processedFile);
+	public void startPreProcess() {
+		_preProcess= new PreProcess();
+		_preProcess.preProcess(_inputFile, _processedFile);
 		
-		JTree sectionNamesTree = new JTree(preProcess.getSectionNamesTree());
-		_sectionNameScrollPane = new JScrollPane(sectionNamesTree);
-		this.add(_sectionNameScrollPane, BorderLayout.CENTER);
+		
 //		_frame.pack();
-		this.revalidate();
-		this.repaint();
+//		this.revalidate();
+//		this.repaint();
 		
-		ArrayList<Integer> sectionColNums = getSectionColNums();
+		_sectionColChoiceFrame = new JFrame("USC Catalogue Print to PDF");
+		_sectionColChoiceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_sectionColChoiceFrame.setBounds(50, 50, 1500, 800);
 		
-		System.out.println(sectionColNums);
+		_sectionColChoicePanel = new SectionColChoicePanel(_sectionColChoiceFrame, _preProcess);
 		
-		try {
-			Parser parser = new Parser();
-			parser.parse(new File(_processedFile), new ParserHandler(new File(_outputFile), preProcess));
-		} catch (FatalErrorException e) {
-			System.err.println(e.getMessage());
-			System.exit(-1);
-		} catch (Exception e) {
-			e.getMessage();
-			e.printStackTrace();
-		}
-	}
-	
-	private ArrayList<Integer> getSectionColNums() {
-		ArrayList<Integer> sectionColNums = new ArrayList<Integer>();
-		for (Map.Entry<String, Integer> entr : preProcess.getSectionColNums()) {
-			sectionColNums.add(entr.getValue());
-		}
-		return sectionColNums;
+//		_sectionColChoiceFrame.add(_sectionColChoicePanel);
+
+		_frame.setVisible(false);
+		_sectionColChoiceFrame.setVisible(true);
 	}
 	
 	/**
@@ -157,5 +142,23 @@ public class Main extends JPanel implements ActionListener{
 	 */
 	public static String getConfigFile() {
 		return _configFile;
+	}
+	
+	/**
+	 * Returns name of the preProcessed file.
+	 * 
+	 * @return name of the preProcessed file
+	 */
+	public static String getProcessedFile() {
+		return _processedFile;
+	}
+	
+	/**
+	 * Returns name of the output file.
+	 * 
+	 * @return name of the output file
+	 */
+	public static String getOutputFile() {
+		return _outputFile;
 	}
 }
