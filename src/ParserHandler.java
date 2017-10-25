@@ -47,6 +47,7 @@ class ParserHandler implements IParserHandler {
             else if (name.equals("font")) _conv.fontStart(element);
             else if (name.equals("img")) _conv.imgStart(element);
             else if (name.equals("table")) _conv.tableStart(element);
+            else if (name.equals("h0") || name.equals("h1")) _conv.sectionStart(element);
             else _conv.commonElementStart(element);
             
             _conv.cssStyleStart(element);
@@ -86,6 +87,7 @@ class ParserHandler implements IParserHandler {
             else if (name.equals("table")) _conv.tableEnd(element, elementStart);
             else if (name.equals("body")) _conv.bodyEnd(element, elementStart);
             else if (name.equals("font")) _conv.fontEnd(element, elementStart);
+            else if (name.equals("h0") || name.equals("h1")) _conv.sectionEnd(element, elementStart);
             else _conv.commonElementEnd(element, elementStart);                        
             
         } catch (IOException e) {

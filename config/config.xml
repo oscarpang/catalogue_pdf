@@ -114,8 +114,8 @@
         <end>@NL</end>
     </element>
     <element name='body'>
-        <start>@NL@NL\begin{document}@NL\tiny@NL\begin{multicols}{2}</start>
-        <end>@NL\end{multicols}@NL\end{document}</end>
+        <start>@NL@NL\begin{document}@NL\tiny</start>
+        <end>@NL\end{document}</end>
     </element>
     <element name='acronym'>
         <start>\texttt{</start>
@@ -235,12 +235,12 @@
         <end></end>
     </element>
     <element name='h0'>
-        <start>@NL@NL\end{multicols}@NL@NL\chapter{</start>
-        <end>}@NL@NL\begin{multicols}{2}@NL@NL</end>
+        <start>@NL@NL\chapter{</start>
+        <end>}</end>
     </element>
     <element name='h1'>
-        <start>@NL@NL\end{multicols}@NL@NL\section{</start>
-        <end>}@NL@NL\begin{multicols}{2}@NL@NL</end>
+        <start>@NL@NL\section{</start>
+        <end>}</end>
     </element>
     <element name='h2'>
         <start>@NL@NL\subsection{</start>
@@ -440,8 +440,8 @@
         <end></end>
     </element>
     <element name='table'>
-        <start>@NL@NL\end{multicols}@NL@NL\begin{tabulary}{\linewidth}</start>
-        <end>@NL\end{tabulary}@NL@NL\begin{multicols}{2}@NL@NL</end>
+        <start>@NL@NL\begin{tabulary}{\linewidth}</start>
+        <end>@NL\end{tabulary}@NL@NL</end>
     </element>  
     <element name='tr'>
         <start></start>
