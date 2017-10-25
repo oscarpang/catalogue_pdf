@@ -35,14 +35,18 @@ public class PreProcess {
 	
 	private static ArrayList<Integer> _tableColNum;
 	
+	private static ArrayList<ArrayList<Integer>> _tableColWidth;
+	
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
 		_processedFile = processedFile;
 		_tableColNum = new ArrayList<Integer>();
+		_tableColWidth = new ArrayList<ArrayList<Integer>>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
 		
 		firstRoundPreProcessing();
 		secondRoundPreProcessing();
+		thirdRoundPreProcessing();
 	}
 	
 	
@@ -124,10 +128,9 @@ public class PreProcess {
 		String line = null;
 		
 		boolean inTable = false;
-		int currentColumnNumber = 0;
+		int curColNum = 0;
 		int prevRowColspan = 0;
-		
-		int currentTableColumnNumber = 0;
+		int curTableColNum = 0;
 		
 		try{
 			while ((line = _bufferedReader.readLine()) != null) {
@@ -135,8 +138,9 @@ public class PreProcess {
 					inTable = true;
 				} else if (line.contains("</tbody>")) {
 					inTable = false;
-					_tableColNum.add(currentTableColumnNumber);
-					currentTableColumnNumber = 0;
+					_tableColNum.add(curTableColNum);
+					
+					curTableColNum = 0;
 				}		
 				
 				if (inTable) {
@@ -146,13 +150,13 @@ public class PreProcess {
 					if (line.contains("<td")) { // start a new column
 						int colspan = getSpan(line, "colspan");
 						int rowspan = getSpan(line, "rowspan");
-						currentColumnNumber += colspan;
+						curColNum += colspan;
 						if (rowspan > 1) {
 							prevRowColspan += colspan;
 						}
 					} else if (line.contains("</tr>")) { // end a row
-						currentTableColumnNumber = Integer.max(currentTableColumnNumber, currentColumnNumber);
-						currentColumnNumber = prevRowColspan;
+						curTableColNum = Integer.max(curTableColNum, curColNum);
+						curColNum = prevRowColspan;
 						prevRowColspan = 0;
 					}
 				}
@@ -209,6 +213,81 @@ public class PreProcess {
 		}
 		System.out.println("Finish second round processing.");
 	}
+	
+	private void thirdRoundPreProcessing() {
+		System.out.println("Start the third round processing.");
+		try {
+			_fileReader = new FileReader(_processedFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		_bufferedReader = new BufferedReader(_fileReader);
+		
+		String line = null;
+		
+		boolean inTable = false;
+		int curColNum = 0;
+		int prevRowColspan = 0;
+		
+		int curTableColNum = 0;
+		ArrayList<Integer> curTableColWidth = new ArrayList<Integer>();
+		int numRow = 0;
+		boolean isFirstLine = true;
+		
+		try{
+			while ((line = _bufferedReader.readLine()) != null) {
+				if (line.contains("<tbody>")) {
+					inTable = true;
+				} else if (line.contains("</tbody>")) {
+					inTable = false;
+					for (int i = 0; i < curTableColWidth.size(); i ++) {
+						curTableColWidth.set(i, curTableColWidth.get(i)/numRow);
+					}
+					_tableColWidth.add(curTableColWidth);
+					
+					curTableColWidth = new ArrayList<Integer>();
+					numRow = 0;
+					isFirstLine = true;
+				}		
+				
+				if (inTable) {
+					if (line.contains("<td")) { // start a new column
+						int colspan = getSpan(line, "colspan");
+						int rowspan = getSpan(line, "rowspan");
+						int curColWidth = getCurColWidth(line);
+						for (int i = 0; i < colspan; i++) {
+							if (isFirstLine) {
+								curTableColWidth.add(curColWidth/colspan);
+							} else {
+								curTableColWidth.set(curColNum + i, 
+										curTableColWidth.get(curColNum + i) + curColWidth/colspan);
+							}
+						}
+						curColNum += colspan;
+						if (rowspan > 1) {
+							prevRowColspan += colspan;
+						}
+					} else if (line.contains("</tr>")) { // end a row
+						curTableColNum = Integer.max(curTableColNum, curColNum);
+						curColNum = prevRowColspan;
+						prevRowColspan = 0;
+						numRow ++;
+						isFirstLine = false;
+					}
+				}
+			}
+			
+			System.out.println(_tableColWidth);
+			
+			_bufferedReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Finish third round processing.");
+	}
 
 	private boolean shouldIgnore(String line) {
 		for (String str : _prefixIgnored) {
@@ -239,6 +318,41 @@ public class PreProcess {
 		return count;
 	}
 	
+	public int getSpan(String line, String str) {
+		int span = 1;
+		if (line.contains(str)) {
+			int index = line.indexOf(str) + str.length() + 2; // 2 = length of "=\""
+			span = Integer.parseInt(line.substring(index, index + 1));
+		}
+		return span;
+	}
+	
+	public int getCurColWidth(String line) {
+		int width = 0;
+		boolean ignore = false;
+		try {
+			while (true) {
+				for (char c : line.toCharArray()) {
+					if (c == '<') {
+						ignore = true;
+					}
+					width += ignore ? 0 : 1;
+					if (c == '>') {
+						ignore = false;
+					}
+				}
+				if (line.contains("</td>")) {
+					break;
+				}
+				width ++;
+				line = _bufferedReader.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return width;
+	}
+	
 	public DefaultMutableTreeNode getSectionNamesTree() {
 		return _sectionNamesTree;
 	}
@@ -247,12 +361,7 @@ public class PreProcess {
 		return _tableColNum;
 	}
 	
-	public int getSpan(String line, String str) {
-		int span = 1;
-		if (line.contains(str)) {
-			int index = line.indexOf(str) + str.length() + 2; // 2 = length of "=\""
-			span = Integer.parseInt(line.substring(index, index + 1));
-		}
-		return span;
+	public ArrayList<ArrayList<Integer>> getTableColWidth() {
+		return _tableColWidth;
 	}
 }
