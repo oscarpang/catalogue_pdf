@@ -51,8 +51,10 @@ class Convertor {
 	private int _curr_col = 0;
 	private HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> filled_cells;
 	private ArrayList<Integer> _table_colnum;
+	private ArrayList<Integer> _table_rownum;
 	private int _curr_table_index = 0;
 	private ArrayList<ArrayList<Double>> _table_column_width;
+	private UnionFind _uf;
 	
 	private int _next_section = 0;
 	ArrayList<Map.Entry<String, Integer>> _section_colnums;
@@ -77,6 +79,7 @@ class Convertor {
 
 		_config = new Configuration();
 		_table_colnum = preprocess_info.getTableColNum();
+		_table_rownum = preprocess_info.getTableRowNum();
 		_table_column_width = preprocess_info.getTableColWidth();
 		_section_colnums = preprocess_info.getCustomizedSectionColNums();
 
@@ -537,8 +540,43 @@ class Convertor {
 	 *             output error occurs
 	 */
 	public void tableRowEnd(ElementEnd e, ElementStart es) throws IOException {
-		if (_printBorder)
-			_writer.write(" \\\\ \n\\hline\n");
+		int curr_row_num = _table_rownum.get(_curr_table_index);
+		int curr_col_num = _table_colnum.get(_curr_table_index);
+		
+		if (_printBorder) {
+			if(_curr_row == curr_row_num-1) {
+				_writer.write(" \\\\ \n\\hline\n");
+			} else {
+				boolean isHline = true;
+				ArrayList<Pair<Integer, Integer>> cline_start_length = new ArrayList<>();
+				int possible_start = 0;
+				int maximun_cline_length = 0;
+				for(int i = 0; i < curr_col_num; i++) {
+					if(_uf.find(_curr_row * curr_col_num + i) == 
+							_uf.find((_curr_row + 1) * curr_col_num + i)) {
+						isHline = false;
+						if(maximun_cline_length > 0) {
+							cline_start_length.add(new Pair<Integer, Integer>(possible_start+1, maximun_cline_length));
+						}
+						possible_start = i+1;
+						maximun_cline_length = 0;
+					} else {
+						maximun_cline_length++;
+					}
+				}
+				if(isHline) {
+					_writer.write(" \\\\ \n\\hline\n");
+				} else {
+					_writer.write("\\\\ ");
+					for(Pair<Integer, Integer> p : cline_start_length) {
+						_writer.write("\\cline{" + p.getFirst() + "-" + (p.getFirst() + p.getSecond() - 1) + "} ");
+					}
+					_writer.write("\n");
+				}
+			}
+		}
+
+		
 		_firstCell = true;
 		_curr_row++;
 		_curr_col = 0;
@@ -606,8 +644,12 @@ class Convertor {
 			_writer.write("}{*}{");
 			_multirow_cell = true;
 		}
+		
+		int curr_colnum = _table_colnum.get(_curr_table_index);
+		//	Combine cells
 		for (int i = _curr_col; i < _curr_col + colspan; i++) {
 			for (int j = _curr_row + 1; j < _curr_row + rowspan; j++) {
+				_uf.union(_curr_row*curr_colnum + _curr_col, j*curr_colnum + i);
 				if (i == _curr_col)
 					filled_cells.put(new Pair<Integer, Integer>(j, i),
 							new Pair<Integer, Integer>(1, colspan));
@@ -673,9 +715,11 @@ class Convertor {
 		String str;
 		_curr_col = 0;
 		_curr_row = 0;
-
-		// {L{0.2\columnwidth}*{50}{L{0.1\columnwidth}}}
 		int curr_col_num = _table_colnum.get(_curr_table_index);
+		int curr_row_num = _table_rownum.get(_curr_table_index);
+		_uf = new UnionFind(curr_col_num*curr_row_num);
+		
+
 		double average_ratio_per_col = 1.0 / curr_col_num;
 		_writer.write(String.format("{L{%.3f\\columnwidth}*{%d}{L{%.3f\\columnwidth}}}", average_ratio_per_col,
 				curr_col_num - 1, average_ratio_per_col));
@@ -942,4 +986,51 @@ class Pair<A, B> {
 	public void setSecond(B second) {
 		this.second = second;
 	}
+}
+
+
+class UnionFind {
+
+	  private int[] _parent;
+	  private int[] _rank;
+
+
+	  public int find(int i) {
+
+	    int p = _parent[i];
+	    if (i == p) {
+	      return i;
+	    }
+	    return _parent[i] = find(p);
+
+	  }
+
+
+	  public void union(int i, int j) {
+
+	    int root1 = find(i);
+	    int root2 = find(j);
+
+	    if (root2 == root1) return;
+
+	    if (_rank[root1] > _rank[root2]) {
+	      _parent[root2] = root1;
+	    } else if (_rank[root2] > _rank[root1]) {
+	      _parent[root1] = root2;
+	    } else {
+	      _parent[root2] = root1;
+	      _rank[root1]++;
+	    }
+	  }
+
+
+	  public UnionFind(int max) {
+
+	    _parent = new int[max];
+	    _rank = new int[max];
+
+	    for (int i = 0; i < max; i++) {
+	      _parent[i] = i;
+	    }
+	  }
 }
