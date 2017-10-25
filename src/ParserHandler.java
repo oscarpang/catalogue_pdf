@@ -19,8 +19,8 @@ class ParserHandler implements IParserHandler {
      * @param outputFile output LaTeX file
      * @throws FatalErrorException fatal error (ie. output file can't be closed) occurs
      */
-    ParserHandler(File outputFile) throws FatalErrorException {
-        _conv = new Convertor(outputFile);
+    ParserHandler(File outputFile, PreProcess preprocess_info) throws FatalErrorException {
+        _conv = new Convertor(outputFile, preprocess_info);
     }
 
     

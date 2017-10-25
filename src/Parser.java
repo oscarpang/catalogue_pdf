@@ -22,6 +22,7 @@ public class Parser {
     /** Stack containing all opened and still non-closed elements. */
     private Stack<ElementStart> _openElements = new Stack<ElementStart>();
     
+    
     /**
      * Parses the HTML file and converts it using the particular handler.
      * The file is processed char by char and a couple of events are

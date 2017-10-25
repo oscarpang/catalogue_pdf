@@ -42,4 +42,5 @@ public interface IParserHandler {
     */    
     public void endDocument();
     
+    
 }

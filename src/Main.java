@@ -31,7 +31,7 @@ public class Main extends JPanel implements ActionListener{
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _startBtn;
 	private static JPanel _btnPanel;
 	private static JScrollPane _sectionNameScrollPane;
-	
+	PreProcess preProcess;
 	
 	/**
 	 * Creates {@link Parser Parser} instance and runs its
@@ -96,7 +96,7 @@ public class Main extends JPanel implements ActionListener{
 	}
 	
 	public void startConversion() {
-		PreProcess preProcess= new PreProcess();
+		preProcess= new PreProcess();
 		preProcess.preProcess(_inputFile, _processedFile);
 		
 		JTree sectionNamesTree = new JTree(preProcess.getSectionNamesTree());
@@ -108,7 +108,7 @@ public class Main extends JPanel implements ActionListener{
 		
 		try {
 			Parser parser = new Parser();
-			parser.parse(new File(_processedFile), new ParserHandler(new File(_outputFile)));
+			parser.parse(new File(_processedFile), new ParserHandler(new File(_outputFile), preProcess));
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

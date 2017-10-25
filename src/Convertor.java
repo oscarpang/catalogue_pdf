@@ -47,7 +47,9 @@ class Convertor {
     private int _curr_row = 0;
     private int _curr_col = 0;
     private HashMap<Pair<Integer, Integer>, Pair<Integer, Integer>> filled_cells;
-    
+    private ArrayList<Integer> _table_colnum;
+    private int _curr_table_index = 0;
+    private ArrayList<ArrayList<Double>> _table_column_width;
     
     /**
      *  Document's bibliography. <br />
@@ -62,9 +64,11 @@ class Convertor {
      *  @param outputFile output LaTeX file
      *  @throws FatalErrorException when output file can't be opened
     */
-    Convertor(File outputFile) throws FatalErrorException {
+    Convertor(File outputFile, PreProcess preprocess_info) throws FatalErrorException {
 
         _config = new Configuration();
+        _table_colnum = preprocess_info.getTableColNum();
+        _table_column_width = preprocess_info.getTableColWidth();
         
         try {
             _outputFile = outputFile;
@@ -530,9 +534,16 @@ class Convertor {
 				if(colspan > 1) {
 					_writer.write("\\multicolumn{");
 					_writer.write(Integer.toString(colspan));
-					double max_colspan_pagewidth_ratio = 1.0 / (double)colspan;
-					_writer.write("}{L{" + Double.toString(max_colspan_pagewidth_ratio) + "\\columnwidth}}{");
-					_multicol_cell = true;
+//			        int curr_col_num = _table_colnum.get(_curr_table_index);
+//			        double average_ratio_per_col = 1.0/curr_col_num;
+					ArrayList<Double> curr_row_widths = _table_column_width.get(_curr_table_index);
+					double span_ratio = 0;
+					for(int i = _curr_col; i < _curr_col+colspan; i++) {
+						span_ratio += curr_row_widths.get(i)*0.9;
+					}
+			        _writer.write("}{L{" + String.format("%.3f", span_ratio) + "\\columnwidth}}{");
+			        _writer.write("\\makecell[{{L{" + String.format("%.3f", span_ratio)+ "\\columnwidth}}}]{");
+			        _multicol_cell = true;
 				}
 	    	}
 
@@ -546,7 +557,6 @@ class Convertor {
 					_multirow_cell = true;
 					for(int i = _curr_col; i < _curr_col + colspan; i++) {
 						for(int j = _curr_row+1; j < _curr_row + rowspan; j++) {
-							System.out.println("Put: " + j + " " + i);
 							if(i == _curr_col)
 								filled_cells.put(new Pair<Integer, Integer>(j, i), new Pair<Integer, Integer>(1, colspan));
 							else
@@ -560,9 +570,15 @@ class Convertor {
 	    	int colspan = 1;
 			_writer.write("\\multicolumn{");
 			_writer.write(Integer.toString(colspan));
-			double max_colspan_pagewidth_ratio = 0.5;
-			_writer.write("}{L{" + Double.toString(max_colspan_pagewidth_ratio) + "\\columnwidth}}{");
+//			int curr_col_num = _table_colnum.get(_curr_table_index);
+//	        double average_ratio_per_col = 1.0/curr_col_num;
+			ArrayList<Double> curr_row_widths = _table_column_width.get(_curr_table_index);
+			double span_ratio = curr_row_widths.get(_curr_col) *0.9;
+	        _writer.write("}{L{" + String.format("%.3f", span_ratio) + "\\columnwidth}}{");
+	        _writer.write("\\makecell[{{L{" + String.format("%.3f", span_ratio)+ "\\columnwidth}}}]{");
 			_multicol_cell = true;
+//			_writer.write("\\makecell[l]{");
+
 			
 			String rowspan_str = e.getAttributes().get("rowspan");
 			if(rowspan_str != null) {
@@ -574,7 +590,7 @@ class Convertor {
 					_multirow_cell = true;
 					for(int i = _curr_col; i < _curr_col + colspan; i++) {
 						for(int j = _curr_row+1; j < _curr_row + rowspan; j++) {
-							System.out.println("Put: " + j + " " + i);
+//							System.out.println("Put: " + j + " " + i);
 							if(i == _curr_col)
 								filled_cells.put(new Pair<Integer, Integer>(j, i), new Pair<Integer, Integer>(1, colspan));
 							else
@@ -606,7 +622,7 @@ class Convertor {
     	}
     	
          if(_multicol_cell) {
- 			_writer.write("}");
+ 			_writer.write("}}");
  			_multicol_cell = false;
  			String colspan_str = e.getAttributes().get("colspan");
  			int colspan = 1;
@@ -633,9 +649,16 @@ class Convertor {
         String str;
         _curr_col = 0;
         _curr_row = 0;
-
-        if ( (str = e.getAttributes().get("latexcols")) != null)
-            _writer.write("{" + str + "}\n");
+        
+//        {L{0.2\columnwidth}*{50}{L{0.1\columnwidth}}}
+        int curr_col_num = _table_colnum.get(_curr_table_index);
+        double average_ratio_per_col = 1.0/curr_col_num;
+        _writer.write(
+        		String.format("{L{%.3f\\columnwidth}*{%d}{L{%.3f\\columnwidth}}}", 
+        				average_ratio_per_col,curr_col_num-1,average_ratio_per_col));
+        _printBorder = true;
+//        if ( (str = e.getAttributes().get("latexcols")) != null)
+//            _writer.write("{" + str + "}\n");
         
         if (_printBorder) 
             _writer.write("\\hline \n");
@@ -656,6 +679,7 @@ class Convertor {
         _firstRow = true;
         _printBorder = false;
         filled_cells.clear();
+        _curr_table_index++;
     }
     
     

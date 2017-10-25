@@ -81,16 +81,20 @@
     <element name='html'>
         <start>\documentclass[a4paper,11pt,twoside]{book}@NL\usepackage{ulem}@NL\usepackage{multirow}
             @NL\usepackage{a4wide}@NL\usepackage[dvipsnames,svgnames]{xcolor}@NL\usepackage[pdftex]{graphicx}@NL\usepackage{textcomp}
-            @NL\usepackage{tabulary}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}
+            @NL\usepackage{tabulary}@NL\usepackage{makecell}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}
             @NL\usepackage[document]{ragged2e}@NL\usepackage{indentfirst}@NL\setlength\RaggedRightParindent{15pt}@NL\usepackage[T1]{fontenc}
             @NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}
-            @NL\usepackage{paralist}@NL\usepackage[compact]{titlesec}@NL\titlespacing{\section}{0pt}{0pt}{0pt}
+            @NL\usepackage{paralist}
+            @NL\usepackage[compact, nobottomtitles*]{titlesec}
+            @NL\tolerance=1@NL\emergencystretch=\maxdimen@NL\hyphenpenalty=10000@NL\hbadness=10000
+            @NL\titleclass{\chapter}{straight}@NL\titleformat{\chapter}[display]{\sloppy\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+            @NL\titlespacing{\section}{0pt}{0pt}{0pt}
             @NL\titlespacing{\subsection}{0pt}{1em}{1em}@NL\titlespacing{\subsubsection}{0pt}{1em}{0pt}@NL\titlespacing{\subparagraph}{0pt}{0pt}{0pt}
-            @NL\titleformat*{\paragraph}{\sffamily\bfseries\scriptsize}
-            @NL\titleformat*{\subparagraph}{\sffamily\bfseries\tiny}
-            @NL\titleformat{\section}{\rmfamily\LARGE\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
-            @NL\titleformat{\subsection}{\sffamily\large\bfseries}{\thesection}{1em}{}[]
-            @NL\titleformat{\subsubsection}{\sffamily\small\itshape}{\thesection}{1em}{}[]
+            @NL\titleformat*{\paragraph}{\sloppy\sffamily\bfseries\scriptsize}
+            @NL\titleformat*{\subparagraph}{\sloppy\sffamily\bfseries\tiny}
+            @NL\titleformat{\section}{\sloppy\rmfamily\LARGE\bfseries\hyphenchar\font=-1}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+            @NL\titleformat{\subsection}{\sloppy\sffamily\large\bfseries\hyphenchar\font=-1}{\thesection}{1em}{}[]
+            @NL\titleformat{\subsubsection}{\sloppy\sffamily\small\itshape}{\thesection}{1em}{}[]
             @NL\setlength{\parskip}{0cm}@NL\setcounter{secnumdepth}{-2}@NL\setcounter{tocdepth}{2}
             @NL\renewcommand{\familydefault}{\sfdefault}@NL\usepackage{fancyhdr}@NL\pagestyle{fancy}
             @NL\fancyhf{}@NL\fancyhead[RE,LO]{\thepage / \rightmark}
@@ -220,6 +224,10 @@
     </element>    
     <element name='frame'>
         <start></start>
+        <end></end>
+    </element>
+    <element name='table_p'>
+        <start>\\</start>
         <end></end>
     </element>
     <element name='frameset'>
@@ -432,16 +440,16 @@
         <end></end>
     </element>
     <element name='table'>
-        <start>@NL@NL\end{multicols}@NL@NL\begin{tabulary}{\linewidth}{L{0.2\columnwidth}*{50}{L{0.1\columnwidth}}}</start>
+        <start>@NL@NL\end{multicols}@NL@NL\begin{tabulary}{\linewidth}</start>
         <end>@NL\end{tabulary}@NL@NL\begin{multicols}{2}@NL@NL</end>
     </element>  
     <element name='tr'>
         <start></start>
         <end></end>
     </element>
-    <element name='td'>
-        <start>\makecell[l]{</start>
-        <end>}</end>
+	<element name='td'>
+        <start></start>
+        <end></end>
     </element>
     <element name='th'>
         <start>\textbf{</start>
