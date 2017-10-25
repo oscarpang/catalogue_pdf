@@ -243,13 +243,13 @@ public class PreProcess {
 					inTable = true;
 				} else if (line.contains("</tbody>")) {
 					inTable = false;
-					int sum = 0;
+					double sum = 0;
 					for (int i = 0; i < curTableColWidth.size(); i ++) {
 						double average = curTableColWidth.get(i)/numRow;
 						curTableColWidth.set(i, average);
 						sum += average;
 					}
-					
+//					System.out.println("sum : " + sum);
 //					System.out.println(curTableColWidth);
 					for (int i = 0; i < curTableColWidth.size(); i ++) {
 						curTableColWidth.set(i, curTableColWidth.get(i)/sum);
