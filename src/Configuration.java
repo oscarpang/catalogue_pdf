@@ -69,7 +69,7 @@ class Configuration {
             loadLinksConfiguration(root);
             loadCharsConfiguration(root);
             loadStylesConfiguration(root);
-            if (!Main.getCSSFile().equals("")) loadStyleSheet(new File(Main.getCSSFile()));            
+//            if (!Main.getCSSFile().equals("")) loadStyleSheet(new File(Main.getCSSFile()));            
         } catch (Exception e) {
             throw new FatalErrorException("Can't load configuration.\n" + e.getMessage());
         }

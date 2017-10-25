@@ -75,17 +75,13 @@ public class CourseXlsParser {
 	        		"\\begin{document}\n");
 		}
 		
-        
+        writer.write("\\chapter{Courses of Instruction}");
         String course_type = "";
         boolean first_section = true;
+		writer.write("\\begin{multicols*}{3}\n");
 		for(Course c : course_list) {
-			
 			if(!c.GetCourseType().equals(course_type)) {
-				if(!first_section){
-					writer.write("\\end{multicols*}" + "\n");
-				}
-				writer.write("\\section*{" + c.GetCourseType() +"}\n");
-				writer.write("\\begin{multicols*}{3}\n");
+				writer.write("\\subsection*{" + c.GetCourseType() +"}\n");
 				course_type = c.GetCourseType();
 				first_section = false;
 			}

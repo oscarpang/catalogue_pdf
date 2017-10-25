@@ -59,6 +59,8 @@ class Convertor {
 	private int _next_section = 0;
 	ArrayList<Map.Entry<String, Integer>> _section_colnums;
 	private boolean _is_multicol = false;
+	
+	private String _course_xls_file_path = "/Users/oscarpang/Documents/workspace/htmltolatex/data/courses-list-2017-09-07_21.40.11.xls";
 
 	/**
 	 * Document's bibliography. <br />
@@ -807,12 +809,12 @@ class Convertor {
 					&& ((str2 = es.getAttributes().get("content")) != null)) {
 
 				str2 = str2.toLowerCase();
-				if (str2.contains("windows-1250"))
-					_writer.write("\n\\usepackage[cp1250]{inputenc}");
-				else if (str2.contains("iso-8859-2"))
-					_writer.write("\n\\usepackage[latin2]{inputenc}");
-				else if (str2.contains("utf-8"))
-					_writer.write("\n\\usepackage[utf8]{inputenc}");
+//				if (str2.contains("windows-1250"))
+//					_writer.write("\n\\usepackage[cp1250]{inputenc}");
+//				else if (str2.contains("iso-8859-2"))
+//					_writer.write("\n\\usepackage[latin2]{inputenc}");
+//				else if (str2.contains("utf-8"))
+//					_writer.write("\n\\usepackage[utf8]{inputenc}");
 			}
 		}
 	}
@@ -913,6 +915,9 @@ class Convertor {
 		if(_is_multicol) {
 			_writer.write("\\end{multicols}\n");
 		}
+		
+		//	Add course infomations
+		CourseXlsParser.ParseToWriter(Main.getCourseXlsFile(), _writer, false);
 		commonElementEnd(element, es);
 	}
 	

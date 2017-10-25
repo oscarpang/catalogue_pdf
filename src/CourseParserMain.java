@@ -11,7 +11,7 @@ import java.util.List;
 public class CourseParserMain {
 
 	public static void main(String[] args) {
-		File csv_file = new File("/Users/oscarpang/Documents/workspace/htmltolatex/data/courses-list-2017-09-07_21.40.11.xls");
+		File csv_file = new File("/Users/weiwupang/Downloads/courses-list-2017-09-07_21.40.11.xls");
 		try {
 			CourseXlsParser parser = new CourseXlsParser(csv_file);
 			parser.Parse();
@@ -46,21 +46,10 @@ public class CourseParserMain {
             		"\\usepackage{caption}\n" + 
             		"\\usepackage{subcaption}\n" + 
             		"\\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}\n" + 
-            		"\\begin{document}\n");
+            		"\\begin{document}\n" +
+            		"\\begin{multicols*}{3}\n");
             
-            String course_type = "";
-            boolean first_section = true;
 			for(Course c : course_list) {
-				
-				if(!c.GetCourseType().equals(course_type)) {
-					if(!first_section){
-						writer.write("\\end{multicols*}" + "\n");
-					}
-					writer.write("\\section*{" + c.GetCourseType() +"}\n");
-					writer.write("\\begin{multicols*}{3}\n");
-					course_type = c.GetCourseType();
-					first_section = false;
-				}
 				writer.write("\\paragraph{" + c.GetTitle().replace("&", "\\&") + "}\n");
 				String p = c.GetParagraph().replace("&", "\\&");
 				p = p.replace("#", "\\#");
