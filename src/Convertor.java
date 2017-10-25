@@ -561,11 +561,7 @@ class Convertor {
 		else
 			_firstCell = false;
 		Pair<Integer, Integer> p = filled_cells.get(new Pair<Integer, Integer>(_curr_row, _curr_col));
-		for (Pair key : filled_cells.keySet()) {
-			if (key.equals(p)) {
-				System.out.println("Find");
-			}
-		}
+
 		if (p != null) {
 			int filled_row_span = p.getFirst();
 			int filled_col_span = p.getSecond();
