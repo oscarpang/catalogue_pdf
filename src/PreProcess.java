@@ -33,12 +33,12 @@ public class PreProcess {
 
 	private static DefaultMutableTreeNode _sectionNamesTree;
 	
-	private static ArrayList<ArrayList<Integer>> _tableColNum;
+	private static ArrayList<Integer> _tableColNum;
 	
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
 		_processedFile = processedFile;
-		_tableColNum = new ArrayList<ArrayList<Integer>>();
+		_tableColNum = new ArrayList<Integer>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
 		
 		firstRoundPreProcessing();
@@ -127,7 +127,7 @@ public class PreProcess {
 		int currentColumnNumber = 0;
 		int prevRowColspan = 0;
 		
-		ArrayList<Integer> currentTableColumnNumber = new ArrayList<Integer>();
+		int currentTableColumnNumber = 0;
 		
 		try{
 			while ((line = _bufferedReader.readLine()) != null) {
@@ -136,7 +136,7 @@ public class PreProcess {
 				} else if (line.contains("</tbody>")) {
 					inTable = false;
 					_tableColNum.add(currentTableColumnNumber);
-					currentTableColumnNumber = new ArrayList<Integer>();
+					currentTableColumnNumber = 0;
 				}		
 				
 				if (inTable) {
@@ -151,7 +151,7 @@ public class PreProcess {
 							prevRowColspan += colspan;
 						}
 					} else if (line.contains("</tr>")) { // end a row
-						currentTableColumnNumber.add(currentColumnNumber);
+						currentTableColumnNumber = Integer.max(currentTableColumnNumber, currentColumnNumber);
 						currentColumnNumber = prevRowColspan;
 						prevRowColspan = 0;
 					}
@@ -243,7 +243,7 @@ public class PreProcess {
 		return _sectionNamesTree;
 	}
 	
-	public ArrayList<ArrayList<Integer>> getTableColNum() {
+	public ArrayList<Integer> getTableColNum() {
 		return _tableColNum;
 	}
 	
