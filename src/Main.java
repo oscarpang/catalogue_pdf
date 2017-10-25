@@ -22,7 +22,7 @@ public class Main extends JPanel implements ActionListener{
 	/** Configuration file. */
 	private static String _configFile = "config/config.xml";
 	/** File with CSS. */
-	private static String _cssFile = "";
+	private static String _courseXlsFile = "";
 	
 	private static JFrame _frame, _sectionColChoiceFrame;
 	private static Main _mainPanel;
@@ -84,8 +84,8 @@ public class Main extends JPanel implements ActionListener{
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xls","xls", "xlsx"));
 			int returnVal = _fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				_cssFile = _fileChooser.getSelectedFile().getPath();
-				System.out.println("Css File is: " + _inputFile);
+				_courseXlsFile = _fileChooser.getSelectedFile().getPath();
+				System.out.println("Css File is: " + _courseXlsFile);
 			}
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
@@ -128,8 +128,8 @@ public class Main extends JPanel implements ActionListener{
 	 * 
 	 * @return name of the file with CSS
 	 */
-	public static String getCSSFile() {
-		return _cssFile;
+	public static String getCourseXlsFile() {
+		return _courseXlsFile;
 	}
 	
 	/**
