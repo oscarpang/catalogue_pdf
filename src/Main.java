@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -31,7 +33,7 @@ public class Main extends JPanel implements ActionListener{
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _startBtn;
 	private static JPanel _btnPanel;
 	private static JScrollPane _sectionNameScrollPane;
-	PreProcess preProcess;
+	private static PreProcess preProcess;
 	
 	/**
 	 * Creates {@link Parser Parser} instance and runs its
@@ -106,6 +108,10 @@ public class Main extends JPanel implements ActionListener{
 		this.revalidate();
 		this.repaint();
 		
+		ArrayList<Integer> sectionColNums = getSectionColNums();
+		
+		System.out.println(sectionColNums);
+		
 		try {
 			Parser parser = new Parser();
 			parser.parse(new File(_processedFile), new ParserHandler(new File(_outputFile), preProcess));
@@ -116,6 +122,14 @@ public class Main extends JPanel implements ActionListener{
 			e.getMessage();
 			e.printStackTrace();
 		}
+	}
+	
+	private ArrayList<Integer> getSectionColNums() {
+		ArrayList<Integer> sectionColNums = new ArrayList<Integer>();
+		for (Map.Entry<String, Integer> entr : preProcess.getSectionColNums()) {
+			sectionColNums.add(entr.getValue());
+		}
+		return sectionColNums;
 	}
 	
 	/**

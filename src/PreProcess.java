@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -37,12 +39,15 @@ public class PreProcess {
 	
 	private static ArrayList<ArrayList<Double>> _tableColWidth;
 	
+	private static ArrayList<Map.Entry<String, Integer>> _sectionColNums;
+	
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
 		_processedFile = processedFile;
 		_tableColNum = new ArrayList<Integer>();
 		_tableColWidth = new ArrayList<ArrayList<Double>>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
+		_sectionColNums = new ArrayList<Map.Entry<String, Integer>>();
 		
 		firstRoundPreProcessing();
 		secondRoundPreProcessing();
@@ -68,29 +73,41 @@ public class PreProcess {
 		
 		String line = null;
 		DefaultMutableTreeNode currentChapterNode = new DefaultMutableTreeNode();
+		String curSectionName = null;
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
 				line = line.replaceAll("<br></h", "</h");
 				if (line.contains("<h1 class=\"Page\">")) {
 					//promote some h1 to be chapter (h0). and add all sectionNames into a tree.
-					String name = line.replace("<h1 class=\"Page\">", "");
+					curSectionName = line.replace("<h1 class=\"Page\">", "");
 					boolean isChapter = isChapter(line);
 					line = isChapter ? line.replaceAll("h1", "h0") : line;
 					while (!line.contains("</")) {
 						_bufferedWriter.write(line);
 						_bufferedWriter.newLine();
 						line = _bufferedReader.readLine();
-						name += " " + line;
+						curSectionName += " " + line;
 					}
-					name = name.contains("</") ? name.substring(0, name.indexOf("</")) : name;
+					curSectionName = curSectionName.contains("</") ? curSectionName.substring(0, curSectionName.indexOf("</")) : curSectionName;
 					
 					if (isChapter) {
-						currentChapterNode = new DefaultMutableTreeNode(name);
+						currentChapterNode = new DefaultMutableTreeNode(curSectionName);
 						_sectionNamesTree.add(currentChapterNode);
 					} else {
-						currentChapterNode.add(new DefaultMutableTreeNode(name));
+						currentChapterNode.add(new DefaultMutableTreeNode(curSectionName));
+					}
+					_sectionColNums.add(new AbstractMap.SimpleEntry<String, Integer>(curSectionName, 2));
+				}
+				
+				//By default, sections with tables should be shown in one column.
+				if (line.contains("<tbody>")) {
+					for (Map.Entry<String, Integer> entr : _sectionColNums) {
+						if (entr.getKey().equals(curSectionName)) {
+							entr.setValue(1);
+						}
 					}
 				}
+				
 				if (line.contains("class=\"Course\"") || line.contains("Return to")) { // should ignore
 					while (!line.contains("</")) {
 						line = _bufferedReader.readLine();
@@ -105,6 +122,7 @@ public class PreProcess {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println(_sectionColNums);
 		System.out.println("Finish first round processing.");
 	}
 
@@ -372,5 +390,9 @@ public class PreProcess {
 	
 	public ArrayList<ArrayList<Double>> getTableColWidth() {
 		return _tableColWidth;
+	}
+	
+	public ArrayList<Map.Entry<String, Integer>> getSectionColNums() {
+		return _sectionColNums;
 	}
 }
