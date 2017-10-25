@@ -240,9 +240,6 @@ public class Parser {
                 readElement();
                 return;
             }
-            if(str.contains("Students may use EE 494")) {
-            	System.out.println("Contains");
-            }
             if(ch >= 128) {
                 str += String.format("&#%d;", (int)ch);
             } else {
