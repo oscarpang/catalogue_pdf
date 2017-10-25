@@ -4,7 +4,7 @@ public class Course implements Comparable<Course>{
 	private static String CONCURRENT_ENROLLMENT_PREFIX =  "Concurrent enrollment";
 	private static String LATEX_SEPERATOR = " $|$ ";
 	
-	
+	private String course_type_;
 	private String prefix_;
 	private String code_;
 	private String suffix_;
@@ -26,12 +26,13 @@ public class Course implements Comparable<Course>{
 	private String instruction_mode_;
 	private String grading_options_;
 	private String crosslist_as_;
-	public Course(String prefix_, String code_, String suffix_, String name_, String units_, String max_units_,
+	public Course(String course_type_, String prefix_, String code_, String suffix_, String name_, String units_, String max_units_,
 			String terms_offered_, String description_, String prerequisite_str_, String recommend_prep_,
 			String corequisite_str_, String concurrent_enrollment_, String sat_new_ge_req_, String sat_global_per_,
 			String sat_old_ge_req_, String reg_restriction_, String credit_restriction_, String duplicate_credit_,
 			String instruction_mode_, String grading_options_, String crosslist_as_) {
 		super();
+		this.course_type_ = course_type_;
 		this.prefix_ = prefix_;
 		this.code_ = code_;
 		this.suffix_ = suffix_;
@@ -53,6 +54,10 @@ public class Course implements Comparable<Course>{
 		this.instruction_mode_ = instruction_mode_;
 		this.grading_options_ = grading_options_;
 		this.crosslist_as_ = crosslist_as_;
+	}
+	
+	public String GetCourseType() {
+		return course_type_;
 	}
 	
 	public String GetTitle() {
