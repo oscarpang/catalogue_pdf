@@ -3,11 +3,8 @@
  * Main.java
  */
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

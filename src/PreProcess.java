@@ -37,6 +37,8 @@ public class PreProcess {
 	
 	private static ArrayList<Integer> _tableColNum;
 	
+	private static ArrayList<Integer> _tableRowNum;
+	
 	private static ArrayList<ArrayList<Double>> _tableColWidth;
 	
 	private static ArrayList<Map.Entry<String, Integer>> _defaultSectionColNums;
@@ -47,6 +49,7 @@ public class PreProcess {
 		_inputFile = inputFile;
 		_processedFile = processedFile;
 		_tableColNum = new ArrayList<Integer>();
+		_tableRowNum = new ArrayList<Integer>();
 		_tableColWidth = new ArrayList<ArrayList<Double>>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
 		_defaultSectionColNums = new ArrayList<Map.Entry<String, Integer>>();
@@ -277,7 +280,7 @@ public class PreProcess {
 					}
 //					System.out.println(curTableColWidth);
 					_tableColWidth.add(curTableColWidth);
-					
+					_tableRowNum.add(numRow);
 					curTableColWidth = new ArrayList<Double>();
 					numRow = 0;
 					isFirstLine = true;
@@ -309,8 +312,8 @@ public class PreProcess {
 					}
 				}
 			}
-			
-			System.out.println(_tableColWidth);
+			System.out.println("_tableRowNum : " + _tableRowNum);
+			System.out.println("_tableColWidth : " + _tableColWidth);
 			
 			_bufferedReader.close();
 		} catch (IOException e) {
@@ -389,6 +392,10 @@ public class PreProcess {
 	
 	public ArrayList<Integer> getTableColNum() {
 		return _tableColNum;
+	}
+	
+	public ArrayList<Integer> getTableRowNum() {
+		return _tableRowNum;
 	}
 	
 	public ArrayList<ArrayList<Double>> getTableColWidth() {
