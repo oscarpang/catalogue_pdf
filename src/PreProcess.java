@@ -35,13 +35,13 @@ public class PreProcess {
 	
 	private static ArrayList<Integer> _tableColNum;
 	
-	private static ArrayList<ArrayList<Integer>> _tableColWidth;
+	private static ArrayList<ArrayList<Double>> _tableColWidth;
 	
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
 		_processedFile = processedFile;
 		_tableColNum = new ArrayList<Integer>();
-		_tableColWidth = new ArrayList<ArrayList<Integer>>();
+		_tableColWidth = new ArrayList<ArrayList<Double>>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
 		
 		firstRoundPreProcessing();
@@ -80,7 +80,7 @@ public class PreProcess {
 						_bufferedWriter.write(line);
 						_bufferedWriter.newLine();
 						line = _bufferedReader.readLine();
-						name += " " + line; // ?????????? Do we need to add the space
+						name += " " + line;
 					}
 					name = name.contains("</") ? name.substring(0, name.indexOf("</")) : name;
 					
@@ -233,7 +233,7 @@ public class PreProcess {
 		int prevRowColspan = 0;
 		
 		int curTableColNum = 0;
-		ArrayList<Integer> curTableColWidth = new ArrayList<Integer>();
+		ArrayList<Double> curTableColWidth = new ArrayList<Double>();
 		int numRow = 0;
 		boolean isFirstLine = true;
 		
@@ -243,12 +243,21 @@ public class PreProcess {
 					inTable = true;
 				} else if (line.contains("</tbody>")) {
 					inTable = false;
+					int sum = 0;
 					for (int i = 0; i < curTableColWidth.size(); i ++) {
-						curTableColWidth.set(i, curTableColWidth.get(i)/numRow);
+						double average = curTableColWidth.get(i)/numRow;
+						curTableColWidth.set(i, average);
+						sum += average;
 					}
+					
+//					System.out.println(curTableColWidth);
+					for (int i = 0; i < curTableColWidth.size(); i ++) {
+						curTableColWidth.set(i, curTableColWidth.get(i)/sum);
+					}
+//					System.out.println(curTableColWidth);
 					_tableColWidth.add(curTableColWidth);
 					
-					curTableColWidth = new ArrayList<Integer>();
+					curTableColWidth = new ArrayList<Double>();
 					numRow = 0;
 					isFirstLine = true;
 				}		
@@ -260,7 +269,7 @@ public class PreProcess {
 						int curColWidth = getCurColWidth(line);
 						for (int i = 0; i < colspan; i++) {
 							if (isFirstLine) {
-								curTableColWidth.add(curColWidth/colspan);
+								curTableColWidth.add(curColWidth*1.0/colspan);
 							} else {
 								curTableColWidth.set(curColNum + i, 
 										curTableColWidth.get(curColNum + i) + curColWidth/colspan);
@@ -361,7 +370,7 @@ public class PreProcess {
 		return _tableColNum;
 	}
 	
-	public ArrayList<ArrayList<Integer>> getTableColWidth() {
+	public ArrayList<ArrayList<Double>> getTableColWidth() {
 		return _tableColWidth;
 	}
 }
