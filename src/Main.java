@@ -88,8 +88,17 @@ public class Main extends JPanel implements ActionListener{
 				System.out.println("Css File is: " + _courseXlsFile);
 			}
 		}else if (e.getSource() == _startBtn) {
-			System.out.println("Should Start Conversion now. Maybe add error etc.");
-			startPreProcess();
+			if (_inputFile.equals("") || _courseXlsFile.equals("")) {
+				String msg = _inputFile.equals("") ? "the html file" : "";
+				if (_courseXlsFile.equals("")) {
+					msg += msg.equals("") ? "the course xls file" : " and the course xls file";
+				}
+				JOptionPane.showMessageDialog(this, "You need to specify " + msg, "Warning",
+				        JOptionPane.WARNING_MESSAGE);
+			} else {
+				System.out.println("Should Start Conversion now. Maybe add error etc.");
+				startPreProcess();
+			}
 		}
 	}
 	
