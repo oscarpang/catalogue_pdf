@@ -99,7 +99,8 @@
             @NL\setlength{\parskip}{0cm}@NL\setcounter{secnumdepth}{-2}@NL\setcounter{tocdepth}{2}
             @NL\renewcommand{\familydefault}{\sfdefault}@NL\usepackage{fancyhdr}@NL\pagestyle{fancy}
             @NL\fancyhf{}@NL\fancyhead[RE,LO]{\thepage / \rightmark}
-            @NL\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}@NL</start>
+            @NL\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+            @NL\setcounter{secnumdepth}{-1}</start>
         <end>@NL</end>
     </element>
     <element name='a'>
@@ -115,7 +116,7 @@
         <end>@NL</end>
     </element>
     <element name='body'>
-        <start>@NL@NL\begin{document}@NL\tiny</start>
+        <start>@NL@NL\begin{document}@NL\tableofcontents@NL\newpage@NL\tiny</start>
         <end>@NL\end{document}</end>
     </element>
     <element name='acronym'>
