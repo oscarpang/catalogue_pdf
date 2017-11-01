@@ -39,7 +39,7 @@ public class CourseXlsParser {
 		ParseContent();
 	}
 	
-	public static void ParseToWriter(String filepath, Writer writer, boolean standalone) throws IOException {
+	public static void ParseToLatexWriter(String filepath, Writer writer, boolean standalone) throws IOException {
 		File csv_file = new File(filepath);
 		
 		CourseXlsParser parser = new CourseXlsParser(csv_file);
@@ -94,6 +94,27 @@ public class CourseXlsParser {
 		
 		if(standalone) {
 			writer.write("\\end{document}\\n");
+		}
+        writer.flush();
+	}
+	
+	public static void ParseToHTMLWriter(String filepath, Writer writer) throws IOException {
+		File csv_file = new File(filepath);
+		
+		CourseXlsParser parser = new CourseXlsParser(csv_file);
+		parser.Parse();
+		List<Course> course_list = parser.GetCourseList();
+		Collections.sort(course_list, (a, b) -> a.compareTo(b));
+
+        writer.write("<h0>Courses of Instruction</h0>");
+        String course_type = "";
+		for(Course c : course_list) {
+			if(!c.GetCourseType().equals(course_type)) {
+				writer.write("<h2>" + c.GetCourseType() +"</h2>\n");
+				course_type = c.GetCourseType();
+			}
+			writer.write("<h4>" + c.GetTitle()+ "</h4>\n");
+			writer.write(c.GetParagraph() + "\n\n");
 		}
         writer.flush();
 	}

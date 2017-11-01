@@ -916,8 +916,8 @@ class Convertor {
 			_writer.write("\\end{multicols}\n");
 		}
 		
-		//	Add course infomations
-		CourseXlsParser.ParseToWriter(Main.getCourseXlsFile(), _writer, false);
+//		//	Add course infomations
+//		CourseXlsParser.ParseToWriter(Main.getCourseXlsFile(), _writer, false);
 		commonElementEnd(element, es);
 	}
 	
