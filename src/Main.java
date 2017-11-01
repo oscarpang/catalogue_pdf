@@ -73,6 +73,7 @@ public class Main extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//TODO: change to grey out the startBtn if user haven't provide both file path.
 		if (e.getSource() == _chooseHtmlBtn) {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("html","html"));
 			int returnVal = _fileChooser.showOpenDialog(Main.this);
@@ -104,7 +105,7 @@ public class Main extends JPanel implements ActionListener{
 	
 	public void startPreProcess() {
 		_preProcess= new PreProcess();
-		_preProcess.preProcess(_inputFile, _processedFile);
+		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
 		
 		
 //		_frame.pack();

@@ -16,6 +16,8 @@ public class PreProcess {
 
 	/** Input HTML file. */
 	private static String _inputFile = null;
+	/** Input Xls file. */
+	private static String _courseXlsFile = null;
 	/** Output HTML file. */
 	private static String _processedFile = null;
 
@@ -25,38 +27,37 @@ public class PreProcess {
 	private static BufferedReader _bufferedReader = null;
 	private static BufferedWriter _bufferedWriter = null;
 
+	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
 	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>", "<p></p>",
-			"<p> </p>", "<h4> </h4>", "<h3> </h3>", "<h2> </h2>", "<br>", "", "	", "<p><br></p>" }; // �
-																										// is
-																										// the
-																										// encoding
-																										// of
-																										// UTF8
-																										// none
-																										// breaking
-																										// space.
+			"<p> </p>", "<h4> </h4>", "<h3> </h3>", "<h2> </h2>", "<br>", "", "	", "<p><br></p>" }; 
 
 	private static String[] _chapterNames = { "Catalogue Home", "A Message from the President",
 			"Admission and Orientation", "Tuition and Fees", "The Schools and Academic Units",
 			"Programs, Minors and Certificates", "Academic and University Policies", "Undergraduate Education",
 			"Graduate and Professional Education", "The Graduate School" };
 
-	private static DefaultMutableTreeNode _sectionNamesTree;
+	// the JTree root for the sectionName tree.
+	private static DefaultMutableTreeNode _sectionNamesTree; 
 
-	private static ArrayList<Integer> _tableColNum;
+	// the column number for each table
+	private static ArrayList<Integer> _tableColNum; 
 
-	private static ArrayList<Integer> _tableRowNum;
+	// the row number for each table
+	private static ArrayList<Integer> _tableRowNum; 
 
-	private static ArrayList<ArrayList<Double>> _tableColWidth;
+	// the average character length for each column
+	private static ArrayList<ArrayList<Double>> _tableColWidth; 
 
-	private static ArrayList<Map.Entry<String, Integer>> _defaultSectionColNums;
+	// By default, 1 column for sections that contain tables, and 2 columns for other sections.
+	private static ArrayList<Map.Entry<String, Integer>> _defaultSectionColNums; 
 
 	private static ArrayList<Map.Entry<String, Integer>> _customizedSectionColNums;
 	
 	private static HashSet<Character> _non_ascii_charset;
 
-	public void preProcess(String inputFile, String processedFile) {
+	public void preProcess(String inputFile, String processedFile, String courseXlsFile) {
 		_inputFile = inputFile;
+		_courseXlsFile = courseXlsFile;
 		_processedFile = processedFile;
 		_tableColNum = new ArrayList<Integer>();
 		_tableRowNum = new ArrayList<Integer>();
@@ -99,8 +100,7 @@ public class PreProcess {
 				}
 				line = line.replaceAll("<br></h", "</h");
 				if (line.contains("<h1 class=\"Page\">")) {
-					// promote some h1 to be chapter (h0). and add all
-					// sectionNames into a tree.
+					// promote some h1 to be chapter (h0). and add all sectionNames into a tree.
 					curSectionName = line.replace("<h1 class=\"Page\">", "");
 					boolean isChapter = isChapter(line);
 					line = isChapter ? line.replaceAll("h1", "h0") : line;
@@ -123,8 +123,7 @@ public class PreProcess {
 					_defaultSectionColNums.add(new AbstractMap.SimpleEntry<String, Integer>(curSectionName, 2));
 				}
 
-				// By default, sections with tables should be shown in one
-				// column.
+				// By default, sections with tables is shown in one column.
 				if (line.contains("<tbody>")) {
 					for (Map.Entry<String, Integer> entr : _defaultSectionColNums) {
 						if (entr.getKey().equals(curSectionName)) {
@@ -133,9 +132,13 @@ public class PreProcess {
 						}
 					}
 				}
+				
+				if (line.contains("</html>")) {
+					CourseXlsParser.ParseToHTMLWriter(_courseXlsFile,_bufferedWriter);
+				}
 
-				if (line.contains("class=\"Course\"") || line.contains("Return to")) { // should
-																						// ignore
+				//should ignore those lines.
+				if (line.contains("class=\"Course\"") || line.contains("Return to")) {
 					while (!line.contains("</")) {
 						line = _bufferedReader.readLine();
 					}
@@ -373,13 +376,12 @@ public class PreProcess {
 	}
 
 	public int getSpan(String line, String str) {
-		int span = 1;
 		if (line.contains(str)) {
-			int index = line.indexOf(str) + str.length() + 2; // 2 = length of
-																// "=\""
-			span = Integer.parseInt(line.substring(index, index + 1));
+			// 2 = length of "=\""
+			int index = line.indexOf(str) + str.length() + 2;
+			return Integer.parseInt(line.substring(index, index + 1));
 		}
-		return span;
+		return 1;
 	}
 
 	public int getCurColWidth(String line) {
@@ -399,7 +401,7 @@ public class PreProcess {
 				if (line.contains("</td>")) {
 					break;
 				}
-				width++;
+				width++; // add the extra space.
 				line = _bufferedReader.readLine();
 			}
 		} catch (IOException e) {
