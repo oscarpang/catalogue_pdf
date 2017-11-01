@@ -2,7 +2,7 @@
 
 public class Course implements Comparable<Course>{
 	private static String CONCURRENT_ENROLLMENT_PREFIX =  "Concurrent enrollment";
-	private static String LATEX_SEPERATOR = " $|$ ";
+	private static String LATEX_SEPERATOR = " | ";
 	
 	private String course_type_;
 	private String prefix_;

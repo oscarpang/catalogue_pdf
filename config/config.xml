@@ -488,6 +488,8 @@
   </elements>
   
   <chars>
+    <char num='124' name='Pipe' convertTo='$|$' />
+    <char num='35' name='NumberSign' convertTo='\#' />
     <char num='913' name='Alpha' convertTo='$A$' />
     <char num='914' name='Beta' convertTo='$B$' />
     <char num='915' name='Gamma' convertTo='$\Gamma$' />

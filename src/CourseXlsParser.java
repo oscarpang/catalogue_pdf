@@ -113,8 +113,8 @@ public class CourseXlsParser {
 				writer.write("<h2>" + c.GetCourseType() +"</h2>\n");
 				course_type = c.GetCourseType();
 			}
-			writer.write("<h4>" + c.GetTitle()+ "</h4>\n");
-			writer.write(c.GetParagraph() + "\n\n");
+			writer.write("<h4>" + c.GetTitle().replace("&", "&amp;").replace("|", "&#124;") + "</h4>\n");
+			writer.write(c.GetParagraph().replace("&", "&amp;").replace("#", "&#35;").replace("|", "&#124;") + "\n\n");
 		}
         writer.flush();
 	}
