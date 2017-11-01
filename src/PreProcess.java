@@ -133,7 +133,7 @@ public class PreProcess {
 					}
 				}
 				
-				if (line.contains("</html>")) {
+				if (line.contains("</body")) {
 					CourseXlsParser.ParseToHTMLWriter(_courseXlsFile,_bufferedWriter);
 				}
 
