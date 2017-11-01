@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -25,7 +26,7 @@ public class PreProcess {
 	private static BufferedWriter _bufferedWriter = null;
 
 	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>", "<p></p>",
-			"<p> </p>", "<h4> </h4>", "<h3> </h3>", "<h2> </h2>", "<br>", "", "	", "<p><br></p>" }; // �
+			"<p> </p>", "<h4> </h4>", "<h3> </h3>", "<h2> </h2>", "<br>", "", "	", "<p><br></p>" }; // �
 																										// is
 																										// the
 																										// encoding
@@ -51,6 +52,8 @@ public class PreProcess {
 	private static ArrayList<Map.Entry<String, Integer>> _defaultSectionColNums;
 
 	private static ArrayList<Map.Entry<String, Integer>> _customizedSectionColNums;
+	
+	private static HashSet<Character> _non_ascii_charset;
 
 	public void preProcess(String inputFile, String processedFile) {
 		_inputFile = inputFile;
@@ -60,6 +63,8 @@ public class PreProcess {
 		_tableColWidth = new ArrayList<ArrayList<Double>>();
 		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
 		_defaultSectionColNums = new ArrayList<Map.Entry<String, Integer>>();
+		
+		_non_ascii_charset = new HashSet<>();
 
 		firstRoundPreProcessing();
 		secondRoundPreProcessing();
@@ -87,6 +92,11 @@ public class PreProcess {
 		String curSectionName = null;
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
+				for(char c : line.toCharArray()) {
+					if((int) c >= 128) {
+						_non_ascii_charset.add(c);
+					}
+				}
 				line = line.replaceAll("<br></h", "</h");
 				if (line.contains("<h1 class=\"Page\">")) {
 					// promote some h1 to be chapter (h0). and add all
