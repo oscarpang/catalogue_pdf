@@ -93,11 +93,6 @@ public class PreProcess {
 		String curSectionName = null;
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
-				for(char c : line.toCharArray()) {
-					if((int) c >= 128) {
-						_non_ascii_charset.add(c);
-					}
-				}
 				line = line.replaceAll("<br></h", "</h");
 				if (line.contains("<h1 class=\"Page\">")) {
 					// promote some h1 to be chapter (h0). and add all sectionNames into a tree.
@@ -183,6 +178,11 @@ public class PreProcess {
 
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
+				for(char c : line.toCharArray()) {
+					if((int) c >= 128) {
+						_non_ascii_charset.add(c);
+					}
+				}
 				if (line.contains("<tbody>")) {
 					inTable = true;
 				} else if (line.contains("</tbody>")) {
