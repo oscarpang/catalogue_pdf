@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
-public class ConfigurationPanel extends JPanel {
+public class ConfigurationPanel extends JTabbedPane {
 	/**
 	 * 
 	 */
@@ -21,21 +22,18 @@ public class ConfigurationPanel extends JPanel {
 	JPanel _char_config_panel;
 	JTable _element_table;
 	JTable _char_config_table;
+	JPanel _main_panel;
 	
 	public ConfigurationPanel() throws FatalErrorException {
 		super();
 		_config = new Configuration();
-		
-		this.setLayout(new BorderLayout());
-		_main_pane = new JTabbedPane();
 		_command_config_panel = new JPanel();
 		_char_config_panel = new JPanel();
+		
 		PopulateCommandConfig();
 		PopulateCharConfig();
-		_main_pane.addTab("Html Element", _command_config_panel);
-		_main_pane.addTab("Char Num", _char_config_panel);
-		this.add(_main_pane, BorderLayout.CENTER);
-		
+//		this.addTab("Html Element", _command_config_panel);
+//		this.addTab("Char Num", _char_config_panel);
 	}
 	
 	private void PopulateCommandConfig() {
@@ -51,10 +49,20 @@ public class ConfigurationPanel extends JPanel {
 			row_idx++;
 		}
 		String[] column_names = {"Name", "Start", "End", "IgnoreContent", "IgnoreStyles"};
-		_element_table = new JTable(elements_info,  column_names);
+		_element_table = new JTable(elements_info,  column_names){
+		    public String getToolTipText( MouseEvent e )
+		    {
+		        int row = rowAtPoint( e.getPoint() );
+		        int column = columnAtPoint( e.getPoint() );
+
+		        Object value = getValueAt(row, column);
+		        return value == null ? null : value.toString();
+		    }
+		};
 		JScrollPane scrollPane = new JScrollPane(_element_table);
 		_element_table.setFillsViewportHeight(true);
-		_command_config_panel.add(scrollPane);
+		this.addTab("HTML Element", scrollPane);
+		//		_command_config_panel.add(scrollPane);
 	}
 	
 	private void PopulateCharConfig() {
@@ -70,7 +78,9 @@ public class ConfigurationPanel extends JPanel {
 		_element_table = new JTable(elements_info,  column_names);
 		JScrollPane scrollPane = new JScrollPane(_element_table);
 		_element_table.setFillsViewportHeight(true);
-		_char_config_panel.add(scrollPane);
+//		_char_config_panel.add(scrollPane);
+		this.addTab("Config", scrollPane);
+
 	}
 
 }
