@@ -29,12 +29,18 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	private static JFrame _sectionColChoiceFrame;
 	private static JButton _finishChooseColBtn, _setOneColBtn, _rmOneColBtn, _setDefaultColBtn;
+	private static JButton _charConfigBtn;
 	private static JScrollPane _sectionNameScrollPane, _oneColSectionPane;
 	private static JTree _sectionNamesTree;
 	private static JPanel _chooseBtnPanel;
 	private static PreProcess _preProcess;
 	private static JList<String> _oneColSectionList;
 	private static DefaultListModel<String> _oneColSectionListModel;
+	private static JPanel _southBtnsPanel;
+	private static ConfigurationPanel _configPanel;
+	
+	
+	private static JFrame _config_setting_frame;
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
@@ -89,9 +95,16 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		
 		_sectionColChoiceFrame.add(this, BorderLayout.CENTER);
 		
+		_southBtnsPanel = new JPanel();
+		_sectionColChoiceFrame.add(_southBtnsPanel, BorderLayout.SOUTH);
 		_finishChooseColBtn = new JButton("Done");
 		_finishChooseColBtn.addActionListener(this);
-		_sectionColChoiceFrame.add(_finishChooseColBtn, BorderLayout.SOUTH);
+		_southBtnsPanel.add(_finishChooseColBtn);
+//		_sectionColChoiceFrame.add(_finishChooseColBtn, BorderLayout.SOUTH);
+		
+		_charConfigBtn = new JButton("Char Config");
+		_charConfigBtn.addActionListener(this);
+		_southBtnsPanel.add(_charConfigBtn);
 	}
 	
 	@Override
@@ -106,6 +119,17 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			removeOneColSections();
 		} else if (e.getSource() == _setDefaultColBtn) {
 			_preProcess.resetCustomizedSectionColNums();
+		} else if (e.getSource() == _charConfigBtn) {
+			System.out.println("_charConfigBtn");
+			try {
+				_configPanel = new ConfigurationPanel();
+			} catch (FatalErrorException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			_config_setting_frame = new JFrame("Config Setting");
+			_config_setting_frame.add(_configPanel, BorderLayout.CENTER);
+			_config_setting_frame.setVisible(true);
 		}
 		
 		setOneColSectionListModel();

@@ -142,6 +142,14 @@ class Configuration {
 		}
 	}
 
+	public HashMap<String, String> get_charsName() {
+		return _charsName;
+	}
+
+	public void set_charsName(HashMap<String, String> _charsName) {
+		this._charsName = _charsName;
+	}
+
 	/**
 	 * Loads mapping between HTML elements and LaTeX commands.
 	 * 
@@ -535,6 +543,30 @@ class Configuration {
 	 */
 	public boolean getMakeCmdsFromCSS() {
 		return _makeCmdsFromCSS;
+	}
+
+	public HashMap<String, ElementConfigItem> get_elements() {
+		return _elements;
+	}
+
+	public void set_elements(HashMap<String, ElementConfigItem> _elements) {
+		this._elements = _elements;
+	}
+
+	public HashMap<String, String> get_chars() {
+		return _chars;
+	}
+
+	public void set_chars(HashMap<String, String> _chars) {
+		this._chars = _chars;
+	}
+
+	public HashMap<Integer, String> get_charsNum() {
+		return _charsNum;
+	}
+
+	public void set_charsNum(HashMap<Integer, String> _charsNum) {
+		this._charsNum = _charsNum;
 	}
 
 }

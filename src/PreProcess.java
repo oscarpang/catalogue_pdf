@@ -442,6 +442,10 @@ public class PreProcess {
 			}
 		}
 	}
+	
+	public HashSet<Character> getNonAsciiSet(){
+		return _non_ascii_charset;
+	}
 
 	public void resetCustomizedSectionColNums() {
 		_customizedSectionColNums = new ArrayList<Map.Entry<String, Integer>>();

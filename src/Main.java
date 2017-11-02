@@ -5,6 +5,7 @@
 import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.io.File;
+import java.util.HashSet;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -121,6 +122,7 @@ public class Main extends JPanel implements ActionListener{
 
 		_frame.setVisible(false);
 		_sectionColChoiceFrame.setVisible(true);
+		
 	}
 	
 	/**
