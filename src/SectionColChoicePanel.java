@@ -33,7 +33,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static PreProcess _preProcess;
 
 	private static JPanel _southBtnsPanel;
-	private static ConfigurationPanel _configPanel;
+//	private static ConfigurationPanel _configPanel;
 	private static JFrame _config_setting_frame;
 	private static JButton _charConfigBtn;
 
@@ -149,15 +149,15 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			_preProcess.resetCustomizedSectionParamsByColNums();
 		} else if (e.getSource() == _charConfigBtn) {
 			System.out.println("_charConfigBtn");
-			try {
-				_configPanel = new ConfigurationPanel();
-			} catch (FatalErrorException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			_config_setting_frame = new JFrame("Config Setting");
-			_config_setting_frame.add(_configPanel, BorderLayout.CENTER);
-			_config_setting_frame.setVisible(true);
+//			try {
+//				_configPanel = new ConfigurationPanel();
+//			} catch (FatalErrorException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			_config_setting_frame = new JFrame("Config Setting");
+//			_config_setting_frame.add(_configPanel, BorderLayout.CENTER);
+//			_config_setting_frame.setVisible(true);
 		}
 //		System.out.println("-----2-----------");
 		setSectionParamListModel();

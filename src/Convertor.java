@@ -60,8 +60,6 @@ class Convertor {
 	ArrayList<Map.Entry<String, int[]>> _section_params;
 	private boolean _is_multicol = false;
 	
-	private String _course_xls_file_path = "/Users/oscarpang/Documents/workspace/htmltolatex/data/courses-list-2017-09-07_21.40.11.xls";
-
 	/**
 	 * Document's bibliography. <br />
 	 * key : bibitem name <br />
@@ -915,30 +913,47 @@ class Convertor {
 		if(_is_multicol) {
 			_writer.write("\\end{multicols}\n");
 		}
-		
-//		//	Add course infomations
-//		CourseXlsParser.ParseToWriter(Main.getCourseXlsFile(), _writer, false);
 		commonElementEnd(element, es);
 	}
 	
 	public void sectionStart(ElementStart element) throws IOException, NoItemException {
-		if(_is_multicol) {
-			_writer.write("\\end{multicols}\n");
-			_is_multicol = false;
+		endMultiCol();
+		String customized_header = String.format("h%d", _section_params.get(_next_section).getValue()[0]);
+		if(!element.getElementName().equals(customized_header)) {
+			System.out.println("Old: " + element.getElementName() + " replace: " + customized_header);
+			element.setElementName(customized_header);
+		} else {
+//			System.out.println("Old: " + element.getElementName() + " replace: " + customized_header);
+
 		}
 		commonElementStart(element);
+		if(_next_section == 0) {
+			Integer next_section_col = _section_params.get(_next_section).getValue()[1];
+			beginMultiCol(next_section_col);
+		}
 	}
 	
 	public void sectionEnd(ElementEnd element, ElementStart es) throws IOException, NoItemException {
 		commonElementEnd(element, es);
 		if(_next_section != _section_params.size()) {
 			Integer next_section_col = _section_params.get(_next_section).getValue()[1];
-			if(next_section_col > 1) {
-				_writer.write("\\begin{multicols}{" + next_section_col.toString() + "}\n");
-				_is_multicol = true;
-			}
+			beginMultiCol(next_section_col);
 		}
 		_next_section++;
+	}
+	
+	private void beginMultiCol(Integer colnum) throws IOException{
+		if(colnum > 1) {
+			_writer.write("\\begin{multicols}{" + colnum.toString() + "}\n");
+			_is_multicol = true;
+		}
+	}
+	
+	private void endMultiCol() throws IOException{
+		if(_is_multicol) {
+			_writer.write("\\end{multicols}\n");
+			_is_multicol = false;
+		}
 	}
 
 }

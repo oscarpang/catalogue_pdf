@@ -87,7 +87,7 @@ public class CourseXlsParser {
 			}
 			writer.write("\\paragraph{" + c.GetTitle().replace("&", "\\&") + "}\n");
 			String p = c.GetParagraph().replace("&", "\\&");
-			p = p.replace("#", "\\#");
+			p = p.replace("#", "\\#").replace("|", "$|$");
 			writer.write(p + "\n\n");
 		}
 		writer.write("\\end{multicols*}\n");

@@ -59,6 +59,9 @@ abstract class MyElement {
      * @return element's name
      */
     String getElementName() { return _element; }
+    void setElementName(String newName) {
+    	_element = newName;
+    }
 }
 
 
