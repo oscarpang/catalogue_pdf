@@ -33,9 +33,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static PreProcess _preProcess;
 
 	private static JPanel _southBtnsPanel;
-//	private static ConfigurationPanel _configPanel;
+	private static ConfigurationPanel _configPanel;
 	private static JFrame _config_setting_frame;
-	private static JButton _charConfigBtn;
 
 	
 	private static JList<String> _sectionParamList;
@@ -110,13 +109,19 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		
 		this.add(_chooseBtnPanel);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
-		
-		_configPane = new JScrollPane();
-//		TitledBorder oneColSectionTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
-//		oneColSectionTitledBorder.setTitleFont(_titleFont);
-//		_oneColSectionPane.setViewportBorder(oneColSectionTitledBorder);
-		this.add(_configPane);
-		
+		try {
+			_configPanel = new ConfigurationPanel();
+		} catch (FatalErrorException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.add(_configPanel);
+//		_configPane = new JScrollPane();
+////		TitledBorder oneColSectionTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
+////		oneColSectionTitledBorder.setTitleFont(_titleFont);
+////		_oneColSectionPane.setViewportBorder(oneColSectionTitledBorder);
+//		this.add(_configPane);
+//		
 		_sectionColChoiceFrame.add(this, BorderLayout.CENTER);
 		
 		_southBtnsPanel = new JPanel();
@@ -125,10 +130,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_finishChooseColBtn.addActionListener(this);
 		_southBtnsPanel.add(_finishChooseColBtn);
 //		_sectionColChoiceFrame.add(_finishChooseColBtn, BorderLayout.SOUTH);
-		
-		_charConfigBtn = new JButton("Char Config");
-		_charConfigBtn.addActionListener(this);
-		_southBtnsPanel.add(_charConfigBtn);
 	}
 	
 	@Override
@@ -147,18 +148,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			changeColNum(selectColNum);
 		} else if (e.getSource() == _setDefaultColBtn) {
 			_preProcess.resetCustomizedSectionParamsByColNums();
-		} else if (e.getSource() == _charConfigBtn) {
-			System.out.println("_charConfigBtn");
-//			try {
-//				_configPanel = new ConfigurationPanel();
-//			} catch (FatalErrorException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			_config_setting_frame = new JFrame("Config Setting");
-//			_config_setting_frame.add(_configPanel, BorderLayout.CENTER);
-//			_config_setting_frame.setVisible(true);
 		}
+
 //		System.out.println("-----2-----------");
 		setSectionParamListModel();
 //		System.out.println("-----3----------");
