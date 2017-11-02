@@ -20,7 +20,7 @@ public class Main extends JPanel implements ActionListener{
 	/** Output LaTeX file. */
 	private static String _outputFile = "output/Catalogue_17_18_.tex";
 	/** Configuration file. */
-	private static String _configFile = "config/config.xml";
+	private static String _configFile = "./output_config.xml";
 	/** File with CSS. */
 	private static String _courseXlsFile = "";
 	
@@ -106,7 +106,6 @@ public class Main extends JPanel implements ActionListener{
 	public void startPreProcess() {
 		_preProcess= new PreProcess();
 		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
-		
 		
 //		_frame.pack();
 //		this.revalidate();
