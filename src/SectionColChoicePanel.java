@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -13,34 +12,38 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.border.TitledBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
 	private static JFrame _sectionColChoiceFrame;
-	private static JButton _finishChooseColBtn, _setOneColBtn, _rmOneColBtn, _setDefaultColBtn;
-	private static JButton _charConfigBtn;
-	private static JScrollPane _sectionNameScrollPane, _oneColSectionPane;
-	private static JTree _sectionNamesTree;
+
+	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
+						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn;
+	private static JScrollPane _sectionParamPane, _configPane;
 	private static JPanel _chooseBtnPanel;
 	private static PreProcess _preProcess;
-	private static JList<String> _oneColSectionList;
-	private static DefaultListModel<String> _oneColSectionListModel;
+
 	private static JPanel _southBtnsPanel;
 	private static ConfigurationPanel _configPanel;
-	
-	
 	private static JFrame _config_setting_frame;
+	private static JButton _charConfigBtn;
+
+	
+	private static JList<String> _sectionParamList;
+	private static JComboBox<Integer> _sectionColChoiceCombobox;
+	private static DefaultListModel<String> _sectionParamListModel;
+	
+	private static Integer[] _sectionColChoice = { 1, 2, 3};
+	private static String _listDisplaySpacing = "                    ";
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
@@ -53,45 +56,66 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_preProcess = preProcess;
 		_sectionColChoiceFrame = sectionColChoiceFrame;
 		
-		_sectionNamesTree = new JTree(_preProcess.getSectionNamesTree());
-		_sectionNameScrollPane = new JScrollPane(_sectionNamesTree);
-		TitledBorder sectionNameTitledBorder = new TitledBorder("All Sections in USC Catalogue");
-		sectionNameTitledBorder.setTitleFont(_titleFont);
-		_sectionNameScrollPane.setViewportBorder(sectionNameTitledBorder);
-		this.add(_sectionNameScrollPane);
+		_sectionParamListModel = new DefaultListModel<String>();
+		setSectionParamListModel();
+		_sectionParamList = new JList<String>(_sectionParamListModel);
+		_sectionParamPane = new JScrollPane(_sectionParamList);
+		TitledBorder sectionParamTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
+		sectionParamTitledBorder.setTitleFont(_titleFont);
+		_sectionParamPane.setViewportBorder(sectionParamTitledBorder);
+		this.add(_sectionParamPane);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		
 		_chooseBtnPanel = new JPanel();
 		_chooseBtnPanel.setLayout(new BoxLayout(_chooseBtnPanel, BoxLayout.Y_AXIS));
 		
-		_setOneColBtn = new JButton(">>");
-		_setOneColBtn.addActionListener(this);
-		_setOneColBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-		_rmOneColBtn = new JButton("<<");
-		_rmOneColBtn.addActionListener(this);
-		_rmOneColBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-		_setDefaultColBtn = new JButton("Set by default.");
+		_upgradeLevelBtn = new JButton("Upgrade title Level");
+		_upgradeLevelBtn.addActionListener(this);
+		_upgradeLevelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		_downgradeLevelBtn = new JButton("Downgrade title Level");
+		_downgradeLevelBtn.addActionListener(this);
+		_downgradeLevelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		_setDefaultLevelBtn = new JButton("Reset to default title levels.");
+		_setDefaultLevelBtn.addActionListener(this);
+		_setDefaultLevelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		_sectionColChoiceCombobox = new JComboBox<Integer>(_sectionColChoice);
+		_sectionColChoiceCombobox.setSelectedIndex(1);
+		_sectionColChoiceCombobox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		Dimension preferredSize = _sectionColChoiceCombobox.getPreferredSize();
+        preferredSize.height = 25;
+        _sectionColChoiceCombobox.setMaximumSize(preferredSize);
+		
+		_changeColNumBtn = new JButton("Change column number.");
+		_changeColNumBtn.addActionListener(this);
+		_changeColNumBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		_setDefaultColBtn = new JButton("Reset to default column numbers.");
 		_setDefaultColBtn.addActionListener(this);
 		_setDefaultColBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		_chooseBtnPanel.add(_setOneColBtn);
+		_chooseBtnPanel.add(_upgradeLevelBtn);
 		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_chooseBtnPanel.add(_rmOneColBtn);
+		_chooseBtnPanel.add(_downgradeLevelBtn);
+		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_chooseBtnPanel.add(_setDefaultLevelBtn);
+		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+		_chooseBtnPanel.add(_sectionColChoiceCombobox);
+		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_chooseBtnPanel.add(_changeColNumBtn);
 		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_chooseBtnPanel.add(_setDefaultColBtn);
-		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+//		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		
 		this.add(_chooseBtnPanel);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		
-		_oneColSectionListModel = new DefaultListModel<String>();
-		setOneColSectionListModel();
-		_oneColSectionList = new JList<String>(_oneColSectionListModel);
-		_oneColSectionPane = new JScrollPane(_oneColSectionList);
-		TitledBorder oneColSectionTitledBorder = new TitledBorder("Sections that will be shown as one column.");
-		oneColSectionTitledBorder.setTitleFont(_titleFont);
-		_oneColSectionPane.setViewportBorder(oneColSectionTitledBorder);
-		this.add(_oneColSectionPane);
+		_configPane = new JScrollPane();
+//		TitledBorder oneColSectionTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
+//		oneColSectionTitledBorder.setTitleFont(_titleFont);
+//		_oneColSectionPane.setViewportBorder(oneColSectionTitledBorder);
+		this.add(_configPane);
 		
 		_sectionColChoiceFrame.add(this, BorderLayout.CENTER);
 		
@@ -112,13 +136,17 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		if (e.getSource() == _finishChooseColBtn) {
 			startConversion();
 			JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Where do you want to save the file?");
-		} else if (e.getSource() == _setOneColBtn) {
-			addOneColSections();
-			_sectionNamesTree.clearSelection();
-		} else if (e.getSource() == _rmOneColBtn) {
-			removeOneColSections();
+		} else if (e.getSource() == _upgradeLevelBtn) {
+			addSectionLevel(-1);
+		} else if (e.getSource() == _downgradeLevelBtn) {
+			addSectionLevel(1);
+		} else if (e.getSource() == _setDefaultLevelBtn) {
+			_preProcess.resetCustomizedSectionParamsByLevels();
+		} else if (e.getSource() == _changeColNumBtn) {
+			int selectColNum = (int)_sectionColChoiceCombobox.getSelectedItem();
+			changeColNum(selectColNum);
 		} else if (e.getSource() == _setDefaultColBtn) {
-			_preProcess.resetCustomizedSectionColNums();
+			_preProcess.resetCustomizedSectionParamsByColNums();
 		} else if (e.getSource() == _charConfigBtn) {
 			System.out.println("_charConfigBtn");
 			try {
@@ -131,40 +159,41 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			_config_setting_frame.add(_configPanel, BorderLayout.CENTER);
 			_config_setting_frame.setVisible(true);
 		}
-		
-		setOneColSectionListModel();
-		
+//		System.out.println("-----2-----------");
+		setSectionParamListModel();
+//		System.out.println("-----3----------");
 		this.revalidate();
 		this.repaint();
 	}
 	
-	public void setOneColSectionListModel() {
-		_oneColSectionListModel.clear();
-		for (Map.Entry<String, Integer> entr : _preProcess.getCustomizedSectionColNums()) {
-			if (entr.getValue() == 1) {
-				_oneColSectionListModel.addElement(entr.getKey());
+	public void setSectionParamListModel() {
+		_sectionParamListModel.clear();
+//		System.out.println(_preProcess.getCustomizedSectionParams().size());
+//		int index = 0;
+		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
+//			index ++;
+//			System.out.println(index);
+			String indexing = "";
+			for (int i = 0; i < entr.getValue()[0]; i++) {
+				indexing += _listDisplaySpacing;
 			}
+			_sectionParamListModel.addElement(indexing + entr.getKey() + " : " + entr.getValue()[1]);
 		}
 	}
 	
-	public void addOneColSections() {
-		TreePath[] treePath = _sectionNamesTree.getSelectionPaths();
-		if (treePath == null) {
-			return;
-		}
-		for (TreePath p : treePath) {
-			String sectionName = ((DefaultMutableTreeNode)p.getLastPathComponent()).getUserObject().toString();
-			_preProcess.setCustomizedSectionColNums(sectionName, 1);
+	public void addSectionLevel(int offset) {
+		int[] selectedIndices = _sectionParamList.getSelectedIndices();
+		for (int index : selectedIndices) {
+			System.out.println("--addSectionLevel---" + index + "--" + offset);
+			_preProcess.addCustomizedSectionLevels(index, offset);
 		}
 	}
 	
-	public void removeOneColSections() {
-		List<String> selectionList = _oneColSectionList.getSelectedValuesList();
-		if (selectionList.isEmpty()) {
-			return;
-		}
-		for (String str : selectionList) {
-			_preProcess.setCustomizedSectionColNums(str, 2);
+	public void changeColNum(int colNum) {
+		int[] selectedIndices = _sectionParamList.getSelectedIndices();
+		for (int index : selectedIndices) {
+			System.out.println("--changeColNum---" + index + "--" + colNum);
+			_preProcess.setCustomizedSectionColNums(index, colNum);
 		}
 	}
 

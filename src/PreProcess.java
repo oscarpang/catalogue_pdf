@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-
 public class PreProcess {
 
 	/** Input HTML file. */
@@ -28,16 +26,15 @@ public class PreProcess {
 	private static BufferedWriter _bufferedWriter = null;
 
 	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
-	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>", "<p></p>",
-			"<p> </p>", "<h4> </h4>", "<h3> </h3>", "<h2> </h2>", "<br>", "", "	", "<p><br></p>" }; 
+	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>",
+			"<h1></h1>", "<h2></h2>", "<h3></h3>", "<h4></h4>", "<h5></h5>", "<h6></h6>",
+			"<h1> </h1>", "<h2> </h2>", "<h3> </h3>", "<h4> </h4>", "<h5> </h5>", "<h6> </h6>",
+			"<p></p>", "<p> </p>", "<br>", "", "	", "<p><br></p>"}; 
 
 	private static String[] _chapterNames = { "Catalogue Home", "A Message from the President",
 			"Admission and Orientation", "Tuition and Fees", "The Schools and Academic Units",
-			"Programs, Minors and Certificates", "Academic and University Policies", "Undergraduate Education",
-			"Graduate and Professional Education", "The Graduate School" };
-
-	// the JTree root for the sectionName tree.
-	private static DefaultMutableTreeNode _sectionNamesTree; 
+			"Programs, Minors and Certificates", "Academic and University Policies", 
+			"Undergraduate Education", "Graduate and Professional Education", "The Graduate School" };
 
 	// the column number for each table
 	private static ArrayList<Integer> _tableColNum; 
@@ -49,9 +46,9 @@ public class PreProcess {
 	private static ArrayList<ArrayList<Double>> _tableColWidth; 
 
 	// By default, 1 column for sections that contain tables, and 2 columns for other sections.
-	private static ArrayList<Map.Entry<String, Integer>> _defaultSectionColNums; 
+	private static ArrayList<Map.Entry<String, int[]>> _defaultSectionParams; 
 
-	private static ArrayList<Map.Entry<String, Integer>> _customizedSectionColNums;
+	private static ArrayList<Map.Entry<String, int[]>> _customizedSectionParams;
 	
 	private static HashSet<Character> _non_ascii_charset;
 
@@ -62,8 +59,8 @@ public class PreProcess {
 		_tableColNum = new ArrayList<Integer>();
 		_tableRowNum = new ArrayList<Integer>();
 		_tableColWidth = new ArrayList<ArrayList<Double>>();
-		_sectionNamesTree = new DefaultMutableTreeNode("USC_Catalogue_Chapters_And_Sections: ");
-		_defaultSectionColNums = new ArrayList<Map.Entry<String, Integer>>();
+		_defaultSectionParams = new ArrayList<Map.Entry<String, int[]>>();
+		_customizedSectionParams = new ArrayList<Map.Entry<String, int[]>>();
 		
 		_non_ascii_charset = new HashSet<>();
 
@@ -89,45 +86,48 @@ public class PreProcess {
 		_bufferedWriter = new BufferedWriter(_fileWriter);
 
 		String line = null;
-		DefaultMutableTreeNode currentChapterNode = new DefaultMutableTreeNode();
 		String curSectionName = null;
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
+				if (shouldIgnore(line)) continue;
 				line = line.replaceAll("<br></h", "</h");
-				if (line.contains("<h1 class=\"Page\">")) {
-					// promote some h1 to be chapter (h0). and add all sectionNames into a tree.
-					curSectionName = line.replace("<h1 class=\"Page\">", "");
-					boolean isChapter = isChapter(line);
-					line = isChapter ? line.replaceAll("h1", "h0") : line;
+				if (line.contains("<h") && !line.contains("<html>") && !line.contains("<head>")) {
+					curSectionName = line.substring(line.indexOf(">")+1);
+					// promote some h1 to be chapter (h0).
+					line = isChapter(line) ? line.replaceAll("h1", "h0") : line;
+					int curSectionLevel = Integer.parseInt("" + line.charAt(line.indexOf("<h") + 2));
+					
 					while (!line.contains("</")) {
 						_bufferedWriter.write(line);
 						_bufferedWriter.newLine();
 						line = _bufferedReader.readLine();
 						curSectionName += " " + line;
 					}
-					curSectionName = curSectionName.contains("</")
-							? curSectionName.substring(0, curSectionName.indexOf("</")) : curSectionName;
+					curSectionName = curSectionName.contains("</") ?
+							 curSectionName.substring(0, curSectionName.indexOf("</")) : curSectionName;
+							
+					curSectionName = curSectionName.contains(">") ?
+							 curSectionName.substring(curSectionName.indexOf(">") + 1) : curSectionName;
 
-					if (isChapter) {
-						currentChapterNode = new DefaultMutableTreeNode(curSectionName);
-						_sectionNamesTree.add(currentChapterNode);
-					} else {
-						currentChapterNode.add(new DefaultMutableTreeNode(curSectionName));
-					}
-
-					_defaultSectionColNums.add(new AbstractMap.SimpleEntry<String, Integer>(curSectionName, 2));
+					int[] curSectionParam = {curSectionLevel,2};
+					_defaultSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam));
+					int[] curSectionParam_copy = {curSectionLevel,2};
+					_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam_copy));
 				}
 
 				// By default, sections with tables is shown in one column.
 				if (line.contains("<tbody>")) {
-					for (Map.Entry<String, Integer> entr : _defaultSectionColNums) {
-						if (entr.getKey().equals(curSectionName)) {
-							entr.setValue(1);
-							break;
-						}
-					}
+					Map.Entry<String, int[]> entr = _defaultSectionParams.get(_defaultSectionParams.size() - 1);
+					int[] curParam = entr.getValue();
+					curParam[1] = 1;
+					entr.setValue(curParam);
+					entr = _customizedSectionParams.get(_defaultSectionParams.size() - 1);
+					int[] curParam_copy = entr.getValue();
+					curParam_copy[1] = 1;
+					entr.setValue(curParam_copy);
 				}
 				
+				//Add course of instructions to the same html
 				if (line.contains("</body")) {
 					CourseXlsParser.ParseToHTMLWriter(_courseXlsFile,_bufferedWriter);
 				}
@@ -147,8 +147,11 @@ public class PreProcess {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		resetCustomizedSectionColNums();
-		System.out.println("_defaultSectionColNums : " + _defaultSectionColNums);
+//		System.out.println("-----_default Section Params -----");
+//		for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
+//			System.out.println(entr.getValue()[0] + " " + entr.getValue()[1] + " " + entr.getKey());
+//		}
+//		System.out.println("----- end -----");
 		System.out.println("Finish first round processing.");
 	}
 
@@ -214,8 +217,8 @@ public class PreProcess {
 				numStrong += countOccurence(line, "<strong>") - countOccurence(line, "</strong>");
 				numEm += countOccurence(line, "<em>") - countOccurence(line, "</em>");
 				numUnderline += countOccurence(line, "<u>") - countOccurence(line, "</u>");
-				numHeader += countOccurence(line, "<h") - countOccurence(line, "<html>")
-						- (countOccurence(line, "</h") - countOccurence(line, "</html>"));
+				numHeader += countOccurence(line, "<h") - countOccurence(line, "<html>") - countOccurence(line,"<head>")
+						- (countOccurence(line, "</h") - countOccurence(line, "</html>") - countOccurence(line,"</head>"));
 
 				if (line.contains("<br>")) {
 					// System.out.println(numStrong + "**" + numEm + "**" +
@@ -409,9 +412,69 @@ public class PreProcess {
 		}
 		return width;
 	}
+	
+	public void setCustomizedSectionColNums(int index, int value) {
+		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
+		int[] curParam = entr.getValue();
+		curParam[1] = value;
+		entr.setValue(curParam);
+		System.out.println("--setCustomizedSectionColNums--- " + entr.getKey() 
+						+ " " + entr.getValue()[1]);
+	}
+	
+	public void addCustomizedSectionLevels(int index, int offset) {
+		//Note: this function also upgrade/downgrade subsections.
+		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
+		int oldLevel = entr.getValue()[0];
+		for (int i = index; i < _customizedSectionParams.size(); i++) {
+			entr = _customizedSectionParams.get(i);
+			if (i == index || entr.getValue()[0] > oldLevel) {
+				int[] curParam = entr.getValue();
+				curParam[0] += offset;
+				curParam[0] = curParam[0] > 6 ? 6 : curParam[0];
+				curParam[0] = curParam[0] < 0 ? 0 : curParam[0];
+				entr.setValue(curParam);
+				System.out.println("--addCustomizedSectionLevels---" + entr.getKey() 
+								+ "--" + entr.getValue()[0]);
+			} else {
+				break;
+			}
+		}
+	}
 
-	public DefaultMutableTreeNode getSectionNamesTree() {
-		return _sectionNamesTree;
+//	public void resetCustomizedSectionParams() {
+//		_customizedSectionParams = new ArrayList<Map.Entry<String, int[]>>();
+//		for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
+//			_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(entr.getKey(), entr.getValue()));
+//		}
+//	}
+	
+	public void resetCustomizedSectionParamsByLevels() {
+		for (int i = 0; i < _defaultSectionParams.size(); i++) {
+			Map.Entry<String, int[]> defaultEntr = _defaultSectionParams.get(i);
+			Map.Entry<String, int[]> customEntr = _customizedSectionParams.get(i);
+			int[] param = customEntr.getValue();
+			if (param[0] != defaultEntr.getValue()[0]) {
+				System.out.println(defaultEntr.getKey() + "--" + defaultEntr.getValue()[0] 
+						+ "--" + customEntr.getValue()[0] + "--");
+			}
+			param[0] = defaultEntr.getValue()[0];
+			customEntr.setValue(param);
+		}
+	}
+	
+	public void resetCustomizedSectionParamsByColNums() {
+		for (int i = 0; i < _defaultSectionParams.size(); i++) {
+			Map.Entry<String, int[]> defaultEntr = _defaultSectionParams.get(i);
+			Map.Entry<String, int[]> customEntr = _customizedSectionParams.get(i);
+			int[] param = customEntr.getValue();
+			if (param[1] != defaultEntr.getValue()[1]) {
+				System.out.println(defaultEntr.getKey() + "--" + defaultEntr.getValue()[1] 
+						+ "--" + customEntr.getValue()[1] + "--");
+			}
+			param[1] = defaultEntr.getValue()[1];
+			customEntr.setValue(param);
+		}
 	}
 
 	public ArrayList<Integer> getTableColNum() {
@@ -426,31 +489,26 @@ public class PreProcess {
 		return _tableColWidth;
 	}
 
-	public ArrayList<Map.Entry<String, Integer>> getDefaultSectionColNums() {
-		return _defaultSectionColNums;
+	public ArrayList<Map.Entry<String, int[]>> getDefaultSectionParams() {
+		return _defaultSectionParams;
 	}
 
-	public ArrayList<Map.Entry<String, Integer>> getCustomizedSectionColNums() {
-		return _customizedSectionColNums;
+	public ArrayList<Map.Entry<String, int[]>> getCustomizedSectionParams() {
+		return _customizedSectionParams;
 	}
-
-	public void setCustomizedSectionColNums(String key, int value) {
-		for (Map.Entry<String, Integer> entr : _customizedSectionColNums) {
-			if (entr.getKey().equals(key)) {
-				entr.setValue(value);
-				break;
-			}
+	
+	public ArrayList<Map.Entry<Integer, Integer>> getCustomizedSectionParamsIntArray() {
+		ArrayList<Map.Entry<Integer, Integer>> customSectionParamsIntArray = 
+											new ArrayList<Map.Entry<Integer, Integer>>();
+		for (Map.Entry<String, int[]> entr : _customizedSectionParams) {
+			customSectionParamsIntArray.add(new AbstractMap.SimpleEntry<Integer,Integer>
+											(entr.getValue()[0], entr.getValue()[1]));
 		}
+		System.out.println(customSectionParamsIntArray);
+		return customSectionParamsIntArray;
 	}
 	
 	public HashSet<Character> getNonAsciiSet(){
 		return _non_ascii_charset;
-	}
-
-	public void resetCustomizedSectionColNums() {
-		_customizedSectionColNums = new ArrayList<Map.Entry<String, Integer>>();
-		for (Map.Entry<String, Integer> entr : _defaultSectionColNums) {
-			_customizedSectionColNums.add(new AbstractMap.SimpleEntry<String, Integer>(entr.getKey(), entr.getValue()));
-		}
 	}
 }

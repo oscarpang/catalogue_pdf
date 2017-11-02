@@ -57,7 +57,7 @@ class Convertor {
 	private UnionFind _uf;
 	
 	private int _next_section = 0;
-	ArrayList<Map.Entry<String, Integer>> _section_colnums;
+	ArrayList<Map.Entry<String, int[]>> _section_params;
 	private boolean _is_multicol = false;
 	
 	private String _course_xls_file_path = "/Users/oscarpang/Documents/workspace/htmltolatex/data/courses-list-2017-09-07_21.40.11.xls";
@@ -83,7 +83,7 @@ class Convertor {
 		_table_colnum = preprocess_info.getTableColNum();
 		_table_rownum = preprocess_info.getTableRowNum();
 		_table_column_width = preprocess_info.getTableColWidth();
-		_section_colnums = preprocess_info.getCustomizedSectionColNums();
+		_section_params = preprocess_info.getCustomizedSectionParams();
 
 		try {
 			_outputFile = outputFile;
@@ -931,8 +931,8 @@ class Convertor {
 	
 	public void sectionEnd(ElementEnd element, ElementStart es) throws IOException, NoItemException {
 		commonElementEnd(element, es);
-		if(_next_section != _section_colnums.size()) {
-			Integer next_section_col = _section_colnums.get(_next_section).getValue();
+		if(_next_section != _section_params.size()) {
+			Integer next_section_col = _section_params.get(_next_section).getValue()[1];
 			if(next_section_col > 1) {
 				_writer.write("\\begin{multicols}{" + next_section_col.toString() + "}\n");
 				_is_multicol = true;
