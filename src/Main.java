@@ -21,7 +21,7 @@ public class Main extends JPanel implements ActionListener{
 	/** Output LaTeX file. */
 	private static String _outputFile = "output/Catalogue_17_18_.tex";
 	/** Configuration file. */
-	private static String _configFile = "config/config.xml";
+	private static String _configFile = "";
 	/** File with CSS. */
 	private static String _courseXlsFile = "";
 	
@@ -29,10 +29,9 @@ public class Main extends JPanel implements ActionListener{
 	private static Main _mainPanel;
 	private static SectionColChoicePanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
-	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _startBtn;
-	private static JPanel _btnPanel, _logPanel;
-	private static JTextArea _logTextArea;
-	private static JScrollPane _logScrollPane;
+	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _startBtn;
+	private static JLabel _htmlLabel, _xlsLabel, _configLabel;
+	private static JPanel _btnPanel, _labelPanel;
 	private static PreProcess _preProcess;
 	
 	/**
@@ -43,20 +42,15 @@ public class Main extends JPanel implements ActionListener{
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
-		String s = "The George Méliès Endowed Chair in Visual Effects:</em>\n" + 
-				"Michael Fink, MFA";
-		for(Character c: s.toCharArray()) {
-			System.out.println((int)c);
-		}
-		//		_frame = new JFrame("USC Catalogue Print to PDF");
-//		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-////		_frame.setBounds(50, 50, 1000, 1000);
-//		
-//		_mainPanel = new Main();
-//		_frame.add(_mainPanel);
-//		
-//		_frame.pack();
-//		_frame.setVisible(true);
+		_frame = new JFrame("USC Catalogue Print to PDF");
+		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		_frame.setBounds(50, 50, 1000, 1000);
+		
+		_mainPanel = new Main();
+		_frame.add(_mainPanel);
+		
+		_frame.pack();
+		_frame.setVisible(true);
 	}
 	
 	public Main() {
@@ -68,6 +62,8 @@ public class Main extends JPanel implements ActionListener{
 		_chooseHtmlBtn.addActionListener(this);
 		_chooseXlsBtn = new JButton("Choose the Xls Course file...");
 		_chooseXlsBtn.addActionListener(this);
+		_chooseConfigBtn = new JButton("Choose the Config XML file...");
+		_chooseConfigBtn.addActionListener(this);
 		_startBtn = new JButton("Start Conversion");
 		_startBtn.addActionListener(this);
 		_startBtn.setEnabled(false);
@@ -75,15 +71,26 @@ public class Main extends JPanel implements ActionListener{
 		_btnPanel = new JPanel();
 		_btnPanel.add(_chooseHtmlBtn);
 		_btnPanel.add(_chooseXlsBtn);
+		_btnPanel.add(_chooseConfigBtn);
 		_btnPanel.add(_startBtn);
 		
 		this.add(_btnPanel, BorderLayout.NORTH);
 		
-		_logTextArea = new JTextArea(40,40);
-		_logTextArea.setLineWrap(true);
-		_logScrollPane = new JScrollPane(_logTextArea);
+		_htmlLabel = new JLabel("HTML Catalogue File : ");
+		_xlsLabel = new JLabel("Course XLS File : ");
+		_configLabel = new JLabel("Config XML File : ");
+		
+		_labelPanel = new JPanel();
+		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
+		
+		_labelPanel.add(_htmlLabel);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_xlsLabel);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_configLabel);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 	
-		this.add(_logScrollPane, BorderLayout.CENTER);
+		this.add(_labelPanel, BorderLayout.CENTER);
 	}
 
 	@Override
@@ -94,9 +101,10 @@ public class Main extends JPanel implements ActionListener{
 			int returnVal = _fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				_inputFile = _fileChooser.getSelectedFile().getPath();
+				_htmlLabel.setText(_htmlLabel.getText() + _inputFile);
+				this.validate();
 				System.out.println("Input File is: " + _inputFile);
-				writeLog("Input File is: " + _inputFile);
-				if (!_courseXlsFile.equals("")) {
+				if (!_courseXlsFile.equals("") && !_configFile.equals("")) {
 					_startBtn.setEnabled(true);
 				}
 			}
@@ -105,15 +113,27 @@ public class Main extends JPanel implements ActionListener{
 			int returnVal = _fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				_courseXlsFile = _fileChooser.getSelectedFile().getPath();
+				_xlsLabel.setText(_xlsLabel.getText() + _courseXlsFile);
+				this.validate();
 				System.out.println("CourseXLS File is: " + _courseXlsFile);
-				writeLog("CourseXLS File is: " + _courseXlsFile);
-				if (!_inputFile.equals("")) {
+				if (!_inputFile.equals("") && !_configFile.equals("")) {
+					_startBtn.setEnabled(true);
+				}
+			}
+		}else if (e.getSource() == _chooseConfigBtn) {
+			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
+			int returnVal = _fileChooser.showOpenDialog(Main.this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				_configFile = _fileChooser.getSelectedFile().getPath();
+				_configLabel.setText(_configLabel.getText() + _configFile);
+				this.validate();
+				System.out.println("Config File is: " + _configFile);
+				if (!_inputFile.equals("") && !_courseXlsFile.equals("")) {
 					_startBtn.setEnabled(true);
 				}
 			}
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
-			writeLog("Should Start Conversion now. Maybe add error etc.");
 			startPreProcess();
 		}
 	}
@@ -132,11 +152,6 @@ public class Main extends JPanel implements ActionListener{
 		_frame.setVisible(false);
 		_sectionColChoiceFrame.setVisible(true);
 		
-	}
-	
-	public void writeLog(String log) {
-		_logTextArea.append(log + "\n");
-		this.validate();
 	}
 	
 	/**
