@@ -24,9 +24,9 @@ public class Main extends JPanel implements ActionListener{
 	/** Input HTML file*/
 	private static String _inputFile = "";
 	/** Pre-processed HTML file. */
-	private static String _processedFile = "data/Catalogue_17_18_new_processed.html";
+	private static String _processedFile = "Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
-	private static String _outputFile = "output/Catalogue_17_18_.tex";
+	private static String _outputFile = "Catalogue_17_18_.tex";
 	/** Configuration file. */
 	private static String _configFile = "";
 	/** File with CSS. */

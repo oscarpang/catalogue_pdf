@@ -899,7 +899,6 @@ class Convertor {
 	 *             tag not found in the configuration
 	 */
 	public void bodyEnd(ElementEnd element, ElementStart es) throws IOException, NoItemException {
-
 		if (!_biblio.isEmpty()) {
 			_writer.write("\n\n\\begin{thebibliography}{" + _biblio.size() + "}\n");
 			for (Iterator iterator = _biblio.entrySet().iterator(); iterator.hasNext();) {
@@ -919,25 +918,33 @@ class Convertor {
 	public void sectionStart(ElementStart element) throws IOException, NoItemException {
 		endMultiCol();
 		String customized_header = String.format("h%d", _section_params.get(_next_section).getValue()[0]);
-		if(!element.getElementName().equals(customized_header)) {
-			System.out.println("Old: " + element.getElementName() + " replace: " + customized_header);
+		String old_name = element.getElementName();
+		if(!old_name.equals(customized_header)) {
+			System.out.println("Old: " + element.getElementName() + " replace: " + customized_header + " " + _section_params.get(_next_section).getKey());
 			element.setElementName(customized_header);
+			commonElementStart(element);
+			element.setElementName(old_name);
 		} else {
-//			System.out.println("Old: " + element.getElementName() + " replace: " + customized_header);
-
-		}
-		commonElementStart(element);
-		if(_next_section == 0) {
-			Integer next_section_col = _section_params.get(_next_section).getValue()[1];
-			beginMultiCol(next_section_col);
+			commonElementStart(element);
 		}
 	}
 	
 	public void sectionEnd(ElementEnd element, ElementStart es) throws IOException, NoItemException {
-		commonElementEnd(element, es);
+		String customized_header = String.format("h%d", _section_params.get(_next_section).getValue()[0]);
+		String old_name = element.getElementName();
+		if(!old_name.equals(customized_header)) {
+			element.setElementName(customized_header);
+			commonElementEnd(element,es);
+			element.setElementName(old_name);
+		} else {
+			commonElementEnd(element,es);
+		}
+		
 		if(_next_section != _section_params.size()) {
 			Integer next_section_col = _section_params.get(_next_section).getValue()[1];
-			beginMultiCol(next_section_col);
+			if(_next_section == 0 || next_section_col != _section_params.get(_next_section-1).getValue()[1]) {
+				beginMultiCol(next_section_col);
+			}
 		}
 		_next_section++;
 	}

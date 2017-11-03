@@ -106,7 +106,7 @@ public class CourseXlsParser {
 		List<Course> course_list = parser.GetCourseList();
 		Collections.sort(course_list, (a, b) -> a.compareTo(b));
 
-        writer.write("<h0>Courses of Instruction</h0>");
+        writer.write("<h0>Courses of Instruction</h0>\n");
         String course_type = "";
 		for(Course c : course_list) {
 			if(!c.GetCourseType().equals(course_type)) {

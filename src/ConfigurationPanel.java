@@ -87,6 +87,7 @@ public class ConfigurationPanel extends JTabbedPane {
 			System.out.println("Not found: " + (int)c);
 			elements_info[row_idx][0] = (int)c;
 			elements_info[row_idx][1] = "UNDEFINED";
+			row_idx++;
 		}
 		
 		String[] column_names = {"Char Num", "convertTo"};
