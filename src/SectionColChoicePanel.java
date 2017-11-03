@@ -28,13 +28,12 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 
 	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
 						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn;
-	private static JScrollPane _sectionParamPane, _configPane;
+	private static JScrollPane _sectionParamPane;
 	private static JPanel _chooseBtnPanel;
 	private static PreProcess _preProcess;
 
 	private static JPanel _southBtnsPanel;
 	private static ConfigurationPanel _configPanel;
-	private static JFrame _config_setting_frame;
 
 	
 	private static JList<String> _sectionParamList;
@@ -107,31 +106,21 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_chooseBtnPanel.add(_changeColNumBtn);
 		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_chooseBtnPanel.add(_setDefaultColBtn);
-//		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		
 		this.add(_chooseBtnPanel);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		try {
 			_configPanel = new ConfigurationPanel();
 		} catch (FatalErrorException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		this.add(_configPanel);
-//		_configPane = new JScrollPane();
-////		TitledBorder oneColSectionTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
-////		oneColSectionTitledBorder.setTitleFont(_titleFont);
-////		_oneColSectionPane.setViewportBorder(oneColSectionTitledBorder);
-//		this.add(_configPane);
-//		
-		_sectionColChoiceFrame.add(this, BorderLayout.CENTER);
 		
 		_southBtnsPanel = new JPanel();
 		_sectionColChoiceFrame.add(_southBtnsPanel, BorderLayout.SOUTH);
 		_finishChooseColBtn = new JButton("Done");
 		_finishChooseColBtn.addActionListener(this);
 		_southBtnsPanel.add(_finishChooseColBtn);
-//		_sectionColChoiceFrame.add(_finishChooseColBtn, BorderLayout.SOUTH);
 	}
 	
 	@Override
@@ -161,6 +150,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	public void setSectionParamListModel() {
 		//TODO: bold the level and column width. + corresponding name.
+		//TODO: non-ascii char in title.
 		_sectionParamListModel.clear();
 //		System.out.println(_preProcess.getCustomizedSectionParams().size());
 //		int index = 0;
@@ -189,7 +179,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	public void addSectionLevel(int offset) {
 		int[] selectedIndices = _sectionParamList.getSelectedIndices();
 		for (int index : selectedIndices) {
-			System.out.println("--addSectionLevel---" + index + "--" + offset);
 			_preProcess.addCustomizedSectionLevels(index, offset);
 		}
 	}
@@ -197,7 +186,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	public void changeColNum(int colNum) {
 		int[] selectedIndices = _sectionParamList.getSelectedIndices();
 		for (int index : selectedIndices) {
-			System.out.println("--changeColNum---" + index + "--" + colNum);
 			_preProcess.setCustomizedSectionColNums(index, colNum);
 		}
 	}

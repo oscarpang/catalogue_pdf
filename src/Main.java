@@ -3,9 +3,9 @@
  * Main.java
  */
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.File;
-import java.util.HashSet;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -30,7 +30,9 @@ public class Main extends JPanel implements ActionListener{
 	private static SectionColChoicePanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _startBtn;
-	private static JPanel _btnPanel;
+	private static JPanel _btnPanel, _logPanel;
+	private static JTextArea _logTextArea;
+	private static JScrollPane _logScrollPane;
 	private static PreProcess _preProcess;
 	
 	/**
@@ -70,6 +72,14 @@ public class Main extends JPanel implements ActionListener{
 		_btnPanel.add(_startBtn);
 		
 		this.add(_btnPanel, BorderLayout.NORTH);
+		
+		_logTextArea = new JTextArea();
+		Dimension preferredSize = _logTextArea.getPreferredSize();
+        preferredSize.height = 500;
+        _logTextArea.setMinimumSize(preferredSize);
+		_logScrollPane = new JScrollPane(_logTextArea);
+	
+		this.add(_logScrollPane, BorderLayout.CENTER);
 	}
 
 	@Override
@@ -81,13 +91,15 @@ public class Main extends JPanel implements ActionListener{
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				_inputFile = _fileChooser.getSelectedFile().getPath();
 				System.out.println("Input File is: " + _inputFile);
+				writeLog("Input File is: " + _inputFile);
 			}
 		}else if (e.getSource() == _chooseXlsBtn) {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xls","xls", "xlsx"));
 			int returnVal = _fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				_courseXlsFile = _fileChooser.getSelectedFile().getPath();
-				System.out.println("Css File is: " + _courseXlsFile);
+				System.out.println("CourseXLS File is: " + _courseXlsFile);
+				writeLog("CourseXLS File is: " + _courseXlsFile);
 			}
 		}else if (e.getSource() == _startBtn) {
 			if (_inputFile.equals("") || _courseXlsFile.equals("")) {
@@ -99,6 +111,7 @@ public class Main extends JPanel implements ActionListener{
 				        JOptionPane.WARNING_MESSAGE);
 			} else {
 				System.out.println("Should Start Conversion now. Maybe add error etc.");
+				writeLog("Should Start Conversion now. Maybe add error etc.");
 				startPreProcess();
 			}
 		}
@@ -108,21 +121,21 @@ public class Main extends JPanel implements ActionListener{
 		_preProcess= new PreProcess();
 		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
 		
-//		_frame.pack();
-//		this.revalidate();
-//		this.repaint();
-		
 		_sectionColChoiceFrame = new JFrame("USC Catalogue Print to PDF");
 		_sectionColChoiceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		_sectionColChoiceFrame.setBounds(50, 50, 1500, 800);
 		
 		_sectionColChoicePanel = new SectionColChoicePanel(_sectionColChoiceFrame, _preProcess);
-		
-//		_sectionColChoiceFrame.add(_sectionColChoicePanel);
+		_sectionColChoiceFrame.add(_sectionColChoicePanel, BorderLayout.CENTER);
 
 		_frame.setVisible(false);
 		_sectionColChoiceFrame.setVisible(true);
 		
+	}
+	
+	public void writeLog(String log) {
+		_logTextArea.append(log);
+		this.validate();
 	}
 	
 	/**

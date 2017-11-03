@@ -403,10 +403,10 @@ public class PreProcess {
 	public void setCustomizedSectionColNums(int index, int value) {
 		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
 		int[] curParam = entr.getValue();
+		int oldColNum = curParam[1];
 		curParam[1] = value;
-		entr.setValue(curParam);
-		System.out.println("--setCustomizedSectionColNums--- " + entr.getKey() 
-						+ " " + entr.getValue()[1]);
+		System.out.println("--setCustomizedSectionColNums---" + entr.getKey() 
+							+ "--" + oldColNum+ "->" + value);
 	}
 	
 	public void addCustomizedSectionLevels(int index, int offset) {
@@ -419,19 +419,19 @@ public class PreProcess {
 				break;
 			}
 			int[] curParam = entr.getValue();
+			int oldTitleLevel = curParam[0];
 			curParam[0] += offset;
 			curParam[0] = curParam[0] > 6 ? 6 : curParam[0];
 			curParam[0] = curParam[0] < 0 ? 0 : curParam[0];
-			entr.setValue(curParam);
 			System.out.println("--addCustomizedSectionLevels---" + entr.getKey() 
-							+ "--" + entr.getValue()[0]);
+								+ "--" + oldTitleLevel + "->" + curParam[0]);
 		}
 	}
 
 //	public void resetCustomizedSectionParams() {
 //		_customizedSectionParams = new ArrayList<Map.Entry<String, int[]>>();
 //		for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
-//			_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(entr.getKey(), entr.getValue()));
+//			_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(entr.getKey(), entr.getValue().clone()));
 //		}
 //	}
 	
@@ -442,10 +442,9 @@ public class PreProcess {
 			int[] param = customEntr.getValue();
 			if (param[0] != defaultEntr.getValue()[0]) {
 				System.out.println("--resetCustomizedSectionParamsByLevels--" + defaultEntr.getKey() 
-						+ "--" + defaultEntr.getValue()[0] + "--" + customEntr.getValue()[0] + "--");
+						+ "--" + customEntr.getValue()[0] + "->" + defaultEntr.getValue()[0]);
 			}
 			param[0] = defaultEntr.getValue()[0];
-			customEntr.setValue(param);
 		}
 	}
 	
@@ -455,11 +454,10 @@ public class PreProcess {
 			Map.Entry<String, int[]> customEntr = _customizedSectionParams.get(i);
 			int[] param = customEntr.getValue();
 			if (param[1] != defaultEntr.getValue()[1]) {
-				System.out.println("--resetCustomizedSectionParamsByColNums--" + defaultEntr.getKey() 
-						+ "--" + defaultEntr.getValue()[1] + "--" + customEntr.getValue()[1] + "--");
+				System.out.println("--resetCustomizedSectionParamsByColNums--" + defaultEntr.getKey()
+						+ "--" + customEntr.getValue()[1] + "->" + defaultEntr.getValue()[1]);
 			}
 			param[1] = defaultEntr.getValue()[1];
-			customEntr.setValue(param);
 		}
 	}
 
@@ -475,9 +473,9 @@ public class PreProcess {
 		return _tableColWidth;
 	}
 
-//	public ArrayList<Map.Entry<String, int[]>> getDefaultSectionParams() {
-//		return _defaultSectionParams;
-//	}
+	public ArrayList<Map.Entry<String, int[]>> getDefaultSectionParams() {
+		return _defaultSectionParams;
+	}
 
 	public ArrayList<Map.Entry<String, int[]>> getCustomizedSectionParams() {
 		return _customizedSectionParams;
