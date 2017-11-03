@@ -43,15 +43,20 @@ public class Main extends JPanel implements ActionListener{
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
-		_frame = new JFrame("USC Catalogue Print to PDF");
-		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		_frame.setBounds(50, 50, 1000, 1000);
-		
-		_mainPanel = new Main();
-		_frame.add(_mainPanel);
-		
-		_frame.pack();
-		_frame.setVisible(true);
+		String s = "The George Méliès Endowed Chair in Visual Effects:</em>\n" + 
+				"Michael Fink, MFA";
+		for(Character c: s.toCharArray()) {
+			System.out.println((int)c);
+		}
+		//		_frame = new JFrame("USC Catalogue Print to PDF");
+//		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+////		_frame.setBounds(50, 50, 1000, 1000);
+//		
+//		_mainPanel = new Main();
+//		_frame.add(_mainPanel);
+//		
+//		_frame.pack();
+//		_frame.setVisible(true);
 	}
 	
 	public Main() {
