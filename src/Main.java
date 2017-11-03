@@ -65,6 +65,7 @@ public class Main extends JPanel implements ActionListener{
 		_chooseXlsBtn.addActionListener(this);
 		_startBtn = new JButton("Start Conversion");
 		_startBtn.addActionListener(this);
+		_startBtn.setEnabled(false);
 		
 		_btnPanel = new JPanel();
 		_btnPanel.add(_chooseHtmlBtn);
@@ -73,10 +74,8 @@ public class Main extends JPanel implements ActionListener{
 		
 		this.add(_btnPanel, BorderLayout.NORTH);
 		
-		_logTextArea = new JTextArea();
-		Dimension preferredSize = _logTextArea.getPreferredSize();
-        preferredSize.height = 500;
-        _logTextArea.setMinimumSize(preferredSize);
+		_logTextArea = new JTextArea(40,40);
+		_logTextArea.setLineWrap(true);
 		_logScrollPane = new JScrollPane(_logTextArea);
 	
 		this.add(_logScrollPane, BorderLayout.CENTER);
@@ -92,6 +91,9 @@ public class Main extends JPanel implements ActionListener{
 				_inputFile = _fileChooser.getSelectedFile().getPath();
 				System.out.println("Input File is: " + _inputFile);
 				writeLog("Input File is: " + _inputFile);
+				if (!_courseXlsFile.equals("")) {
+					_startBtn.setEnabled(true);
+				}
 			}
 		}else if (e.getSource() == _chooseXlsBtn) {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xls","xls", "xlsx"));
@@ -100,20 +102,14 @@ public class Main extends JPanel implements ActionListener{
 				_courseXlsFile = _fileChooser.getSelectedFile().getPath();
 				System.out.println("CourseXLS File is: " + _courseXlsFile);
 				writeLog("CourseXLS File is: " + _courseXlsFile);
+				if (!_inputFile.equals("")) {
+					_startBtn.setEnabled(true);
+				}
 			}
 		}else if (e.getSource() == _startBtn) {
-			if (_inputFile.equals("") || _courseXlsFile.equals("")) {
-				String msg = _inputFile.equals("") ? "the html file" : "";
-				if (_courseXlsFile.equals("")) {
-					msg += msg.equals("") ? "the course xls file" : " and the course xls file";
-				}
-				JOptionPane.showMessageDialog(this, "You need to specify " + msg, "Warning",
-				        JOptionPane.WARNING_MESSAGE);
-			} else {
-				System.out.println("Should Start Conversion now. Maybe add error etc.");
-				writeLog("Should Start Conversion now. Maybe add error etc.");
-				startPreProcess();
-			}
+			System.out.println("Should Start Conversion now. Maybe add error etc.");
+			writeLog("Should Start Conversion now. Maybe add error etc.");
+			startPreProcess();
 		}
 	}
 	
@@ -134,7 +130,7 @@ public class Main extends JPanel implements ActionListener{
 	}
 	
 	public void writeLog(String log) {
-		_logTextArea.append(log);
+		_logTextArea.append(log + "\n");
 		this.validate();
 	}
 	
