@@ -4,10 +4,17 @@
  */
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Main extends JPanel implements ActionListener{
@@ -44,7 +51,6 @@ public class Main extends JPanel implements ActionListener{
 	public static void main(String[] args) {
 		_frame = new JFrame("USC Catalogue Print to PDF");
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		_frame.setBounds(50, 50, 1000, 1000);
 		
 		_mainPanel = new Main();
 		_frame.add(_mainPanel);
@@ -95,46 +101,38 @@ public class Main extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//TODO: change to grey out the startBtn if user haven't provide both file path.
 		if (e.getSource() == _chooseHtmlBtn) {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("html","html"));
-			int returnVal = _fileChooser.showOpenDialog(Main.this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
+			_fileChooser.setSelectedFile(new File(""));
+			if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
 				_inputFile = _fileChooser.getSelectedFile().getPath();
 				_htmlLabel.setText(_htmlLabel.getText() + _inputFile);
-				this.validate();
 				System.out.println("Input File is: " + _inputFile);
-				if (!_courseXlsFile.equals("") && !_configFile.equals("")) {
-					_startBtn.setEnabled(true);
-				}
 			}
 		}else if (e.getSource() == _chooseXlsBtn) {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xls","xls", "xlsx"));
-			int returnVal = _fileChooser.showOpenDialog(Main.this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
+			_fileChooser.setSelectedFile(new File(""));
+			if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
 				_courseXlsFile = _fileChooser.getSelectedFile().getPath();
 				_xlsLabel.setText(_xlsLabel.getText() + _courseXlsFile);
-				this.validate();
 				System.out.println("CourseXLS File is: " + _courseXlsFile);
-				if (!_inputFile.equals("") && !_configFile.equals("")) {
-					_startBtn.setEnabled(true);
-				}
 			}
 		}else if (e.getSource() == _chooseConfigBtn) {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
-			int returnVal = _fileChooser.showOpenDialog(Main.this);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
+			_fileChooser.setSelectedFile(new File(""));
+			if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
 				_configFile = _fileChooser.getSelectedFile().getPath();
 				_configLabel.setText(_configLabel.getText() + _configFile);
-				this.validate();
 				System.out.println("Config File is: " + _configFile);
-				if (!_inputFile.equals("") && !_courseXlsFile.equals("")) {
-					_startBtn.setEnabled(true);
-				}
 			}
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
 			startPreProcess();
+		}
+		
+		this.validate();
+		if (!_inputFile.equals("") && !_courseXlsFile.equals("") && !_configFile.equals("")) {
+			_startBtn.setEnabled(true);
 		}
 	}
 	

@@ -56,7 +56,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_sectionColChoiceFrame = sectionColChoiceFrame;
 		
 		_sectionParamListModel = new DefaultListModel<String>();
-		setSectionParamListModel();
+		createSectionParamListModel();
 		_sectionParamList = new JList<String>(_sectionParamListModel);
 		_sectionParamList.setFont( _sectionParamList.getFont().deriveFont(Font.PLAIN));
 		_sectionParamPane = new JScrollPane(_sectionParamList);
@@ -121,6 +121,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_finishChooseColBtn = new JButton("Done");
 		_finishChooseColBtn.addActionListener(this);
 		_southBtnsPanel.add(_finishChooseColBtn);
+		
+		//TODO: move btn. add save config button. add save output file button???
 	}
 	
 	@Override
@@ -134,59 +136,78 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			addSectionLevel(1);
 		} else if (e.getSource() == _setDefaultLevelBtn) {
 			_preProcess.resetCustomizedSectionParamsByLevels();
+			resetSectionParamListModel();
 		} else if (e.getSource() == _changeColNumBtn) {
-			int selectColNum = (int)_sectionColChoiceCombobox.getSelectedItem();
-			changeColNum(selectColNum);
+			changeColNum((int)_sectionColChoiceCombobox.getSelectedItem());
 		} else if (e.getSource() == _setDefaultColBtn) {
 			_preProcess.resetCustomizedSectionParamsByColNums();
+			resetSectionParamListModel();
 		}
 
-//		System.out.println("-----2-----------");
-		setSectionParamListModel();
-//		System.out.println("-----3----------");
 		this.revalidate();
 		this.repaint();
 	}
 	
-	public void setSectionParamListModel() {
-		//TODO: bold the level and column width. + corresponding name.
-		//TODO: non-ascii char in title.
-		_sectionParamListModel.clear();
-//		System.out.println(_preProcess.getCustomizedSectionParams().size());
-//		int index = 0;
+	private void createSectionParamListModel() {
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
-//			index ++;
-//			System.out.println(index);
-			
-//			String elem = "<html><b><font color=white>";
-//			for (int i = 0; i < entr.getValue()[0]; i++) {
-//				elem += _listDisplaySpacing;
-//			}
-//			elem += "</font>" + entr.getKey() + " : </b><i> Title Level = </i>" + entr.getValue()[0] + 
-//					", <i>Column number = </i>" + entr.getValue()[1] + "</html>";
-			
-			String elem = "";
-			for (int i = 0; i < entr.getValue()[0]; i++) {
-				elem += _listDisplaySpacing;
-			}
-			elem += entr.getKey() + " : Title Level = " + entr.getValue()[0] + 
-					", Column number = " + entr.getValue()[1];
-			
-			_sectionParamListModel.addElement(elem);
+			_sectionParamListModel.addElement(createListElem(entr));;
 		}
 	}
 	
-	public void addSectionLevel(int offset) {
+	private void resetSectionParamListModel() {
+		//TODO: bold the level and column width. + corresponding name.
+		//TODO: non-ascii char in title.
+		int index = 0;
+		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
+			_sectionParamListModel.set(index, createListElem(entr));
+			index ++;
+		}
+	}
+	
+	private String createListElem(Map.Entry<String, int[]> entr) {
+//		String elem = "<html><b><font color=white>";
+//		for (int i = 0; i < entr.getValue()[0]; i++) {
+//			elem += _listDisplaySpacing;
+//		}
+//		elem += "</font>" + entr.getKey() + " : </b><i> Title Level = </i>" + entr.getValue()[0] + 
+//				", <i>Column number = </i>" + entr.getValue()[1] + "</html>";
+		
+		String elem = "";
+		for (int i = 0; i < entr.getValue()[0]; i++) {
+			elem += _listDisplaySpacing;
+		}
+		elem += entr.getKey() + " : Title Level = " + entr.getValue()[0] + 
+				", Column number = " + entr.getValue()[1];
+		return elem;
+	}
+	
+	private void addSectionLevel(int offset) {
 		int[] selectedIndices = _sectionParamList.getSelectedIndices();
 		for (int index : selectedIndices) {
 			_preProcess.addCustomizedSectionLevels(index, offset);
 		}
+		
+		//update JList's title level
+		int lastChangedIndex = -1;
+		for (int index : selectedIndices) {
+			if (index <= lastChangedIndex) continue;
+			int selectedlevel = _preProcess.getCustomizedSectionParams().get(index).getValue()[0];
+			for (int i = index; i < _preProcess.getCustomizedSectionParams().size(); i++) {
+				Map.Entry<String, int[]> entr = _preProcess.getCustomizedSectionParams().get(i);
+				if (i != index && entr.getValue()[0] <= selectedlevel) {
+					lastChangedIndex = i - 1;
+					break;
+				}
+				_sectionParamListModel.set(i, createListElem(entr));
+			}
+		}
 	}
 	
-	public void changeColNum(int colNum) {
+	private void changeColNum(int colNum) {
 		int[] selectedIndices = _sectionParamList.getSelectedIndices();
 		for (int index : selectedIndices) {
-			_preProcess.setCustomizedSectionColNums(index, colNum);
+			Map.Entry<String, int[]> entr = _preProcess.setCustomizedSectionColNums(index, colNum);
+			_sectionParamListModel.set(index, createListElem(entr));
 		}
 	}
 

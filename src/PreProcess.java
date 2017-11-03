@@ -200,6 +200,8 @@ public class PreProcess {
 						// System.out.println("%%%%%%%%%%%" + line);
 					}
 				}
+				
+				
 
 				// remove empty list
 				if (line.equals("<ul>")) {
@@ -265,7 +267,7 @@ public class PreProcess {
 					}
 					curSectionName = curSectionName.contains("</") ?
 							 curSectionName.substring(0, curSectionName.indexOf("</")) : curSectionName;
-							
+							 
 					curSectionName = curSectionName.contains(">") ?
 							 curSectionName.substring(curSectionName.indexOf(">") + 1) : curSectionName;
 
@@ -369,7 +371,7 @@ public class PreProcess {
 		return count;
 	}
 
-	public int getSpan(String line, String str) {
+	private int getSpan(String line, String str) {
 		if (line.contains(str)) {
 			// 2 = length of "=\""
 			int index = line.indexOf(str) + str.length() + 2;
@@ -378,7 +380,7 @@ public class PreProcess {
 		return 1;
 	}
 
-	public int getCurColWidth(String line) {
+	private int getCurColWidth(String line) {
 		int width = 0;
 		boolean ignore = false;
 		try {
@@ -400,16 +402,17 @@ public class PreProcess {
 		return width;
 	}
 	
-	public void setCustomizedSectionColNums(int index, int value) {
+	public Map.Entry<String, int[]> setCustomizedSectionColNums(int index, int value) {
 		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
 		int[] curParam = entr.getValue();
 		int oldColNum = curParam[1];
 		curParam[1] = value;
 		System.out.println("--setCustomizedSectionColNums---" + entr.getKey() 
 							+ "--" + oldColNum+ "->" + value);
+		return entr;
 	}
 	
-	public void addCustomizedSectionLevels(int index, int offset) {
+	public Map.Entry<String, int[]> addCustomizedSectionLevels(int index, int offset) {
 		//Note: this function also upgrade/downgrade subsections.
 		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
 		int oldLevel = entr.getValue()[0];
@@ -426,6 +429,8 @@ public class PreProcess {
 			System.out.println("--addCustomizedSectionLevels---" + entr.getKey() 
 								+ "--" + oldTitleLevel + "->" + curParam[0]);
 		}
+		
+		return _customizedSectionParams.get(index);
 	}
 
 //	public void resetCustomizedSectionParams() {
