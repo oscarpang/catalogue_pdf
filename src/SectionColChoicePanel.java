@@ -42,8 +42,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static DefaultListModel<String> _sectionParamListModel;
 	
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
-//	private static String _listDisplaySpacing = "                    ";
-	private static String _listDisplaySpacing = "--------------------";
+	private static String _listDisplaySpacing = "                    ";
+//	private static String _listDisplaySpacing = "--------------------";
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
@@ -167,12 +167,21 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
 //			index ++;
 //			System.out.println(index);
-			String elem = "<html><b><font color=white>";
+			
+//			String elem = "<html><b><font color=white>";
+//			for (int i = 0; i < entr.getValue()[0]; i++) {
+//				elem += _listDisplaySpacing;
+//			}
+//			elem += "</font>" + entr.getKey() + " : </b><i> Title Level = </i>" + entr.getValue()[0] + 
+//					", <i>Column number = </i>" + entr.getValue()[1] + "</html>";
+			
+			String elem = "";
 			for (int i = 0; i < entr.getValue()[0]; i++) {
 				elem += _listDisplaySpacing;
 			}
-			elem += "</font>" + entr.getKey() + " : </b><i> Title Level = </i>" + entr.getValue()[0] + 
-					", <i>Column number = </i>" + entr.getValue()[1] + "</html>";
+			elem += entr.getKey() + " : Title Level = " + entr.getValue()[0] + 
+					", Column number = " + entr.getValue()[1];
+			
 			_sectionParamListModel.addElement(elem);
 		}
 	}
