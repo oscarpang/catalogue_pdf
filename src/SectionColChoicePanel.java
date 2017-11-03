@@ -42,7 +42,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static DefaultListModel<String> _sectionParamListModel;
 	
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
-	private static String _listDisplaySpacing = "                    ";
+//	private static String _listDisplaySpacing = "                    ";
+	private static String _listDisplaySpacing = "--------------------";
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
@@ -58,6 +59,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_sectionParamListModel = new DefaultListModel<String>();
 		setSectionParamListModel();
 		_sectionParamList = new JList<String>(_sectionParamListModel);
+		_sectionParamList.setFont( _sectionParamList.getFont().deriveFont(Font.PLAIN));
 		_sectionParamPane = new JScrollPane(_sectionParamList);
 		TitledBorder sectionParamTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
 		sectionParamTitledBorder.setTitleFont(_titleFont);
@@ -158,17 +160,20 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	}
 	
 	public void setSectionParamListModel() {
+		//TODO: bold the level and column width. + corresponding name.
 		_sectionParamListModel.clear();
 //		System.out.println(_preProcess.getCustomizedSectionParams().size());
 //		int index = 0;
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
 //			index ++;
 //			System.out.println(index);
-			String indexing = "";
+			String elem = "<html><b><font color=white>";
 			for (int i = 0; i < entr.getValue()[0]; i++) {
-				indexing += _listDisplaySpacing;
+				elem += _listDisplaySpacing;
 			}
-			_sectionParamListModel.addElement(indexing + entr.getKey() + " : " + entr.getValue()[1]);
+			elem += "</font>" + entr.getKey() + " : </b><i> Title Level = </i>" + entr.getValue()[0] + 
+					", <i>Column number = </i>" + entr.getValue()[1] + "</html>";
+			_sectionParamListModel.addElement(elem);
 		}
 	}
 	

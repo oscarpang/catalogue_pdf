@@ -86,48 +86,16 @@ public class PreProcess {
 		_bufferedWriter = new BufferedWriter(_fileWriter);
 
 		String line = null;
-		String curSectionName = null;
 		try {
+			//TODO: get content based on URL and insert in correct place.
 			while ((line = _bufferedReader.readLine()) != null) {
 				if (shouldIgnore(line)) continue;
+				//remove <br> in header.
 				line = line.replaceAll("<br></h", "</h");
-				if (line.contains("<h") && !line.contains("<html>") && !line.contains("<head>")) {
-					curSectionName = line.substring(line.indexOf(">")+1);
-					// promote some h1 to be chapter (h0).
-					line = isChapter(line) ? line.replaceAll("h1", "h0") : line;
-					int curSectionLevel = Integer.parseInt("" + line.charAt(line.indexOf("<h") + 2));
-					
-					while (!line.contains("</")) {
-						_bufferedWriter.write(line);
-						_bufferedWriter.newLine();
-						line = _bufferedReader.readLine();
-						curSectionName += " " + line;
-					}
-					curSectionName = curSectionName.contains("</") ?
-							 curSectionName.substring(0, curSectionName.indexOf("</")) : curSectionName;
-							
-					curSectionName = curSectionName.contains(">") ?
-							 curSectionName.substring(curSectionName.indexOf(">") + 1) : curSectionName;
-
-					int[] curSectionParam = {curSectionLevel,2};
-					_defaultSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam));
-					int[] curSectionParam_copy = {curSectionLevel,2};
-					_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam_copy));
-				}
-
-				// By default, sections with tables is shown in one column.
-				if (line.contains("<tbody>")) {
-					Map.Entry<String, int[]> entr = _defaultSectionParams.get(_defaultSectionParams.size() - 1);
-					int[] curParam = entr.getValue();
-					curParam[1] = 1;
-					entr.setValue(curParam);
-					entr = _customizedSectionParams.get(_defaultSectionParams.size() - 1);
-					int[] curParam_copy = entr.getValue();
-					curParam_copy[1] = 1;
-					entr.setValue(curParam_copy);
-				}
+				// promote some h1 to be chapter (h0).
+				line = isChapter(line) ? line.replaceAll("h1", "h0") : line;
 				
-				//Add course of instructions to the same html
+				//Add course of instructions to the same HTML
 				if (line.contains("</body")) {
 					CourseXlsParser.ParseToHTMLWriter(_courseXlsFile,_bufferedWriter);
 				}
@@ -147,11 +115,6 @@ public class PreProcess {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		System.out.println("-----_default Section Params -----");
-//		for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
-//			System.out.println(entr.getValue()[0] + " " + entr.getValue()[1] + " " + entr.getKey());
-//		}
-//		System.out.println("----- end -----");
 		System.out.println("Finish first round processing.");
 	}
 
@@ -287,11 +250,38 @@ public class PreProcess {
 		ArrayList<Double> curTableColWidth = new ArrayList<Double>();
 		int numRow = 0;
 		boolean isFirstLine = true;
+		String curSectionName = null;
 
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
+				//get sectionParams.
+				if (line.contains("<h") && !line.contains("<html>") && !line.contains("<head>")) {
+					curSectionName = line.substring(line.indexOf(">")+1);
+					int curSectionLevel = Integer.parseInt("" + line.charAt(line.indexOf("<h") + 2));
+					
+					while (!line.contains("</")) {
+						line = _bufferedReader.readLine();
+						curSectionName += " " + line;
+					}
+					curSectionName = curSectionName.contains("</") ?
+							 curSectionName.substring(0, curSectionName.indexOf("</")) : curSectionName;
+							
+					curSectionName = curSectionName.contains(">") ?
+							 curSectionName.substring(curSectionName.indexOf(">") + 1) : curSectionName;
+
+					int[] curSectionParam = {curSectionLevel,2};
+					_defaultSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam));
+					_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam.clone()));
+				}
+				
 				if (line.contains("<tbody>")) {
 					inTable = true;
+					// By default, sections with tables is shown in one column.
+					Map.Entry<String, int[]> entr = _defaultSectionParams.get(_defaultSectionParams.size() - 1);
+					int[] curParam = entr.getValue();
+					curParam[1] = 1;
+					entr.setValue(curParam);
+					_customizedSectionParams.get(_defaultSectionParams.size() - 1).setValue(curParam.clone());
 				} else if (line.contains("</tbody>")) {
 					inTable = false;
 					double sum = 0;
@@ -300,12 +290,9 @@ public class PreProcess {
 						curTableColWidth.set(i, average);
 						sum += average;
 					}
-					// System.out.println("sum : " + sum);
-					// System.out.println(curTableColWidth);
 					for (int i = 0; i < curTableColWidth.size(); i++) {
 						curTableColWidth.set(i, curTableColWidth.get(i) / sum);
 					}
-					// System.out.println(curTableColWidth);
 					_tableColWidth.add(curTableColWidth);
 					_tableRowNum.add(numRow);
 					curTableColWidth = new ArrayList<Double>();
@@ -341,7 +328,11 @@ public class PreProcess {
 			}
 			System.out.println("_tableRowNum : " + _tableRowNum);
 			System.out.println("_tableColWidth : " + _tableColWidth);
-
+//			System.out.println("-----_default Section Params -----");
+//			for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
+//				System.out.println(entr.getValue()[0] + " " + entr.getValue()[1] + " " + entr.getKey());
+//			}
+//			System.out.println("----- end -----");
 			_bufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -393,13 +384,9 @@ public class PreProcess {
 		try {
 			while (true) {
 				for (char c : line.toCharArray()) {
-					if (c == '<') {
-						ignore = true;
-					}
+					ignore = (c == '<') ? true : ignore;
 					width += ignore ? 0 : 1;
-					if (c == '>') {
-						ignore = false;
-					}
+					ignore = (c == '>') ? false : ignore;
 				}
 				if (line.contains("</td>")) {
 					break;
@@ -428,17 +415,16 @@ public class PreProcess {
 		int oldLevel = entr.getValue()[0];
 		for (int i = index; i < _customizedSectionParams.size(); i++) {
 			entr = _customizedSectionParams.get(i);
-			if (i == index || entr.getValue()[0] > oldLevel) {
-				int[] curParam = entr.getValue();
-				curParam[0] += offset;
-				curParam[0] = curParam[0] > 6 ? 6 : curParam[0];
-				curParam[0] = curParam[0] < 0 ? 0 : curParam[0];
-				entr.setValue(curParam);
-				System.out.println("--addCustomizedSectionLevels---" + entr.getKey() 
-								+ "--" + entr.getValue()[0]);
-			} else {
+			if (i != index && entr.getValue()[0] <= oldLevel) {
 				break;
 			}
+			int[] curParam = entr.getValue();
+			curParam[0] += offset;
+			curParam[0] = curParam[0] > 6 ? 6 : curParam[0];
+			curParam[0] = curParam[0] < 0 ? 0 : curParam[0];
+			entr.setValue(curParam);
+			System.out.println("--addCustomizedSectionLevels---" + entr.getKey() 
+							+ "--" + entr.getValue()[0]);
 		}
 	}
 
@@ -455,8 +441,8 @@ public class PreProcess {
 			Map.Entry<String, int[]> customEntr = _customizedSectionParams.get(i);
 			int[] param = customEntr.getValue();
 			if (param[0] != defaultEntr.getValue()[0]) {
-				System.out.println(defaultEntr.getKey() + "--" + defaultEntr.getValue()[0] 
-						+ "--" + customEntr.getValue()[0] + "--");
+				System.out.println("--resetCustomizedSectionParamsByLevels--" + defaultEntr.getKey() 
+						+ "--" + defaultEntr.getValue()[0] + "--" + customEntr.getValue()[0] + "--");
 			}
 			param[0] = defaultEntr.getValue()[0];
 			customEntr.setValue(param);
@@ -469,8 +455,8 @@ public class PreProcess {
 			Map.Entry<String, int[]> customEntr = _customizedSectionParams.get(i);
 			int[] param = customEntr.getValue();
 			if (param[1] != defaultEntr.getValue()[1]) {
-				System.out.println(defaultEntr.getKey() + "--" + defaultEntr.getValue()[1] 
-						+ "--" + customEntr.getValue()[1] + "--");
+				System.out.println("--resetCustomizedSectionParamsByColNums--" + defaultEntr.getKey() 
+						+ "--" + defaultEntr.getValue()[1] + "--" + customEntr.getValue()[1] + "--");
 			}
 			param[1] = defaultEntr.getValue()[1];
 			customEntr.setValue(param);
@@ -489,23 +475,12 @@ public class PreProcess {
 		return _tableColWidth;
 	}
 
-	public ArrayList<Map.Entry<String, int[]>> getDefaultSectionParams() {
-		return _defaultSectionParams;
-	}
+//	public ArrayList<Map.Entry<String, int[]>> getDefaultSectionParams() {
+//		return _defaultSectionParams;
+//	}
 
 	public ArrayList<Map.Entry<String, int[]>> getCustomizedSectionParams() {
 		return _customizedSectionParams;
-	}
-	
-	public ArrayList<Map.Entry<Integer, Integer>> getCustomizedSectionParamsIntArray() {
-		ArrayList<Map.Entry<Integer, Integer>> customSectionParamsIntArray = 
-											new ArrayList<Map.Entry<Integer, Integer>>();
-		for (Map.Entry<String, int[]> entr : _customizedSectionParams) {
-			customSectionParamsIntArray.add(new AbstractMap.SimpleEntry<Integer,Integer>
-											(entr.getValue()[0], entr.getValue()[1]));
-		}
-		System.out.println(customSectionParamsIntArray);
-		return customSectionParamsIntArray;
 	}
 	
 	public HashSet<Character> getNonAsciiSet(){
