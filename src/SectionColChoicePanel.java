@@ -110,7 +110,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		this.add(_chooseBtnPanel);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		try {
-			_configPanel = new ConfigurationPanel();
+			_configPanel = new ConfigurationPanel(_preProcess);
 		} catch (FatalErrorException e1) {
 			e1.printStackTrace();
 		}

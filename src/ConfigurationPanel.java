@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -23,17 +24,17 @@ public class ConfigurationPanel extends JTabbedPane {
 	JTable _element_table;
 	JTable _char_config_table;
 	JPanel _main_panel;
+	PreProcess _preprocess;
 	
-	public ConfigurationPanel() throws FatalErrorException {
+	public ConfigurationPanel(PreProcess preprocess) throws FatalErrorException {
 		super();
+		_preprocess = preprocess;
 		_config = new Configuration();
 		_command_config_panel = new JPanel();
 		_char_config_panel = new JPanel();
 		
 		PopulateCommandConfig();
 		PopulateCharConfig();
-//		this.addTab("Html Element", _command_config_panel);
-//		this.addTab("Char Num", _char_config_panel);
 	}
 	
 	private void PopulateCommandConfig() {
@@ -62,25 +63,37 @@ public class ConfigurationPanel extends JTabbedPane {
 		JScrollPane scrollPane = new JScrollPane(_element_table);
 		_element_table.setFillsViewportHeight(true);
 		this.addTab("HTML Element", scrollPane);
-		//		_command_config_panel.add(scrollPane);
 	}
 	
 	private void PopulateCharConfig() {
 		HashMap<Integer, String> elements = _config.get_charsNum();
-		Object[][] elements_info = new Object[elements.size()][2];
+		HashSet<Character> non_ascii_set = _preprocess.getNonAsciiSet();
+		HashSet<Character> non_config_chars = new HashSet();
+		for(Character c : non_ascii_set) {
+			if(!elements.containsKey((int)c)) {
+				non_config_chars.add(c);
+			}
+		}
+		
+		Object[][] elements_info = new Object[elements.size() + non_config_chars.size()][2];
 		int row_idx = 0;
 		for(Map.Entry<Integer, String> entry: elements.entrySet()) {
 			elements_info[row_idx][0] = entry.getKey();
 			elements_info[row_idx][1] = entry.getValue();
 			row_idx++;
 		}
+		
+		for(Character c : non_config_chars) {
+			System.out.println("Not found: " + (int)c);
+			elements_info[row_idx][0] = (int)c;
+			elements_info[row_idx][1] = "UNDEFINED";
+		}
+		
 		String[] column_names = {"Char Num", "convertTo"};
 		_element_table = new JTable(elements_info,  column_names);
 		JScrollPane scrollPane = new JScrollPane(_element_table);
 		_element_table.setFillsViewportHeight(true);
-//		_char_config_panel.add(scrollPane);
 		this.addTab("Config", scrollPane);
-
 	}
 
 }

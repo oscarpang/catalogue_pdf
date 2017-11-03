@@ -728,7 +728,6 @@
   </chars>
   
   <charsNum>
-    <charNum num='160' convertTo=' '/>
     <charNum num='173' convertTo='\-' />
     <charNum num='8209' convertTo='\-' />
     <charNum num='8208' convertTo='\-' />
