@@ -107,8 +107,11 @@ public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Configuration config_to_save = new Configuration(_config);
+				
 		try {
-			_config.saveConfiguration("working_config.xml");
+			//TODO Let user specify the file
+			config_to_save.saveConfiguration("working_config.xml");
 		} catch (FatalErrorException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
