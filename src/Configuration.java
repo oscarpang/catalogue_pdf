@@ -42,17 +42,17 @@ class Configuration {
 	 */
 	private HashMap<Integer, String> _charsNum;
 
-	/**
-	 * CSS styles used with converted file. <br />
-	 * key : &lt;styleName&gt;
-	 */
-	private HashMap<String, CSSStyle> _styles;
-
-	/**
-	 * Mappings between CSS properties and LaTeX commands.<br />
-	 * key : &lt;propertyName&gt;-&lt;propertyValue&gt;
-	 */
-	private HashMap<String, CSSPropertyConfigItem> _stylesConf;
+//	/**
+//	 * CSS styles used with converted file. <br />
+//	 * key : &lt;styleName&gt;
+//	 */
+//	private HashMap<String, CSSStyle> _styles;
+//
+//	/**
+//	 * Mappings between CSS properties and LaTeX commands.<br />
+//	 * key : &lt;propertyName&gt;-&lt;propertyValue&gt;
+//	 */
+//	private HashMap<String, CSSPropertyConfigItem> _stylesConf;
 
 	/** The way of converting hyperlinks. */
 	private LinksConversion _linksConversion;
@@ -72,8 +72,8 @@ class Configuration {
 		_chars = new HashMap<String, String>(250);
 		_charsNum = new HashMap<Integer, String>(250);
 		_charsName = new HashMap<String, String>(250);
-		_styles = new HashMap<String, CSSStyle>(20);
-		_stylesConf = new HashMap<String, CSSPropertyConfigItem>(50);
+//		_styles = new HashMap<String, CSSStyle>(20);
+//		_stylesConf = new HashMap<String, CSSPropertyConfigItem>(50);
 
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -89,6 +89,13 @@ class Configuration {
 		} catch (Exception e) {
 			throw new FatalErrorException("Can't load configuration.\n" + e.getMessage());
 		}
+	}
+	
+	public Configuration(Configuration other) {
+		_elements = other._elements;
+		_chars = other._chars;
+		_charsNum = other._charsNum;
+		_charsName = other._charsName;
 	}
 
 	public void saveConfiguration(String filepath) throws FatalErrorException {
@@ -283,54 +290,54 @@ class Configuration {
 			_linksConversion = _linksConversion.IGNORE;
 	}
 
-	/**
-	 * Loads mappings between CSS properties and LaTeX commands.
-	 * 
-	 * @param root
-	 *            root element of the XML configuration file
-	 */
-	private void loadStylesConfiguration(Element root) {
-		NodeList nl = root.getElementsByTagName("cssStyles");
-		if (nl.getLength() == 1) {
-			Element elem = (Element) nl.item(0);
-			String makeCmds = elem.getAttribute("makeCommands");
-			_commandsPrefix = elem.getAttribute("commandsPrefix");
-			if (makeCmds.equals("yes"))
-				_makeCmdsFromCSS = true;
-		}
-		nl = root.getElementsByTagName("property");
-		for (int i = 0; i < nl.getLength(); i++) {
-			Element e = (Element) nl.item(i);
-			String propertyName = e.getAttribute("name");
+//	/**
+//	 * Loads mappings between CSS properties and LaTeX commands.
+//	 * 
+//	 * @param root
+//	 *            root element of the XML configuration file
+//	 */
+//	private void loadStylesConfiguration(Element root) {
+//		NodeList nl = root.getElementsByTagName("cssStyles");
+//		if (nl.getLength() == 1) {
+//			Element elem = (Element) nl.item(0);
+//			String makeCmds = elem.getAttribute("makeCommands");
+//			_commandsPrefix = elem.getAttribute("commandsPrefix");
+//			if (makeCmds.equals("yes"))
+//				_makeCmdsFromCSS = true;
+//		}
+//		nl = root.getElementsByTagName("property");
+//		for (int i = 0; i < nl.getLength(); i++) {
+//			Element e = (Element) nl.item(i);
+//			String propertyName = e.getAttribute("name");
+//
+//			NodeList nl2 = e.getElementsByTagName("value");
+//			for (int j = 0; j < nl2.getLength(); j++) {
+//				Element el = (Element) nl2.item(j);
+//				String propertyValue = el.getAttribute("name");
+//				String start = el.getAttribute("start");
+//				String end = el.getAttribute("end");
+//
+//				_stylesConf.put(propertyName + "-" + propertyValue,
+//						new CSSPropertyConfigItem(replaceSpecialStrings(start), replaceSpecialStrings(end)));
+//			}
+//		}
+//	}
 
-			NodeList nl2 = e.getElementsByTagName("value");
-			for (int j = 0; j < nl2.getLength(); j++) {
-				Element el = (Element) nl2.item(j);
-				String propertyValue = el.getAttribute("name");
-				String start = el.getAttribute("start");
-				String end = el.getAttribute("end");
-
-				_stylesConf.put(propertyName + "-" + propertyValue,
-						new CSSPropertyConfigItem(replaceSpecialStrings(start), replaceSpecialStrings(end)));
-			}
-		}
-	}
-
-	/**
-	 * Loads user style sheet.
-	 * 
-	 * @param f
-	 *            CSS file
-	 */
-	private void loadStyleSheet(File f) {
-		CSSParser parser = new CSSParser();
-		parser.parse(f, new CSSParserHandler(this));
-		for (Iterator iterator = _styles.entrySet().iterator(); iterator.hasNext();) {
-			Map.Entry entry = (Map.Entry) iterator.next();
-			CSSStyle style = (CSSStyle) entry.getValue();
-			style.makeLaTeXCommands(this);
-		}
-	}
+//	/**
+//	 * Loads user style sheet.
+//	 * 
+//	 * @param f
+//	 *            CSS file
+//	 */
+//	private void loadStyleSheet(File f) {
+//		CSSParser parser = new CSSParser();
+//		parser.parse(f, new CSSParserHandler(this));
+//		for (Iterator iterator = _styles.entrySet().iterator(); iterator.hasNext();) {
+//			Map.Entry entry = (Map.Entry) iterator.next();
+//			CSSStyle style = (CSSStyle) entry.getValue();
+//			style.makeLaTeXCommands(this);
+//		}
+//	}
 
 	private String generateSpecialString(String str) {
 		str = str.replaceAll(">", "@GT").replace( "<", "@LT").replace("&","@AMP").replace("\"","@DOUBLEQUOT")
@@ -413,115 +420,115 @@ class Configuration {
 		throw new NoItemException(charNum.toString());
 	}
 
-	/**
-	 * Returns style defined in the user stylesheet.
-	 * 
-	 * @param styleName
-	 *            style name
-	 * @return style defined in the user stylesheet
-	 */
-	public CSSStyle getStyle(String styleName) {
-		return _styles.get(styleName);
-	}
+//	/**
+//	 * Returns style defined in the user stylesheet.
+//	 * 
+//	 * @param styleName
+//	 *            style name
+//	 * @return style defined in the user stylesheet
+//	 */
+//	public CSSStyle getStyle(String styleName) {
+//		return _styles.get(styleName);
+//	}
 
-	/**
-	 * Finds style for element with specified <code>class</code> attribute
-	 * 
-	 * @param className
-	 *            element's <code>class</code> attribute
-	 * @param elementName
-	 *            element name
-	 * @return CSS style
-	 */
-	public CSSStyle findStyleClass(String className, String elementName) {
-		CSSStyle style;
-		if ((style = _styles.get(elementName + "." + className)) != null)
-			return style;
-		else if ((style = _styles.get("." + className)) != null)
-			return style;
-		else
-			return null;
-	}
+//	/**
+//	 * Finds style for element with specified <code>class</code> attribute
+//	 * 
+//	 * @param className
+//	 *            element's <code>class</code> attribute
+//	 * @param elementName
+//	 *            element name
+//	 * @return CSS style
+//	 */
+//	public CSSStyle findStyleClass(String className, String elementName) {
+//		CSSStyle style;
+//		if ((style = _styles.get(elementName + "." + className)) != null)
+//			return style;
+//		else if ((style = _styles.get("." + className)) != null)
+//			return style;
+//		else
+//			return null;
+//	}
 
-	/**
-	 * Finds style for element with specified <code>id</code> attribute
-	 * 
-	 * @param elementId
-	 *            element's <code>id</code> attribute
-	 * @param elementName
-	 *            element name
-	 * @return CSS style
-	 */
-	public CSSStyle findStyleId(String elementId, String elementName) {
-		CSSStyle style;
-		if ((style = _styles.get(elementName + "#" + elementId)) != null)
-			return style;
-		else if ((style = _styles.get("#" + elementId)) != null)
-			return style;
-		else
-			return null;
-	}
+//	/**
+//	 * Finds style for element with specified <code>id</code> attribute
+//	 * 
+//	 * @param elementId
+//	 *            element's <code>id</code> attribute
+//	 * @param elementName
+//	 *            element name
+//	 * @return CSS style
+//	 */
+//	public CSSStyle findStyleId(String elementId, String elementName) {
+//		CSSStyle style;
+//		if ((style = _styles.get(elementName + "#" + elementId)) != null)
+//			return style;
+//		else if ((style = _styles.get("#" + elementId)) != null)
+//			return style;
+//		else
+//			return null;
+//	}
 
-	/**
-	 * Finds style for element.
-	 * 
-	 * @param elementName
-	 *            element name
-	 * @return CSS style
-	 */
-	public CSSStyle findStyle(String elementName) {
-		CSSStyle style;
-		if ((style = _styles.get(elementName)) != null)
-			return style;
-		else
-			return null;
-	}
+//	/**
+//	 * Finds style for element.
+//	 * 
+//	 * @param elementName
+//	 *            element name
+//	 * @return CSS style
+//	 */
+//	public CSSStyle findStyle(String elementName) {
+//		CSSStyle style;
+//		if ((style = _styles.get(elementName)) != null)
+//			return style;
+//		else
+//			return null;
+//	}
 
-	/**
-	 * Returns CSS property configuration.
-	 * 
-	 * @param property
-	 *            property and value name (&lt;propertyName&gt;-&lt;valueName&gt;)
-	 * @return CSS property configuration
-	 * @throws NoItemException
-	 *             when property isn't found in the configuration
-	 */
-	public CSSPropertyConfigItem getPropertyConf(String property) throws NoItemException {
-		CSSPropertyConfigItem ret;
-		if ((ret = _stylesConf.get(property)) != null)
-			return ret;
-
-		throw new NoItemException(property);
-	}
-
-	/**
-	 * Adds user style to the configuration.
-	 * 
-	 * @param name
-	 *            style name
-	 * @param style
-	 *            CSS style
-	 */
-	public void addStyle(String name, CSSStyle style) {
-		_styles.put(name, style);
-	}
-
-	/**
-	 * Makes new LaTeX commands from the CSS styles.
-	 * 
-	 * @return string containing new commands definitions
-	 */
-	public String makeCmdsFromCSS() {
-		String ret = "\n% commands generated by html2latex";
-		for (Iterator iterator = _styles.entrySet().iterator(); iterator.hasNext();) {
-			Map.Entry entry = (Map.Entry) iterator.next();
-			String styleName = (String) entry.getKey();
-			CSSStyle style = (CSSStyle) entry.getValue();
-			ret += "\n\\newcommand{" + getCmdStyleName(styleName) + "}[1]{ " + style.getStart() + "#1" + style.getEnd()
-					+ " }";
-		}
-		return ret + "\n";
-	}
+//	/**
+//	 * Returns CSS property configuration.
+//	 * 
+//	 * @param property
+//	 *            property and value name (&lt;propertyName&gt;-&lt;valueName&gt;)
+//	 * @return CSS property configuration
+//	 * @throws NoItemException
+//	 *             when property isn't found in the configuration
+//	 */
+//	public CSSPropertyConfigItem getPropertyConf(String property) throws NoItemException {
+//		CSSPropertyConfigItem ret;
+//		if ((ret = _stylesConf.get(property)) != null)
+//			return ret;
+//
+//		throw new NoItemException(property);
+//	}
+//
+//	/**
+//	 * Adds user style to the configuration.
+//	 * 
+//	 * @param name
+//	 *            style name
+//	 * @param style
+//	 *            CSS style
+//	 */
+//	public void addStyle(String name, CSSStyle style) {
+//		_styles.put(name, style);
+//	}
+//
+//	/**
+//	 * Makes new LaTeX commands from the CSS styles.
+//	 * 
+//	 * @return string containing new commands definitions
+//	 */
+//	public String makeCmdsFromCSS() {
+//		String ret = "\n% commands generated by html2latex";
+//		for (Iterator iterator = _styles.entrySet().iterator(); iterator.hasNext();) {
+//			Map.Entry entry = (Map.Entry) iterator.next();
+//			String styleName = (String) entry.getKey();
+//			CSSStyle style = (CSSStyle) entry.getValue();
+//			ret += "\n\\newcommand{" + getCmdStyleName(styleName) + "}[1]{ " + style.getStart() + "#1" + style.getEnd()
+//					+ " }";
+//		}
+//		return ret + "\n";
+//	}
 
 	/**
 	 * style name without special chars

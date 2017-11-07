@@ -60,7 +60,7 @@ class ParserHandler implements IParserHandler {
             else if (HeaderElementSet.contains(name)) _conv.sectionStart(element);
             else _conv.commonElementStart(element);
             
-            _conv.cssStyleStart(element);
+//            _conv.cssStyleStart(element);
         } catch (IOException e) {
             System.err.println("Can't write into output file");
         } catch (NoItemException e) {
@@ -88,7 +88,7 @@ class ParserHandler implements IParserHandler {
         	
             String name = element.getElementName();
             
-            _conv.cssStyleEnd(elementStart);
+//            _conv.cssStyleEnd(elementStart);
             
             if (name.equals("a")) _conv.anchorEnd(element, elementStart);
             else if (name.equals("tr")) _conv.tableRowEnd(element, elementStart);
