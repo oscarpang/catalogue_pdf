@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,35 +8,41 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
-public class ConfigurationPanel extends JTabbedPane {
+public class ConfigurationPanel extends JTabbedPane implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3087284870831158695L;
-	JTabbedPane _main_pane;
 	Configuration _config;
-	JPanel _command_config_panel;
-	JPanel _char_config_panel;
 	JTable _element_table;
 	JTable _char_config_table;
 	JPanel _main_panel;
 	PreProcess _preprocess;
+	JButton _saveConfigBtn;
 	
 	public ConfigurationPanel(PreProcess preprocess) throws FatalErrorException {
 		super();
 		_preprocess = preprocess;
 		_config = new Configuration();
-		_command_config_panel = new JPanel();
-		_char_config_panel = new JPanel();
-		
+
+		PopulateMainPane();
 		PopulateCommandConfig();
 		PopulateCharConfig();
+	}
+	
+	private void PopulateMainPane() {
+		_main_panel = new JPanel();
+		_saveConfigBtn = new JButton("Save Config");
+		_saveConfigBtn.addActionListener(this);
+		_main_panel.add(_saveConfigBtn);
+		this.addTab("Main", _main_panel);
 	}
 	
 	private void PopulateCommandConfig() {
@@ -95,6 +103,16 @@ public class ConfigurationPanel extends JTabbedPane {
 		JScrollPane scrollPane = new JScrollPane(_element_table);
 		_element_table.setFillsViewportHeight(true);
 		this.addTab("Config", scrollPane);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			_config.saveConfiguration("working_config.xml");
+		} catch (FatalErrorException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }
