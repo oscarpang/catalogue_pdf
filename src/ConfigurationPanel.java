@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -41,7 +40,6 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 	private static FileDialog _fileDialog;
 	private static boolean macOS;
 	JFrame _parent;
-
 
 	public ConfigurationPanel(JFrame parent, PreProcess preprocess) throws FatalErrorException {
 		super();
@@ -78,10 +76,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		changeConfigPanel.add(btnPanel);
 
 		this.add(changeConfigPanel, BorderLayout.SOUTH);
-		
+
 		String osName = System.getProperty("os.name");
-	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
-		
+		macOS = osName.indexOf("Mac") >= 0 ? true : false;
+
 		if (macOS) {
 			_fileDialog = new FileDialog(_parent, "Save As...", FileDialog.SAVE);
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
@@ -113,11 +111,22 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			 */
 			private static final long serialVersionUID = 1L;
 
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 3 || columnIndex == 4 || columnIndex == 5)
+					return Boolean.class;
+				return super.getColumnClass(columnIndex);
+			}
+
 			public boolean isCellEditable(int row, int column) {
+				if (column == 3 || column == 4 || column == 5)
+					return true;
 				return false;
 			};
 		};
-		JScrollPane scrollPane = new JScrollPane(_element_table);
+
+		JScrollPane scrollPane = new JScrollPane(_element_table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		_element_table.setFillsViewportHeight(true);
 
 		_element_table.addMouseListener(new MouseAdapter() {
@@ -134,6 +143,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				}
 			}
 		});
+		_element_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		_tabbed_pane.addTab("HTML Element", scrollPane);
 	}
 
@@ -237,15 +247,15 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			_fileDialog.setVisible(true);
 			_newConfigFile = _fileDialog.getDirectory() + _fileDialog.getFile();
 		} else {
-			//??????????
-			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
+			// ??????????
+			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml", "xml"));
 			_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
-			
+
 			if (_fileChooser.showSaveDialog(_parent) == JFileChooser.APPROVE_OPTION) {
 				_newConfigFile = _fileChooser.getSelectedFile().getPath();
 			}
 		}
-		
+
 		if (!_newConfigFile.equals("")) {
 			_newConfigFile = _newConfigFile.replaceAll(".xml", "");
 			_newConfigFile += ".xml";
@@ -253,19 +263,19 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			File file = new File(_newConfigFile);
 			if (file.exists()) {
 				int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
-				if ( choice != JOptionPane.YES_OPTION) {
+				if (choice != JOptionPane.YES_OPTION) {
 					return;
 				}
 			}
 			this.saveConfiguration(_newConfigFile);
 		}
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e == null)
+		if (e == null)
 			return;
-		
+
 		if (e.getSource() == _applyChangeBtn) {
 			int tab_ind = _tabbed_pane.getSelectedIndex();
 			if (tab_ind == 0) {
@@ -283,7 +293,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 							_char_config_table.getSelectedColumn());
 				}
 			}
-		} else if(e.getSource() == _saveConfigBtn) {
+		} else if (e.getSource() == _saveConfigBtn) {
 			saveConfig();
 		}
 
