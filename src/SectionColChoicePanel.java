@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -27,22 +28,19 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static JFrame _sectionColChoiceFrame;
-	
 	private static boolean macOS;
-
+	
+	private static JFrame _sectionColChoiceFrame;
 	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
 						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn,
-						_saveConfigBtn;
-	
+						_saveConfigBtn, _applyChangeBtn;
 	private static JScrollPane _sectionParamPane;
-	private static JPanel _chooseBtnPanel;
+	private static JPanel _leftPanel, _rightPanel,  _southBtnsPanel;
 	private static PreProcess _preProcess;
 	private static JFileChooser _fileChooser;
 	private static FileDialog _fileDialog;
-
-	private static JPanel _southBtnsPanel;
 	private static ConfigurationPanel _configPanel;
+	private static JTextField _textField;
 	
 	private static JList<String> _sectionParamList;
 	private static JComboBox<Integer> _sectionColChoiceCombobox;
@@ -55,7 +53,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 
 	public SectionColChoicePanel(JFrame sectionColChoiceFrame, PreProcess preProcess) {
 		super();
-		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 //		this.add(Box.createHorizontalGlue());
 		
@@ -65,76 +63,115 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_preProcess = preProcess;
 		_sectionColChoiceFrame = sectionColChoiceFrame;
 		
+		_leftPanel = new JPanel();
+		_leftPanel.setLayout(new BoxLayout(_leftPanel, BoxLayout.Y_AXIS));
+		TitledBorder sectionParamPanelTitledBorder = 
+				new TitledBorder("Please select the sections that need to change title level or column number: ");
+		sectionParamPanelTitledBorder.setTitleFont(_titleFont);
+		_leftPanel.setBorder(sectionParamPanelTitledBorder);
+		
 		_sectionParamListModel = new DefaultListModel<String>();
 		createSectionParamListModel();
 		_sectionParamList = new JList<String>(_sectionParamListModel);
 		_sectionParamList.setFont( _sectionParamList.getFont().deriveFont(Font.PLAIN));
 		_sectionParamPane = new JScrollPane(_sectionParamList);
-		TitledBorder sectionParamTitledBorder = new TitledBorder("USC Catalogue Chapters And Sections: ");
+		TitledBorder sectionParamTitledBorder = new TitledBorder("USC Catalogue Sections: ");
 		sectionParamTitledBorder.setTitleFont(_titleFont);
 		_sectionParamPane.setViewportBorder(sectionParamTitledBorder);
-		this.add(_sectionParamPane);
-		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		
-		_chooseBtnPanel = new JPanel();
-		_chooseBtnPanel.setLayout(new BoxLayout(_chooseBtnPanel, BoxLayout.Y_AXIS));
-		
+		_sectionParamPane.setAlignmentX(LEFT_ALIGNMENT);
+		_leftPanel.add(_sectionParamPane);
+
+		JPanel changeTitleBtnPanel = new JPanel();
+		changeTitleBtnPanel.setLayout(new BoxLayout(changeTitleBtnPanel, BoxLayout.X_AXIS));
+		TitledBorder changeTitledBtnBorder = new TitledBorder("Press the button to change sections' title level: ");
+		changeTitledBtnBorder.setTitleFont(_titleFont);
+		changeTitleBtnPanel.setBorder(changeTitledBtnBorder);
+
 		_upgradeLevelBtn = new JButton("Upgrade title Level");
 		_upgradeLevelBtn.addActionListener(this);
-		_upgradeLevelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		_downgradeLevelBtn = new JButton("Downgrade title Level");
 		_downgradeLevelBtn.addActionListener(this);
-		_downgradeLevelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		_setDefaultLevelBtn = new JButton("Reset to default title levels.");
 		_setDefaultLevelBtn.addActionListener(this);
-		_setDefaultLevelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		changeTitleBtnPanel.add(_upgradeLevelBtn);
+		changeTitleBtnPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		changeTitleBtnPanel.add(_downgradeLevelBtn);
+		changeTitleBtnPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		changeTitleBtnPanel.add(_setDefaultLevelBtn);
+		changeTitleBtnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		_sectionColChoiceCombobox = new JComboBox<Integer>(_sectionColChoice);
 		_sectionColChoiceCombobox.setSelectedIndex(1);
-		_sectionColChoiceCombobox.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
 		Dimension preferredSize = _sectionColChoiceCombobox.getPreferredSize();
         preferredSize.height = 25;
         _sectionColChoiceCombobox.setMaximumSize(preferredSize);
-		
 		_changeColNumBtn = new JButton("Change column number.");
 		_changeColNumBtn.addActionListener(this);
-		_changeColNumBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
 		_setDefaultColBtn = new JButton("Reset to default column numbers.");
 		_setDefaultColBtn.addActionListener(this);
-		_setDefaultColBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		_chooseBtnPanel.add(_upgradeLevelBtn);
-		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_chooseBtnPanel.add(_downgradeLevelBtn);
-		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_chooseBtnPanel.add(_setDefaultLevelBtn);
-		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 50)));
-		_chooseBtnPanel.add(_sectionColChoiceCombobox);
-		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_chooseBtnPanel.add(_changeColNumBtn);
-		_chooseBtnPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_chooseBtnPanel.add(_setDefaultColBtn);
+		JPanel changeColBtnPanel = new JPanel();
+		changeColBtnPanel.setLayout(new BoxLayout(changeColBtnPanel, BoxLayout.X_AXIS));
+		TitledBorder changeColBtnBorder = new TitledBorder("Press the button to change sections' column number: ");
+		changeColBtnBorder.setTitleFont(_titleFont);
+		changeColBtnPanel.setBorder(changeColBtnBorder);
 		
-		this.add(_chooseBtnPanel);
-		this.add(Box.createRigidArea(new Dimension(10, 0)));
+		changeColBtnPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		changeColBtnPanel.add(_sectionColChoiceCombobox);
+		changeColBtnPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		changeColBtnPanel.add(_changeColNumBtn);
+		changeColBtnPanel.add(Box.createRigidArea(new Dimension(50, 0)));
+		changeColBtnPanel.add(_setDefaultColBtn);
+		changeColBtnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+		_leftPanel.add(changeTitleBtnPanel);
+		_leftPanel.add(changeColBtnPanel);
+		_leftPanel.setPreferredSize(
+		 				new Dimension(_sectionColChoiceFrame.getWidth()*3/5, _sectionColChoiceFrame.getHeight()));
+		this.add(_leftPanel);
+		
+		_rightPanel = new JPanel();
+		_rightPanel.setLayout(new BoxLayout(_rightPanel, BoxLayout.Y_AXIS));
+		TitledBorder rightTitledBorder = new TitledBorder("Please select the table entry that needs to be changed: ");
+		rightTitledBorder.setTitleFont(_titleFont);
+		_rightPanel.setBorder(rightTitledBorder);
+		
 		try {
 			_configPanel = new ConfigurationPanel(_preProcess);
 		} catch (FatalErrorException e1) {
 			e1.printStackTrace();
 		}
-		this.add(_configPanel);
+		
+		JPanel changeConfigPanel = new JPanel();
+		changeConfigPanel.setLayout(new BoxLayout(changeConfigPanel, BoxLayout.X_AXIS));
+		_textField = new JTextField();
+		_textField.setMaximumSize(new Dimension(_textField.getMaximumSize().width,_textField.getMinimumSize().height));
+		_applyChangeBtn = new JButton("Apply Change.");
+		_applyChangeBtn.addActionListener(this);
+		_saveConfigBtn = new JButton("Save the config mapping...");
+		_saveConfigBtn.addActionListener(this);
+		changeConfigPanel.add(_textField);
+		changeConfigPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		changeConfigPanel.add(_applyChangeBtn);
+		changeConfigPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		changeConfigPanel.add(_saveConfigBtn);
+		
+		_rightPanel.add(_configPanel);
+		_rightPanel.add(changeConfigPanel);
+		_rightPanel.setPreferredSize(
+ 				new Dimension(_sectionColChoiceFrame.getWidth()*2/5, _sectionColChoiceFrame.getHeight()));
+		this.add(_rightPanel);
 		
 		_southBtnsPanel = new JPanel();
 		_sectionColChoiceFrame.add(_southBtnsPanel, BorderLayout.SOUTH);
-		_finishChooseColBtn = new JButton("Done");
+		_finishChooseColBtn = new JButton("Start Conversion.");
 		_finishChooseColBtn.addActionListener(this);
-		_saveConfigBtn = new JButton("Save the config mapping...");
-		_saveConfigBtn.addActionListener(this);
+//		_saveConfigBtn = new JButton("Save the config mapping...");
+//		_saveConfigBtn.addActionListener(this);
 		_southBtnsPanel.add(_finishChooseColBtn);
-		_southBtnsPanel.add(_saveConfigBtn);
-		
+//		_southBtnsPanel.add(_saveConfigBtn);
 
 		//TODO: change directory to be user input working directory.
 		if (macOS) {
@@ -147,7 +184,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			_fileChooser.setAcceptAllFileFilterUsed(false);
 		}
 		
-		//TODO:1. move btn. 2.add save config button. 3. add save output file button???
+		//TODO: 3. add save output file button???
 	}
 	
 	@Override
@@ -168,40 +205,45 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			_preProcess.resetCustomizedSectionParamsByColNums();
 			resetSectionParamListModel();
 		} else if (e.getSource() == _saveConfigBtn) {
-			String _newConfigFile = "";
-			
-			if (macOS) {
-				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
-				_fileDialog.setFile(Main.getConfigFile());
-				_fileDialog.setVisible(true);
-				_newConfigFile = _fileDialog.getDirectory() + _fileDialog.getFile();
-			} else {
-				//??????????
-				_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
-				_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
-				
-				if (_fileChooser.showSaveDialog(SectionColChoicePanel.this) == JFileChooser.APPROVE_OPTION) {
-					_newConfigFile = _fileChooser.getSelectedFile().getPath();
-				}
-			}
-			
-			if (!_newConfigFile.equals("")) {
-				_newConfigFile = _newConfigFile.replaceAll(".xml", "");
-				_newConfigFile += ".xml";
-				System.out.println("Save new Config File : " + _newConfigFile);
-				File file = new File(_newConfigFile);
-				if (file.exists()) {
-					int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
-					if ( choice != JOptionPane.YES_OPTION) {
-						return;
-					}
-				}
-				_configPanel.saveConfiguration(_newConfigFile);
-			}
+			saveConfig();
+		} else if (e.getSource() == _applyChangeBtn) {
+			//TODO:
 		}
 
 		this.revalidate();
 		this.repaint();
+	}
+
+	private void saveConfig() {
+		String _newConfigFile = "";
+		if (macOS) {
+			_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
+			_fileDialog.setFile(Main.getConfigFile());
+			_fileDialog.setVisible(true);
+			_newConfigFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+		} else {
+			//??????????
+			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
+			_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
+			
+			if (_fileChooser.showSaveDialog(SectionColChoicePanel.this) == JFileChooser.APPROVE_OPTION) {
+				_newConfigFile = _fileChooser.getSelectedFile().getPath();
+			}
+		}
+		
+		if (!_newConfigFile.equals("")) {
+			_newConfigFile = _newConfigFile.replaceAll(".xml", "");
+			_newConfigFile += ".xml";
+			System.out.println("Save new Config File : " + _newConfigFile);
+			File file = new File(_newConfigFile);
+			if (file.exists()) {
+				int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
+				if ( choice != JOptionPane.YES_OPTION) {
+					return;
+				}
+			}
+			_configPanel.saveConfiguration(_newConfigFile);
+		}
 	}
 	
 	private void createSectionParamListModel() {

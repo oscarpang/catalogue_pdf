@@ -24,16 +24,20 @@ public class Main extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	
 	/** Input HTML file*/
-	private static String _inputFile = "";
+	private static String _inputFile = "data/Catalogue-17_18-5.html";
 	/** Pre-processed HTML file. */
 	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify work dirrectory.)
 	private static String _processedFile = "Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
 	private static String _outputFile = "Catalogue_17_18_.tex";
 	/** Configuration file. */
-	private static String _configFile = "";
-	/** File with CSS. */
-	private static String _courseXlsFile = "";
+	private static String _configFile = "config/config.xml";
+	/** Course XLS File. */
+	private static String _courseXlsFile = "data/courses-list-2017-09-07_21.40.11.xls";
+	/** Project Working directory. */
+	private static String _workingDir = "";
+	
+	
 	
 	private static JFrame _frame, _sectionColChoiceFrame;
 	private static Main _mainPanel;
@@ -94,9 +98,9 @@ public class Main extends JPanel implements ActionListener{
 		_chooseXlsBtn.addActionListener(this);
 		_chooseConfigBtn = new JButton("Choose the Config XML file...");
 		_chooseConfigBtn.addActionListener(this);
-		_startBtn = new JButton("Start Conversion");
+		_startBtn = new JButton("Start");
 		_startBtn.addActionListener(this);
-		_startBtn.setEnabled(false);
+//		_startBtn.setEnabled(false);
 		
 		_btnPanel = new JPanel();
 		_btnPanel.add(_chooseHtmlBtn);
@@ -106,9 +110,9 @@ public class Main extends JPanel implements ActionListener{
 		
 		this.add(_btnPanel, BorderLayout.NORTH);
 		
-		_htmlLabel = new JLabel("  HTML Catalogue File : ");
-		_xlsLabel = new JLabel("  Course XLS File : ");
-		_configLabel = new JLabel("  Config XML File : ");
+		_htmlLabel = new JLabel("  HTML Catalogue File : " + _inputFile);
+		_xlsLabel = new JLabel("  Course XLS File : " + _courseXlsFile);
+		_configLabel = new JLabel("  Config XML File : " + _configFile);
 		
 		_labelPanel = new JPanel();
 		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
@@ -138,7 +142,7 @@ public class Main extends JPanel implements ActionListener{
 					_inputFile = _fileChooser.getSelectedFile().getPath();
 				}
 			}
-			_htmlLabel.setText(_htmlLabel.getText() + _inputFile);
+			_htmlLabel.setText("  HTML Catalogue File : " + _inputFile);
 			System.out.println("Input File is: " + _inputFile);
 		}else if (e.getSource() == _chooseXlsBtn) {
 			if (macOS) {
@@ -153,7 +157,7 @@ public class Main extends JPanel implements ActionListener{
 					_courseXlsFile = _fileChooser.getSelectedFile().getPath();
 				}
 			}
-			_xlsLabel.setText(_xlsLabel.getText() + _courseXlsFile);
+			_xlsLabel.setText("  Course XLS File : " + _courseXlsFile);
 			System.out.println("CourseXLS File is: " + _courseXlsFile);
 		}else if (e.getSource() == _chooseConfigBtn) {
 			if (macOS) {
@@ -168,10 +172,28 @@ public class Main extends JPanel implements ActionListener{
 					_configFile = _fileChooser.getSelectedFile().getPath();
 				}
 			}
-			_configLabel.setText(_configLabel.getText() + _configFile);
+			_configLabel.setText("  Config XML File : " + _configFile);
 			System.out.println("Config File is: " + _configFile);
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
+			if (macOS) {
+				System.setProperty("apple.awt.fileDialogForDirectories", "true");
+//				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
+				_fileDialog.setFile("");
+				_fileDialog.setTitle("Choose your project working directory...");
+				_fileDialog.setVisible(true);
+				_workingDir = _fileDialog.getDirectory() + _fileDialog.getFile();
+				System.setProperty("apple.awt.fileDialogForDirectories", "false");
+			} else {
+				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				_fileChooser.setSelectedFile(new File(""));
+				_fileChooser.setDialogTitle("Choose your project working directory...");
+				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+					_workingDir = _fileChooser.getSelectedFile().getPath();
+				}
+				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			}
+			System.out.println("User Working Directory: " + _workingDir);
 			startPreProcess();
 		}
 		
