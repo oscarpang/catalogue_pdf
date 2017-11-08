@@ -91,7 +91,7 @@ class Configuration {
 		}
 	}
 
-	public void saveConfiguration() throws FatalErrorException {
+	public void saveConfiguration(String customizedConfigFile) throws FatalErrorException {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -112,7 +112,7 @@ class Configuration {
  
             //write to console or file
             StreamResult console = new StreamResult(System.out);
-            StreamResult file = new StreamResult(new File("./output_config_2.xml"));
+            StreamResult file = new StreamResult(new File(customizedConfigFile));
  
             //write data
             transformer.transform(source, console);

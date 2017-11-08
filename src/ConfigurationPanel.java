@@ -1,12 +1,8 @@
-import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -95,6 +91,10 @@ public class ConfigurationPanel extends JTabbedPane {
 		JScrollPane scrollPane = new JScrollPane(_element_table);
 		_element_table.setFillsViewportHeight(true);
 		this.addTab("Config", scrollPane);
+	}
+	
+	public void saveConfiguration(String customizedConfigFile) throws FatalErrorException {
+		_config.saveConfiguration(customizedConfigFile);
 	}
 
 }

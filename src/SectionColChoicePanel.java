@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,12 +14,14 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
@@ -27,14 +30,16 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static JFrame _sectionColChoiceFrame;
 
 	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
-						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn;
+						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn,
+						_saveConfigBtn;
+	
 	private static JScrollPane _sectionParamPane;
 	private static JPanel _chooseBtnPanel;
 	private static PreProcess _preProcess;
+	private static JFileChooser _fileChooser;
 
 	private static JPanel _southBtnsPanel;
 	private static ConfigurationPanel _configPanel;
-
 	
 	private static JList<String> _sectionParamList;
 	private static JComboBox<Integer> _sectionColChoiceCombobox;
@@ -42,7 +47,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
 	private static String _listDisplaySpacing = "                    ";
-//	private static String _listDisplaySpacing = "--------------------";
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
@@ -120,9 +124,17 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_sectionColChoiceFrame.add(_southBtnsPanel, BorderLayout.SOUTH);
 		_finishChooseColBtn = new JButton("Done");
 		_finishChooseColBtn.addActionListener(this);
+		_saveConfigBtn = new JButton("Save the config mapping...");
+		_saveConfigBtn.addActionListener(this);
 		_southBtnsPanel.add(_finishChooseColBtn);
+		_southBtnsPanel.add(_saveConfigBtn);
 		
-		//TODO: move btn. add save config button. add save output file button???
+		_fileChooser = new JFileChooser();
+		_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
+		_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
+		
+		//TODO:1. move btn. 2.add save config button. 3. add save output file button???
 	}
 	
 	@Override
@@ -142,6 +154,29 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		} else if (e.getSource() == _setDefaultColBtn) {
 			_preProcess.resetCustomizedSectionParamsByColNums();
 			resetSectionParamListModel();
+		} else if (e.getSource() == _saveConfigBtn) {
+			System.setProperty("apple.awt.fileDialogForDirectories", "true");
+		    FileDialog d = new FileDialog(_sectionColChoiceFrame);
+		    d.setVisible(true);
+		    
+			if (_fileChooser.showSaveDialog(SectionColChoicePanel.this) == JFileChooser.APPROVE_OPTION) {
+				String _newConfigFile = _fileChooser.getSelectedFile().getPath();
+				_newConfigFile = _newConfigFile.replaceAll(".xml", "");
+				_newConfigFile += ".xml";
+				System.out.println("Save new Config File : " + _newConfigFile);
+				File file = new File(_newConfigFile);
+				if (file.exists()) {
+					int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
+					if ( choice == JOptionPane.NO_OPTION) {
+						return;
+					}
+				}
+				try {
+					_configPanel.saveConfiguration(_newConfigFile);
+				} catch (FatalErrorException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 
 		this.revalidate();
@@ -155,7 +190,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	}
 	
 	private void resetSectionParamListModel() {
-		//TODO: bold the level and column width. + corresponding name.
 		//TODO: non-ascii char in title.
 		int index = 0;
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
@@ -164,14 +198,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		}
 	}
 	
-	private String createListElem(Map.Entry<String, int[]> entr) {
-//		String elem = "<html><b><font color=white>";
-//		for (int i = 0; i < entr.getValue()[0]; i++) {
-//			elem += _listDisplaySpacing;
-//		}
-//		elem += "</font>" + entr.getKey() + " : </b><i> Title Level = </i>" + entr.getValue()[0] + 
-//				", <i>Column number = </i>" + entr.getValue()[1] + "</html>";
-		
+	private String createListElem(Map.Entry<String, int[]> entr) {	
 		String elem = "";
 		for (int i = 0; i < entr.getValue()[0]; i++) {
 			elem += _listDisplaySpacing;

@@ -4,9 +4,12 @@
  */
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -15,6 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Main extends JPanel implements ActionListener{
@@ -24,6 +28,7 @@ public class Main extends JPanel implements ActionListener{
 	/** Input HTML file*/
 	private static String _inputFile = "";
 	/** Pre-processed HTML file. */
+	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify work dirrectory.)
 	private static String _processedFile = "Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
 	private static String _outputFile = "Catalogue_17_18_.tex";
@@ -36,10 +41,12 @@ public class Main extends JPanel implements ActionListener{
 	private static Main _mainPanel;
 	private static SectionColChoicePanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
+	private static FileDialog _fileDialog;
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _startBtn;
 	private static JLabel _htmlLabel, _xlsLabel, _configLabel;
 	private static JPanel _btnPanel, _labelPanel;
 	private static PreProcess _preProcess;
+	private static boolean macOS;
 	
 	/**
 	 * Creates {@link Parser Parser} instance and runs its
@@ -49,6 +56,9 @@ public class Main extends JPanel implements ActionListener{
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
+		String osName = System.getProperty("os.name");
+	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
+		
 		_frame = new JFrame("USC Catalogue Print to PDF");
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -61,8 +71,23 @@ public class Main extends JPanel implements ActionListener{
 	
 	public Main() {
 		super(new BorderLayout());
-		_fileChooser = new JFileChooser();
-		_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		
+		try{
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		}
+		catch(Exception e){
+			System.out.println("Warning! Cross-platform L&F not used!");
+		}
+		
+		if (macOS) {
+			_fileDialog = new FileDialog(_sectionColChoiceFrame);
+			_fileDialog.setTitle("Open File...");
+			_fileDialog.setDirectory(System.getProperty("user.dir"));
+		} else {
+			_fileChooser = new JFileChooser();
+			_fileChooser.setDialogTitle("Open File...");
+			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		}
 		
 		_chooseHtmlBtn = new JButton("Choose the html Catalogue file...");
 		_chooseHtmlBtn.addActionListener(this);
@@ -82,9 +107,9 @@ public class Main extends JPanel implements ActionListener{
 		
 		this.add(_btnPanel, BorderLayout.NORTH);
 		
-		_htmlLabel = new JLabel("HTML Catalogue File : ");
-		_xlsLabel = new JLabel("Course XLS File : ");
-		_configLabel = new JLabel("Config XML File : ");
+		_htmlLabel = new JLabel("  HTML Catalogue File : ");
+		_xlsLabel = new JLabel("  Course XLS File : ");
+		_configLabel = new JLabel("  Config XML File : ");
 		
 		_labelPanel = new JPanel();
 		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
@@ -102,38 +127,60 @@ public class Main extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _chooseHtmlBtn) {
-			_fileChooser.setFileFilter(new FileNameExtensionFilter("html","html"));
-			_fileChooser.setSelectedFile(new File(""));
-			if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-				_inputFile = _fileChooser.getSelectedFile().getPath();
-				_htmlLabel.setText(_htmlLabel.getText() + _inputFile);
-				System.out.println("Input File is: " + _inputFile);
+			if (macOS) {
+				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".html"));
+				_fileDialog.setFile("");
+				_fileDialog.setVisible(true);
+				_inputFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+			} else {
+				_fileChooser.setFileFilter(new FileNameExtensionFilter("html file","html"));
+				_fileChooser.setSelectedFile(new File(""));
+				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+					_inputFile = _fileChooser.getSelectedFile().getPath();
+				}
 			}
+			_htmlLabel.setText(_htmlLabel.getText() + _inputFile);
+			System.out.println("Input File is: " + _inputFile);
 		}else if (e.getSource() == _chooseXlsBtn) {
-			_fileChooser.setFileFilter(new FileNameExtensionFilter("xls","xls", "xlsx"));
-			_fileChooser.setSelectedFile(new File(""));
-			if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-				_courseXlsFile = _fileChooser.getSelectedFile().getPath();
-				_xlsLabel.setText(_xlsLabel.getText() + _courseXlsFile);
-				System.out.println("CourseXLS File is: " + _courseXlsFile);
+			if (macOS) {
+				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xls"));
+				_fileDialog.setFile("");
+				_fileDialog.setVisible(true);
+				_courseXlsFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+			} else {
+				_fileChooser.setFileFilter(new FileNameExtensionFilter("xls file","xls", "xlsx"));
+				_fileChooser.setSelectedFile(new File(""));
+				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+					_courseXlsFile = _fileChooser.getSelectedFile().getPath();
+				}
 			}
+			_xlsLabel.setText(_xlsLabel.getText() + _courseXlsFile);
+			System.out.println("CourseXLS File is: " + _courseXlsFile);
 		}else if (e.getSource() == _chooseConfigBtn) {
-			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
-			_fileChooser.setSelectedFile(new File(""));
-			if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-				_configFile = _fileChooser.getSelectedFile().getPath();
-				_configLabel.setText(_configLabel.getText() + _configFile);
-				System.out.println("Config File is: " + _configFile);
+			if (macOS) {
+				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
+				_fileDialog.setFile("");
+				_fileDialog.setVisible(true);
+				_configFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+			} else {
+				_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
+				_fileChooser.setSelectedFile(new File(""));
+				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+					_configFile = _fileChooser.getSelectedFile().getPath();
+				}
 			}
+			_configLabel.setText(_configLabel.getText() + _configFile);
+			System.out.println("Config File is: " + _configFile);
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
 			startPreProcess();
 		}
 		
-		this.validate();
 		if (!_inputFile.equals("") && !_courseXlsFile.equals("") && !_configFile.equals("")) {
 			_startBtn.setEnabled(true);
 		}
+		
+		this.validate();
 	}
 	
 	public void startPreProcess() {
