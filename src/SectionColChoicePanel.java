@@ -81,7 +81,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 
 		JPanel changeTitleBtnPanel = new JPanel();
 		changeTitleBtnPanel.setLayout(new BoxLayout(changeTitleBtnPanel, BoxLayout.X_AXIS));
-		TitledBorder changeTitledBtnBorder = new TitledBorder("Press the button to change sections' title level: ");
+		TitledBorder changeTitledBtnBorder = new TitledBorder("Press the button to change selected sections' title level: ");
 		changeTitledBtnBorder.setTitleFont(_titleFont);
 		changeTitleBtnPanel.setBorder(changeTitledBtnBorder);
 
@@ -111,7 +111,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		
 		JPanel changeColBtnPanel = new JPanel();
 		changeColBtnPanel.setLayout(new BoxLayout(changeColBtnPanel, BoxLayout.X_AXIS));
-		TitledBorder changeColBtnBorder = new TitledBorder("Press the button to change sections' column number: ");
+		TitledBorder changeColBtnBorder = new TitledBorder("Press the button to change selected sections' column number: ");
 		changeColBtnBorder.setTitleFont(_titleFont);
 		changeColBtnPanel.setBorder(changeColBtnBorder);
 		
@@ -131,7 +131,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		
 		_rightPanel = new JPanel();
 		_rightPanel.setLayout(new BoxLayout(_rightPanel, BoxLayout.Y_AXIS));
-		TitledBorder rightTitledBorder = new TitledBorder("Please select the table entry that needs to be changed: ");
+		TitledBorder rightTitledBorder = new TitledBorder("Please select the cell that needs to be changed: ");
 		rightTitledBorder.setTitleFont(_titleFont);
 		_rightPanel.setBorder(rightTitledBorder);
 		
@@ -272,6 +272,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		try {
 			Parser parser = new Parser();
 			parser.parse(new File(Main.getProcessedFile()), new ParserHandler(new File(Main.getOutputFile()), _preProcess));
+			LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

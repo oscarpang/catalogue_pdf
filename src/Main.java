@@ -134,7 +134,7 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".html"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
-				_inputFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+				_inputFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
 				_fileChooser.setFileFilter(new FileNameExtensionFilter("html file","html"));
 				_fileChooser.setSelectedFile(new File(""));
@@ -149,7 +149,7 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xls"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
-				_courseXlsFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+				_courseXlsFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
 				_fileChooser.setFileFilter(new FileNameExtensionFilter("xls file","xls", "xlsx"));
 				_fileChooser.setSelectedFile(new File(""));
@@ -164,7 +164,7 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
-				_configFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+				_configFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
 				_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
 				_fileChooser.setSelectedFile(new File(""));

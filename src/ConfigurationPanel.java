@@ -244,9 +244,9 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		String _newConfigFile = "";
 		if (macOS) {
 			_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
-			_fileDialog.setFile(Main.getConfigFile());
+			//_fileDialog.setFile(Main.getConfigFile());
 			_fileDialog.setVisible(true);
-			_newConfigFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+			_newConfigFile = _fileDialog.getFile() == null ? null: _fileDialog.getDirectory() + _fileDialog.getFile();
 		} else {
 			// ??????????
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml", "xml"));
@@ -257,7 +257,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			}
 		}
 
-		if (!_newConfigFile.equals("")) {
+		if (_newConfigFile != null && !_newConfigFile.equals("")) {
 			_newConfigFile = _newConfigFile.replaceAll(".xml", "");
 			_newConfigFile += ".xml";
 			System.out.println("Save new Config File : " + _newConfigFile);
