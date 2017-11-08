@@ -51,6 +51,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
+	//TODO: change name and change to JFrame
 	public SectionColChoicePanel(JFrame sectionColChoiceFrame, PreProcess preProcess) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

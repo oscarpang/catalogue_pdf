@@ -26,7 +26,7 @@ public class Main extends JPanel implements ActionListener{
 	/** Input HTML file*/
 	private static String _inputFile = "";
 	/** Pre-processed HTML file. */
-	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify work dirrectory.)
+	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify working directory.)
 	private static String _processedFile = "Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
 	private static String _outputFile = "Catalogue_17_18_.tex";
@@ -37,17 +37,16 @@ public class Main extends JPanel implements ActionListener{
 	/** Project Working directory. */
 	private static String _workingDir = "";
 	
-	
-	
 	private static JFrame _frame, _sectionColChoiceFrame;
 	private static Main _mainPanel;
 	private static SectionColChoicePanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
 	private static FileDialog _fileDialog;
-	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _startBtn;
-	private static JLabel _htmlLabel, _xlsLabel, _configLabel;
+	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _chooseWorkingDirBtn, _startBtn;
+	private static JLabel _htmlLabel, _xlsLabel, _configLabel, _workingDirLabel;
 	private static JPanel _btnPanel, _labelPanel;
 	private static PreProcess _preProcess;
+	
 	private static boolean macOS;
 	
 	/**
@@ -83,6 +82,7 @@ public class Main extends JPanel implements ActionListener{
 		
 		if (macOS) {
 			_fileDialog = new FileDialog(_frame, "Open File...", FileDialog.LOAD);
+			//TODO: see if the title is visible
 			_fileDialog.setTitle("Open File...");
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
 		} else {
@@ -98,6 +98,8 @@ public class Main extends JPanel implements ActionListener{
 		_chooseXlsBtn.addActionListener(this);
 		_chooseConfigBtn = new JButton("Choose the Config XML file...");
 		_chooseConfigBtn.addActionListener(this);
+		_chooseWorkingDirBtn = new JButton("Choose your working directory...");
+		_chooseWorkingDirBtn.addActionListener(this);
 		_startBtn = new JButton("Start");
 		_startBtn.addActionListener(this);
 		_startBtn.setEnabled(false);
@@ -106,6 +108,7 @@ public class Main extends JPanel implements ActionListener{
 		_btnPanel.add(_chooseHtmlBtn);
 		_btnPanel.add(_chooseXlsBtn);
 		_btnPanel.add(_chooseConfigBtn);
+		_btnPanel.add(_chooseWorkingDirBtn);
 		_btnPanel.add(_startBtn);
 		
 		this.add(_btnPanel, BorderLayout.NORTH);
@@ -113,6 +116,7 @@ public class Main extends JPanel implements ActionListener{
 		_htmlLabel = new JLabel("  HTML Catalogue File : " + _inputFile);
 		_xlsLabel = new JLabel("  Course XLS File : " + _courseXlsFile);
 		_configLabel = new JLabel("  Config XML File : " + _configFile);
+		_workingDirLabel = new JLabel("  Working Directory is : " + _workingDir);
 		
 		_labelPanel = new JPanel();
 		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
@@ -122,6 +126,8 @@ public class Main extends JPanel implements ActionListener{
 		_labelPanel.add(_xlsLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_configLabel);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_workingDirLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 	
 		this.add(_labelPanel, BorderLayout.CENTER);
@@ -174,30 +180,40 @@ public class Main extends JPanel implements ActionListener{
 			}
 			_configLabel.setText("  Config XML File : " + _configFile);
 			System.out.println("Config File is: " + _configFile);
-		}else if (e.getSource() == _startBtn) {
-			System.out.println("Should Start Conversion now. Maybe add error etc.");
+		}else if (e.getSource() == _chooseWorkingDirBtn) {
 			if (macOS) {
 				System.setProperty("apple.awt.fileDialogForDirectories", "true");
-//				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
 				_fileDialog.setFile("");
 				_fileDialog.setTitle("Choose your project working directory...");
+				_fileDialog.setFilenameFilter(null);
 				_fileDialog.setVisible(true);
 				_workingDir = _fileDialog.getDirectory() + _fileDialog.getFile();
+				if (_fileDialog.getDirectory() == null && _fileDialog.getFile() == null) {
+					_workingDir = "";
+				}
 				System.setProperty("apple.awt.fileDialogForDirectories", "false");
 			} else {
 				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//				_fileChooser.setAcceptAllFileFilterUsed(true);
 				_fileChooser.setSelectedFile(new File(""));
+				_fileChooser.resetChoosableFileFilters();
 				_fileChooser.setDialogTitle("Choose your project working directory...");
 				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
 					_workingDir = _fileChooser.getSelectedFile().getPath();
 				}
-				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				_fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				_fileChooser.setDialogTitle("Open File...");
+//				_fileChooser.setAcceptAllFileFilterUsed(false);
 			}
-			System.out.println("User Working Directory: " + _workingDir);
+			_workingDirLabel.setText("  Working Directory is : " + _workingDir);
+			System.out.println("Working Directory is : " + _workingDir);
+		}else if (e.getSource() == _startBtn) {
+			System.out.println("Should Start Conversion now. Maybe add error etc.");
 			startPreProcess();
 		}
 		
-		if (!_inputFile.equals("") && !_courseXlsFile.equals("") && !_configFile.equals("")) {
+		if (!_inputFile.equals("") && !_courseXlsFile.equals("") && !_configFile.equals("") 
+				&& !_workingDir.equals("")) {
 			_startBtn.setEnabled(true);
 		}
 		
