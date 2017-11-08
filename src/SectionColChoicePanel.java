@@ -173,7 +173,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			
 			if (macOS) {
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
-				_fileDialog.setFile("");
+				_fileDialog.setFile(Main.getConfigFile());
 				_fileDialog.setVisible(true);
 				_newConfigFile = _fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
