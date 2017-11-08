@@ -138,8 +138,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 
 		//TODO: change directory to be user input working directory.
 		if (macOS) {
-			_fileDialog = new FileDialog(_sectionColChoiceFrame);
-			_fileDialog.setTitle("Save As...");
+			_fileDialog = new FileDialog(_sectionColChoiceFrame, "Save As...", FileDialog.SAVE);
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
 		} else {
 			_fileChooser = new JFileChooser();

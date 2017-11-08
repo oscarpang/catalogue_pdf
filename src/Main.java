@@ -8,8 +8,6 @@ import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -80,7 +78,7 @@ public class Main extends JPanel implements ActionListener{
 		}
 		
 		if (macOS) {
-			_fileDialog = new FileDialog(_frame);
+			_fileDialog = new FileDialog(_frame, "Open File...", FileDialog.LOAD);
 			_fileDialog.setTitle("Open File...");
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
 		} else {
