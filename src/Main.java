@@ -24,16 +24,16 @@ public class Main extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	
 	/** Input HTML file*/
-	private static String _inputFile = "data/Catalogue-17_18-5.html";
+	private static String _inputFile = "";
 	/** Pre-processed HTML file. */
 	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify work dirrectory.)
 	private static String _processedFile = "Catalogue_17_18_new_processed.html";
 	/** Output LaTeX file. */
 	private static String _outputFile = "Catalogue_17_18_.tex";
 	/** Configuration file. */
-	private static String _configFile = "config/config.xml";
+	private static String _configFile = "";
 	/** Course XLS File. */
-	private static String _courseXlsFile = "data/courses-list-2017-09-07_21.40.11.xls";
+	private static String _courseXlsFile = "";
 	/** Project Working directory. */
 	private static String _workingDir = "";
 	
@@ -100,7 +100,7 @@ public class Main extends JPanel implements ActionListener{
 		_chooseConfigBtn.addActionListener(this);
 		_startBtn = new JButton("Start");
 		_startBtn.addActionListener(this);
-//		_startBtn.setEnabled(false);
+		_startBtn.setEnabled(false);
 		
 		_btnPanel = new JPanel();
 		_btnPanel.add(_chooseHtmlBtn);

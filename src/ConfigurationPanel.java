@@ -67,10 +67,15 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		
 
 		changeConfigPanel.add(textAreaScrollPane);
-		// changeConfigPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		changeConfigPanel.add(_applyChangeBtn);
-		// changeConfigPanel.add(Box.createRigidArea(new Dimension(20, 0)));
-		changeConfigPanel.add(_saveConfigBtn);
+		
+		JPanel btnPanel = new JPanel();
+		btnPanel.setLayout(new BoxLayout(btnPanel,BoxLayout.X_AXIS));
+		btnPanel.add(Box.createRigidArea(new Dimension(80, 0)));
+		btnPanel.add(_applyChangeBtn);
+		btnPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+		btnPanel.add(_saveConfigBtn);
+		
+		changeConfigPanel.add(btnPanel);
 
 		this.add(changeConfigPanel, BorderLayout.SOUTH);
 		
