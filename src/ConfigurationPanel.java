@@ -59,8 +59,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		_applyChangeBtn.addActionListener(this);
 		_saveConfigBtn = new JButton("Save the config mapping...");
 		_saveConfigBtn.addActionListener(this);
-		_text_area = new JTextArea();
+		_text_area = new JTextArea(10, changeConfigPanel.getWidth());
+		_text_area.setLineWrap(true);
 		JScrollPane textAreaScrollPane = new JScrollPane(_text_area);
+		
 
 		changeConfigPanel.add(textAreaScrollPane);
 		// changeConfigPanel.add(Box.createRigidArea(new Dimension(10, 0)));
