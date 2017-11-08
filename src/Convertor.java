@@ -313,84 +313,84 @@ class Convertor {
 			_writer.write("\\footnote{" + map.get("cite") + "}");
 	}
 
-	/**
-	 * Prints CSS style converted to LaTeX command. Called when HTML start element
-	 * is reached.
-	 * 
-	 * @param e
-	 *            HTML start element
-	 * @throws IOException
-	 *             when output error occurs
-	 */
-	public void cssStyleStart(ElementStart e) throws IOException {
-		CSSStyle[] styles = findStyles(e);
-		for (int i = 0; i < styles.length; ++i) {
-			if (styles[i] == null)
-				continue;
-			if (_config.getMakeCmdsFromCSS())
-				_writer.write(_config.getCmdStyleName(styles[i].getName()) + "{");
-			else
-				_writer.write(styles[i].getStart());
-		}
-	}
+//	/**
+//	 * Prints CSS style converted to LaTeX command. Called when HTML start element
+//	 * is reached.
+//	 * 
+//	 * @param e
+//	 *            HTML start element
+//	 * @throws IOException
+//	 *             when output error occurs
+//	 */
+//	public void cssStyleStart(ElementStart e) throws IOException {
+//		CSSStyle[] styles = findStyles(e);
+//		for (int i = 0; i < styles.length; ++i) {
+//			if (styles[i] == null)
+//				continue;
+//			if (_config.getMakeCmdsFromCSS())
+//				_writer.write(_config.getCmdStyleName(styles[i].getName()) + "{");
+//			else
+//				_writer.write(styles[i].getStart());
+//		}
+//	}
 
-	/**
-	 * Prints CSS style converted to LaTeX command. Called when HTML end element is
-	 * reached.
-	 * 
-	 * @param e
-	 *            corresponding HTML start element
-	 * @throws IOException
-	 *             when output error occurs
-	 */
-	public void cssStyleEnd(ElementStart e) throws IOException {
-		CSSStyle[] styles = findStyles(e);
-		for (int i = styles.length - 1; i >= 0; --i) {
-			if (styles[i] == null)
-				continue;
-			if (_config.getMakeCmdsFromCSS())
-				_writer.write("}");
-			else
-				_writer.write(styles[i].getEnd());
-		}
-	}
+//	/**
+//	 * Prints CSS style converted to LaTeX command. Called when HTML end element is
+//	 * reached.
+//	 * 
+//	 * @param e
+//	 *            corresponding HTML start element
+//	 * @throws IOException
+//	 *             when output error occurs
+//	 */
+//	public void cssStyleEnd(ElementStart e) throws IOException {
+//		CSSStyle[] styles = findStyles(e);
+//		for (int i = styles.length - 1; i >= 0; --i) {
+//			if (styles[i] == null)
+//				continue;
+//			if (_config.getMakeCmdsFromCSS())
+//				_writer.write("}");
+//			else
+//				_writer.write(styles[i].getEnd());
+//		}
+//	}
 
-	/**
-	 * Finds styles for the specified element.
-	 * 
-	 * @param e
-	 *            HTML element
-	 * @return array with styles in this order: element name style, 'class' style,
-	 *         'id' style (if style not found null is stored in the array)
-	 */
-	private CSSStyle[] findStyles(ElementStart e) {
-		try {
-			if (_config.getElement(e.getElementName()).ignoreStyles())
-				return null;
-		} catch (NoItemException ex) {
-		}
-
-		String[] styleNames = { e.getElementName(), "", "" };
-		CSSStyle[] styles = { null, null, null };
-		CSSStyle style;
-
-		if (e.getAttributes().get("class") != null)
-			styleNames[1] = e.getAttributes().get("class");
-
-		if (e.getAttributes().get("id") != null)
-			styleNames[2] = e.getAttributes().get("id");
-
-		if ((style = _config.findStyle(styleNames[0])) != null)
-			styles[0] = style;
-
-		if ((style = _config.findStyleClass(styleNames[1], e.getElementName())) != null)
-			styles[1] = style;
-
-		if ((style = _config.findStyleId(styleNames[2], e.getElementName())) != null)
-			styles[2] = style;
-
-		return styles;
-	}
+//	/**
+//	 * Finds styles for the specified element.
+//	 * 
+//	 * @param e
+//	 *            HTML element
+//	 * @return array with styles in this order: element name style, 'class' style,
+//	 *         'id' style (if style not found null is stored in the array)
+//	 */
+//	private CSSStyle[] findStyles(ElementStart e) {
+//		try {
+//			if (_config.getElement(e.getElementName()).ignoreStyles())
+//				return null;
+//		} catch (NoItemException ex) {
+//		}
+//
+//		String[] styleNames = { e.getElementName(), "", "" };
+//		CSSStyle[] styles = { null, null, null };
+//		CSSStyle style;
+//
+//		if (e.getAttributes().get("class") != null)
+//			styleNames[1] = e.getAttributes().get("class");
+//
+//		if (e.getAttributes().get("id") != null)
+//			styleNames[2] = e.getAttributes().get("id");
+//
+//		if ((style = _config.findStyle(styleNames[0])) != null)
+//			styles[0] = style;
+//
+//		if ((style = _config.findStyleClass(styleNames[1], e.getElementName())) != null)
+//			styles[1] = style;
+//
+//		if ((style = _config.findStyleId(styleNames[2], e.getElementName())) != null)
+//			styles[2] = style;
+//
+//		return styles;
+//	}
 
 	/**
 	 * Called when A start element is reached.
@@ -767,8 +767,8 @@ class Convertor {
 		if (_config.getLinksConversionType() == LinksConversion.HYPERTEX)
 			_writer.write("\n\\usepackage{hyperref}");
 
-		if (_config.getMakeCmdsFromCSS())
-			_writer.write(_config.makeCmdsFromCSS());
+//		if (_config.getMakeCmdsFromCSS())
+//			_writer.write(_config.makeCmdsFromCSS());
 
 		_writer.write(_config.getElement(es.getElementName()).getStart());
 	}
@@ -916,11 +916,15 @@ class Convertor {
 	}
 	
 	public void sectionStart(ElementStart element) throws IOException, NoItemException {
-		endMultiCol();
+		// End the current multicol env only if 1) next part has diff number of col, or 2) next part starts a level 0 or 1
+		if(_next_section == 0 || 
+				_section_params.get(_next_section).getValue()[1] != _section_params.get(_next_section-1).getValue()[1] ||
+				_section_params.get(_next_section).getValue()[0] <= 1) {
+			endMultiCol();
+		}
 		String customized_header = String.format("h%d", _section_params.get(_next_section).getValue()[0]);
 		String old_name = element.getElementName();
 		if(!old_name.equals(customized_header)) {
-			System.out.println("Old: " + element.getElementName() + " replace: " + customized_header + " " + _section_params.get(_next_section).getKey());
 			element.setElementName(customized_header);
 			commonElementStart(element);
 			element.setElementName(old_name);
@@ -942,7 +946,9 @@ class Convertor {
 		
 		if(_next_section != _section_params.size()) {
 			Integer next_section_col = _section_params.get(_next_section).getValue()[1];
-			if(_next_section == 0 || next_section_col != _section_params.get(_next_section-1).getValue()[1]) {
+			if(_next_section == 0 || 
+					next_section_col != _section_params.get(_next_section-1).getValue()[1] ||
+					_section_params.get(_next_section).getValue()[0] <= 1) {
 				beginMultiCol(next_section_col);
 			}
 		}

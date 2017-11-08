@@ -28,6 +28,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	
 	private static JFrame _sectionColChoiceFrame;
+	
+	private static boolean macOS;
 
 	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
 						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn,
@@ -37,6 +39,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static JPanel _chooseBtnPanel;
 	private static PreProcess _preProcess;
 	private static JFileChooser _fileChooser;
+	private static FileDialog _fileDialog;
 
 	private static JPanel _southBtnsPanel;
 	private static ConfigurationPanel _configPanel;
@@ -55,6 +58,9 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 //		this.add(Box.createHorizontalGlue());
+		
+		String osName = System.getProperty("os.name");
+	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
 		
 		_preProcess = preProcess;
 		_sectionColChoiceFrame = sectionColChoiceFrame;
@@ -129,10 +135,18 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_southBtnsPanel.add(_finishChooseColBtn);
 		_southBtnsPanel.add(_saveConfigBtn);
 		
-		_fileChooser = new JFileChooser();
-		_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-		_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
-		_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
+
+		//TODO: change directory to be user input working directory.
+		if (macOS) {
+			_fileDialog = new FileDialog(_sectionColChoiceFrame);
+			_fileDialog.setTitle("Save As...");
+			_fileDialog.setDirectory(System.getProperty("user.dir"));
+		} else {
+			_fileChooser = new JFileChooser();
+			_fileChooser.setDialogTitle("Save As...");
+			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			_fileChooser.setAcceptAllFileFilterUsed(false);
+		}
 		
 		//TODO:1. move btn. 2.add save config button. 3. add save output file button???
 	}
@@ -141,7 +155,7 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _finishChooseColBtn) {
 			startConversion();
-			JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Where do you want to save the file?");
+			JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Output has been saved to ...");
 		} else if (e.getSource() == _upgradeLevelBtn) {
 			addSectionLevel(-1);
 		} else if (e.getSource() == _downgradeLevelBtn) {
@@ -155,27 +169,35 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			_preProcess.resetCustomizedSectionParamsByColNums();
 			resetSectionParamListModel();
 		} else if (e.getSource() == _saveConfigBtn) {
-			System.setProperty("apple.awt.fileDialogForDirectories", "true");
-		    FileDialog d = new FileDialog(_sectionColChoiceFrame);
-		    d.setVisible(true);
-		    
-			if (_fileChooser.showSaveDialog(SectionColChoicePanel.this) == JFileChooser.APPROVE_OPTION) {
-				String _newConfigFile = _fileChooser.getSelectedFile().getPath();
+			String _newConfigFile = "";
+			
+			if (macOS) {
+				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
+				_fileDialog.setFile("");
+				_fileDialog.setVisible(true);
+				_newConfigFile = _fileDialog.getDirectory() + _fileDialog.getFile();
+			} else {
+				//??????????
+				_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
+				_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
+				
+				if (_fileChooser.showSaveDialog(SectionColChoicePanel.this) == JFileChooser.APPROVE_OPTION) {
+					_newConfigFile = _fileChooser.getSelectedFile().getPath();
+				}
+			}
+			
+			if (!_newConfigFile.equals("")) {
 				_newConfigFile = _newConfigFile.replaceAll(".xml", "");
 				_newConfigFile += ".xml";
 				System.out.println("Save new Config File : " + _newConfigFile);
 				File file = new File(_newConfigFile);
 				if (file.exists()) {
 					int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
-					if ( choice == JOptionPane.NO_OPTION) {
+					if ( choice != JOptionPane.YES_OPTION) {
 						return;
 					}
 				}
-				try {
-					_configPanel.saveConfiguration(_newConfigFile);
-				} catch (FatalErrorException e1) {
-					e1.printStackTrace();
-				}
+				_configPanel.saveConfiguration(_newConfigFile);
 			}
 		}
 

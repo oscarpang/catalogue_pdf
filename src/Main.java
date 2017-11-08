@@ -80,13 +80,14 @@ public class Main extends JPanel implements ActionListener{
 		}
 		
 		if (macOS) {
-			_fileDialog = new FileDialog(_sectionColChoiceFrame);
+			_fileDialog = new FileDialog(_frame);
 			_fileDialog.setTitle("Open File...");
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
 		} else {
 			_fileChooser = new JFileChooser();
 			_fileChooser.setDialogTitle("Open File...");
 			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			_fileChooser.setAcceptAllFileFilterUsed(false);
 		}
 		
 		_chooseHtmlBtn = new JButton("Choose the html Catalogue file...");

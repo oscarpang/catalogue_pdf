@@ -8,15 +8,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
-public class ConfigurationPanel extends JTabbedPane {
+public class ConfigurationPanel extends JTabbedPane{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3087284870831158695L;
-	JTabbedPane _main_pane;
 	Configuration _config;
-	JPanel _command_config_panel;
-	JPanel _char_config_panel;
 	JTable _element_table;
 	JTable _char_config_table;
 	JPanel _main_panel;
@@ -26,9 +23,7 @@ public class ConfigurationPanel extends JTabbedPane {
 		super();
 		_preprocess = preprocess;
 		_config = new Configuration();
-		_command_config_panel = new JPanel();
-		_char_config_panel = new JPanel();
-		
+
 		PopulateCommandConfig();
 		PopulateCharConfig();
 	}
@@ -93,8 +88,13 @@ public class ConfigurationPanel extends JTabbedPane {
 		this.addTab("Config", scrollPane);
 	}
 	
-	public void saveConfiguration(String customizedConfigFile) throws FatalErrorException {
-		_config.saveConfiguration(customizedConfigFile);
+	public void saveConfiguration(String filePath){
+		Configuration config_to_save = new Configuration(_config);
+		try {
+			config_to_save.saveConfiguration(filePath);
+		} catch (FatalErrorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
 }
