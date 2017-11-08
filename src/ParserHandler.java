@@ -58,9 +58,7 @@ class ParserHandler implements IParserHandler {
             else if (name.equals("img")) _conv.imgStart(element);
             else if (name.equals("table")) _conv.tableStart(element);
             else if (HeaderElementSet.contains(name)) _conv.sectionStart(element);
-            else _conv.commonElementStart(element);
-            
-//            _conv.cssStyleStart(element);
+            else _conv.commonElementStart(element);            
         } catch (IOException e) {
             System.err.println("Can't write into output file");
         } catch (NoItemException e) {
