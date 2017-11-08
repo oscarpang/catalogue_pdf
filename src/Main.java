@@ -71,7 +71,7 @@ public class Main extends JPanel implements ActionListener{
 		super(new BorderLayout());
 		
 		try{
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
 		catch(Exception e){
 			System.out.println("Warning! Cross-platform L&F not used!");
