@@ -252,8 +252,16 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				//check if the file exist.
 				File file = new File(newConfigFile);
 				if (file.exists()) {
-					int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
-					if (choice != JOptionPane.YES_OPTION) {
+//					int confirm = JOptionPane.showOptionDialog(
+//				             null, "Replace existing file?", 
+//				             "File Replacement Confirmation", JOptionPane.YES_NO_OPTION, 
+//				             JOptionPane.QUESTION_MESSAGE, null, null, null);
+//					if (confirm == JOptionPane.NO_OPTION) {
+//						return;
+//					}
+					int choice = JOptionPane.showConfirmDialog(null, "Replace existing file?", 
+							"File Replacement Confirmation", JOptionPane.YES_NO_OPTION);
+					if (choice == JOptionPane.NO_OPTION) {
 						return;
 					}
 				}

@@ -5,6 +5,8 @@ import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Map;
 
@@ -49,7 +51,23 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+		    public void windowClosing(WindowEvent e) {
+		        int confirm = JOptionPane.showOptionDialog(
+		             null, "Are You Sure to Close this Application?", 
+		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
+		             JOptionPane.QUESTION_MESSAGE, null, null, null);
+		        if (confirm == JOptionPane.YES_OPTION) {
+		        	//Remove PreProcessed File.
+		        	File preProcessFile = new File(Main.getProcessedFile());
+		        	preProcessFile.delete();
+		        	
+		        	System.exit(0);
+		        }
+		    }
+		});
 		this.setBounds(50, 50, 1500, 800);
 		
 		_preProcess = preProcess;
@@ -171,7 +189,9 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			boolean success = saveOutputFile();
 			if (success) {
 				startConversion();
-				JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Output has been saved to ...");
+				String pdfName = Main.getOutputFile().replaceAll("\\.tex", ".pdf");
+				JOptionPane.showMessageDialog(this, "Finish Conversion.\n Latex output has been saved as : " 
+										+ Main.getOutputFile() + ".\n PDF has been saved as : " + pdfName);
 			}
 		} else if (e.getSource() == _upgradeLevelBtn) {
 			addSectionLevel(-1);
@@ -216,8 +236,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 				//check if the file exist.
 				File file = new File(outputFile);
 				if (file.exists()) {
-					int choice = JOptionPane.showConfirmDialog(null, "Replace existing output file?", 
-							"Replace exisitng output file?", JOptionPane.YES_NO_OPTION);
+					int choice = JOptionPane.showConfirmDialog(null, "Replace existing file?", 
+							"File Replacement Confirmation", JOptionPane.YES_NO_OPTION);
 					if (choice == JOptionPane.NO_OPTION) {
 						return false;
 					}
@@ -294,13 +314,9 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			Parser parser = new Parser();
 			parser.parse(new File(Main.getProcessedFile()), new ParserHandler(new File(Main.getOutputFile()), _preProcess));
 			
-			//Remove PreProcessed File.
-			File preProcessFile = new File(Main.getProcessedFile());
-			preProcessFile.delete();
-			
 			System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
 			//TODO: if failed, end the process.
-			LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
+			boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.Box;
@@ -15,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -61,7 +64,19 @@ public class Main extends JPanel implements ActionListener{
 	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
 		
 		_frame = new JFrame("USC Catalogue Print to PDF");
-		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		_frame.addWindowListener(new WindowAdapter() {
+			@Override
+		    public void windowClosing(WindowEvent e) {
+		        int confirm = JOptionPane.showOptionDialog(
+		             null, "Are You Sure to Close this Application?", 
+		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
+		             JOptionPane.QUESTION_MESSAGE, null, null, null);
+		        if (confirm == JOptionPane.YES_OPTION) {
+		        	System.exit(0);
+		        }
+		    }
+		});
 		
 		_mainPanel = new Main();
 		_frame.add(_mainPanel);
