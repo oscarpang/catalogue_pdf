@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -187,28 +188,35 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setTitle("Choose your project working directory...");
 				_fileDialog.setFilenameFilter(null);
 				_fileDialog.setVisible(true);
-				_workingDir = _fileDialog.getDirectory() + _fileDialog.getFile();
+				_workingDir = _fileDialog.getDirectory() + _fileDialog.getFile() + System.getProperty("file.separator");
 				if (_fileDialog.getDirectory() == null && _fileDialog.getFile() == null) {
 					_workingDir = "";
 				}
 				System.setProperty("apple.awt.fileDialogForDirectories", "false");
 			} else {
 				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//				_fileChooser.setAcceptAllFileFilterUsed(true);
 				_fileChooser.setSelectedFile(new File(""));
 				_fileChooser.resetChoosableFileFilters();
 				_fileChooser.setDialogTitle("Choose your project working directory...");
 				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-					_workingDir = _fileChooser.getSelectedFile().getPath();
+					_workingDir = _fileChooser.getSelectedFile().getPath() + System.getProperty("file.separator");
 				}
 				_fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				_fileChooser.setDialogTitle("Open File...");
-//				_fileChooser.setAcceptAllFileFilterUsed(false);
 			}
 			_workingDirLabel.setText("  Working Directory is : " + _workingDir);
 			System.out.println("Working Directory is : " + _workingDir);
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
+			String name = _inputFile.substring(0, _inputFile.indexOf(".html"));
+			while (name.contains("\\")){
+				name = name.substring(name.indexOf("\\") + 1);
+			}
+			_processedFile = _workingDir + name + "_processed.html";
+			_outputFile = _workingDir + name + ".tex";
+			System.out.println(_processedFile + "---" + _outputFile);
+			checkIfExist(_processedFile);
+			checkIfExist(_outputFile);
 			startPreProcess();
 		}
 		
@@ -218,6 +226,19 @@ public class Main extends JPanel implements ActionListener{
 		}
 		
 		this.validate();
+	}
+	
+	private void checkIfExist(String name) {
+		File file = new File(name);
+		if (file.exists()) {
+			int reply = JOptionPane.showConfirmDialog(null, "Replace existing output file?", 
+					"Replace exisitng output file?", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.NO_OPTION) {
+				//TODO: add optionpane to get file name.
+//				String name = JOptionPane.showInputDialog(frame, "What's your name?");
+				return;
+			}
+		}
 	}
 	
 	public void startPreProcess() {
@@ -279,5 +300,9 @@ public class Main extends JPanel implements ActionListener{
 	 */
 	public static String getOutputFile() {
 		return _outputFile;
+	}
+	
+	public static void setConfigFile(String configFile) {
+		_configFile = configFile;
 	}
 }

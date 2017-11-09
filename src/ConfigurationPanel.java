@@ -269,6 +269,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				}
 			}
 			this.saveConfiguration(_newConfigFile);
+			Main.setConfigFile(_newConfigFile);
 		}
 	}
 

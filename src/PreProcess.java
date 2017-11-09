@@ -68,6 +68,8 @@ public class PreProcess {
 		secondRoundPreProcessing();
 		thirdRoundPreProcessing();
 	}
+	
+	//TODO: change COI default to be in 3 columns.
 
 	private void firstRoundPreProcessing() {
 		System.out.println("Start the first round processing.");
@@ -253,6 +255,8 @@ public class PreProcess {
 		int numRow = 0;
 		boolean isFirstLine = true;
 		String curSectionName = null;
+		
+		int defaultColNum = 2;
 
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
@@ -271,7 +275,10 @@ public class PreProcess {
 					curSectionName = curSectionName.contains(">") ?
 							 curSectionName.substring(curSectionName.indexOf(">") + 1) : curSectionName;
 
-					int[] curSectionParam = {curSectionLevel,2};
+					if (curSectionName.equals("Courses of Instruction")) {
+						defaultColNum = 3;
+					}
+					int[] curSectionParam = {curSectionLevel, defaultColNum};
 					_defaultSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam));
 					_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(curSectionName, curSectionParam.clone()));
 				}
