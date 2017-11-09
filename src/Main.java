@@ -56,6 +56,7 @@ public class Main extends JPanel implements ActionListener{
 	 *            command line arguments
 	 */
 	public static void main(String[] args) {
+		
 		String osName = System.getProperty("os.name");
 	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
 		

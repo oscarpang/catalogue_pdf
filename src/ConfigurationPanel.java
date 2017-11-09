@@ -247,7 +247,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			_fileChooser.setSelectedFile(new File(""));
 			if (_fileChooser.showSaveDialog(_parent) == JFileChooser.APPROVE_OPTION) {
 				newConfigFile = _fileChooser.getSelectedFile().getPath();
-				newConfigFile = newConfigFile.replaceAll(".xml", "");
+				newConfigFile = newConfigFile.replaceAll("\\.xml", "");
 				newConfigFile += ".xml";
 				//check if the file exist.
 				File file = new File(newConfigFile);
@@ -261,7 +261,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 
 		if (!newConfigFile.equals("")) {
-			newConfigFile = newConfigFile.replaceAll(".xml", "");
+			newConfigFile = newConfigFile.replaceAll("\\.xml", "");
 			newConfigFile += ".xml";
 			System.out.println("Save new Config File : " + newConfigFile);
 			this.saveConfiguration(newConfigFile);

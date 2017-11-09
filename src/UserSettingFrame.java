@@ -211,7 +211,7 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			_fileChooser.setSelectedFile(new File(filename + ".tex"));
 			if (_fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 				outputFile = _fileChooser.getSelectedFile().getPath();
-				outputFile = outputFile.replaceAll(".tex", "");
+				outputFile = outputFile.replaceAll("\\.tex", "");
 				outputFile += ".tex";
 				//check if the file exist.
 				File file = new File(outputFile);
@@ -226,27 +226,13 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		}
 
 		if (!outputFile.equals("")) {
-			outputFile = outputFile.replaceAll(".tex", "");
+			outputFile = outputFile.replaceAll("\\.tex", "");
 			outputFile += ".tex";
 			System.out.println("Save output File : " + outputFile);
 			Main.setOutputFile(outputFile);
 			return true;
 		}
 		return false;
-	}
-	
-	private boolean handleIfExist(String name) {
-		File file = new File(name);
-		if (file.exists()) {
-			int reply = JOptionPane.showConfirmDialog(null, "Replace existing output file?", 
-					"Replace exisitng output file?", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.NO_OPTION) {
-				//TODO: add optionpane to get file name.
-//				String name = JOptionPane.showInputDialog(frame, "What's your name?");
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	private void createSectionParamListModel() {
