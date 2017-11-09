@@ -39,6 +39,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	private static String _listDisplaySpacing = "                    ";
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
+	
+	private static boolean macOS;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
@@ -46,6 +48,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		this.setBounds(50, 50, 1500, 800);
 		
 		_preProcess = preProcess;
+		String osName = System.getProperty("os.name");
+	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
 		
 		_contentPanel = new JPanel();
 		_contentPanel.setLayout(new BoxLayout(_contentPanel, BoxLayout.X_AXIS));
@@ -174,8 +178,7 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			System.out.println(Main.getProcessedFile() + "---" + Main.getOutputFile());
 			
 			//TODO: Prompt a file chooser to save output file.
-			
-			if (handleIfExist(Main.getOutputFile())) {
+			if (macOS || handleIfExist(Main.getOutputFile())) {
 				startConversion();
 				JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Output has been saved to ...");
 			}
