@@ -237,32 +237,32 @@
         <end></end>
     </element>
     <element name='h0'>
-        <start>@NL@NL\chapter{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\chapter{</start>
         <end>}</end>
     </element>
     <element name='h1'>
-        <start>@NL@NL\section{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\section{</start>
         <end>}</end>
     </element>
     <element name='h2'>
-        <start>@NL@NL\subsection{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\subsection{</start>
         <end>}</end>
     </element>
     <element name='h3'>
-        <start>@NL@NL\subsubsection{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\subsubsection{</start>
         <end>}</end>
     </element>
     <element name='h4'>
-        <start>@NL@NL\paragraph{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\paragraph{</start>
         <end>}\mbox{}\\</end>
     </element>
     <element name='h5'>
-        <start>@NL@NL\subparagraph{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\subparagraph{</start>
         <end>}\mbox{}\\</end>
     </element>
     <!-- subsubsub -->
     <element name='h6'>
-        <start>@NL@NL\subparagraph{</start>
+        <start>@NL\Needspace{5\baselineskip}@NL\subparagraph{</start>
         <end>}\mbox{}\\</end>
     </element>
     <element name='head'>

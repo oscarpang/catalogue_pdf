@@ -209,9 +209,10 @@ public class Main extends JPanel implements ActionListener{
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
 			String name = _inputFile.substring(0, _inputFile.indexOf(".html"));
-			while (name.contains("\\")){
-				name = name.substring(name.indexOf("\\") + 1);
+			while (name.contains(System.getProperty("file.separator"))){
+				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
 			}
+			System.out.println("----" + name);
 			_processedFile = _workingDir + name + "_processed.html";
 			_outputFile = _workingDir + name + ".tex";
 			System.out.println(_processedFile + "---" + _outputFile);
