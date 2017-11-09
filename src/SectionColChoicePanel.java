@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,32 +13,23 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
-	
-//	private static boolean macOS;
-	
+		
 	private static JFrame _sectionColChoiceFrame;
 	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
 						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn;
-//						_saveConfigBtn, _applyChangeBtn;
 	private static JScrollPane _sectionParamPane;
 	private static JPanel _leftPanel, _rightPanel,  _southBtnsPanel;
 	private static PreProcess _preProcess;
-//	private static JFileChooser _fileChooser;
-//	private static FileDialog _fileDialog;
 	private static ConfigurationPanel _configPanel;
 	
 	private static JList<String> _sectionParamList;
