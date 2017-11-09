@@ -261,11 +261,13 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			_newConfigFile = _newConfigFile.replaceAll(".xml", "");
 			_newConfigFile += ".xml";
 			System.out.println("Save new Config File : " + _newConfigFile);
-			File file = new File(_newConfigFile);
-			if (file.exists()) {
-				int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
-				if (choice != JOptionPane.YES_OPTION) {
-					return;
+			if (!macOS) {
+				File file = new File(_newConfigFile);
+				if (file.exists()) {
+					int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
+					if (choice != JOptionPane.YES_OPTION) {
+						return;
+					}
 				}
 			}
 			this.saveConfiguration(_newConfigFile);
