@@ -86,6 +86,7 @@
             @NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}
             @NL\usepackage{paralist}
             @NL\usepackage[compact]{titlesec}
+            @NL\usepackage{needspace}
             @NL\widowpenalty=10000@NL\clubpenalty=10000
             @NL\newcommand{\dehyphenate}{\tolerance=1\emergencystretch=\maxdimen\hyphenpenalty=10000\hbadness=10000}
             @NL\titleclass{\chapter}{straight}@NL\titleformat{\chapter}[display]{\sloppy\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
@@ -237,32 +238,32 @@
         <end></end>
     </element>
     <element name='h0'>
-        <start>@NL\Needspace{5\baselineskip}@NL\chapter{</start>
+        <start>@NL\needspace{40\baselineskip}@NL\chapter{</start>
         <end>}</end>
     </element>
     <element name='h1'>
-        <start>@NL\Needspace{5\baselineskip}@NL\section{</start>
+        <start>@NL\needspace{20\baselineskip}@NL\section{</start>
         <end>}</end>
     </element>
     <element name='h2'>
-        <start>@NL\Needspace{5\baselineskip}@NL\subsection{</start>
+        <start>@NL\needspace{5\baselineskip}@NL\subsection{</start>
         <end>}</end>
     </element>
     <element name='h3'>
-        <start>@NL\Needspace{5\baselineskip}@NL\subsubsection{</start>
+        <start>@NL\needspace{3\baselineskip}@NL\subsubsection{</start>
         <end>}</end>
     </element>
     <element name='h4'>
-        <start>@NL\Needspace{5\baselineskip}@NL\paragraph{</start>
+        <start>@NL\needspace{2\baselineskip}@NL\paragraph{</start>
         <end>}\mbox{}\\</end>
     </element>
     <element name='h5'>
-        <start>@NL\Needspace{5\baselineskip}@NL\subparagraph{</start>
+        <start>@NL\needspace{2\baselineskip}@NL\subparagraph{</start>
         <end>}\mbox{}\\</end>
     </element>
     <!-- subsubsub -->
     <element name='h6'>
-        <start>@NL\Needspace{5\baselineskip}@NL\subparagraph{</start>
+        <start>@NL\needspace{2\baselineskip}@NL\subparagraph{</start>
         <end>}\mbox{}\\</end>
     </element>
     <element name='head'>
