@@ -40,7 +40,6 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
-	//TODO: change name and change to JFrame
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -270,9 +269,10 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		try {
 			Parser parser = new Parser();
 			parser.parse(new File(Main.getProcessedFile()), new ParserHandler(new File(Main.getOutputFile()), _preProcess));
+			File preProcessFile = new File(Main.getProcessedFile());
+			preProcessFile.delete();
+			System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
 			LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
-//			File preProcessFile = new File(Main.getProcessedFile());
-//			preProcessFile.delete();
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

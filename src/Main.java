@@ -208,6 +208,12 @@ public class Main extends JPanel implements ActionListener{
 			System.out.println("Working Directory is : " + _workingDir);
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
+			String name = _inputFile.substring(0, _inputFile.indexOf(".html"));
+			while (name.contains(System.getProperty("file.separator"))){
+				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
+			}
+			setProcessedFile(_workingDir + name + "_processed.html");
+			System.out.println("Processed File: " + Main.getProcessedFile());
 			startPreProcess();
 		}
 		
@@ -224,16 +230,8 @@ public class Main extends JPanel implements ActionListener{
 		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
 		
 		_userSettingFrame = new UserSettingFrame("USC Catalogue Print to PDF", _preProcess);
-		
-//		_sectionColChoiceFrame = new JFrame("USC Catalogue Print to PDF");
-//		_sectionColChoiceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		_sectionColChoiceFrame.setBounds(50, 50, 1500, 800);
-		
-//		_sectionColChoicePanel = new UserSettingPanel(_sectionColChoiceFrame, _preProcess);
-//		_sectionColChoiceFrame.add(_sectionColChoicePanel, BorderLayout.CENTER);
 
 		_frame.setVisible(false);
-//		_sectionColChoiceFrame.setVisible(true);
 		_userSettingFrame.setVisible(true);
 		
 	}
