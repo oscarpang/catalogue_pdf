@@ -20,15 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-public class SectionColChoicePanel extends JPanel implements ActionListener{
+public class UserSettingFrame extends JFrame implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
-		
-	private static JFrame _sectionColChoiceFrame;
-	private static JButton _finishChooseColBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
+	
+	private static JButton _startConversionBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
 						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn;
 	private static JScrollPane _sectionParamPane;
-	private static JPanel _leftPanel, _rightPanel,  _southBtnsPanel;
+	private static JPanel _contentPanel, _leftPanel, _rightPanel,  _southBtnsPanel;
 	private static PreProcess _preProcess;
 	private static ConfigurationPanel _configPanel;
 	
@@ -42,14 +41,16 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 
 	//TODO: change name and change to JFrame
-	public SectionColChoicePanel(JFrame sectionColChoiceFrame, PreProcess preProcess) {
-		super();
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//		this.add(Box.createHorizontalGlue());
+	public UserSettingFrame(String name, PreProcess preProcess) {
+		super("USC Catalogue Print to PDF");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(50, 50, 1500, 800);
 		
 		_preProcess = preProcess;
-		_sectionColChoiceFrame = sectionColChoiceFrame;
+		
+		_contentPanel = new JPanel();
+		_contentPanel.setLayout(new BoxLayout(_contentPanel, BoxLayout.X_AXIS));
+		_contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		_leftPanel = new JPanel();
 		_leftPanel.setLayout(new BoxLayout(_leftPanel, BoxLayout.Y_AXIS));
@@ -117,8 +118,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_leftPanel.add(changeTitleBtnPanel);
 		_leftPanel.add(changeColBtnPanel);
 		_leftPanel.setPreferredSize(
-		 				new Dimension(_sectionColChoiceFrame.getWidth()*3/5, _sectionColChoiceFrame.getHeight()));
-		this.add(_leftPanel);
+		 				new Dimension(this.getWidth()*3/5, this.getHeight()));
+		_contentPanel.add(_leftPanel);
 		
 		_rightPanel = new JPanel();
 		_rightPanel.setLayout(new BoxLayout(_rightPanel, BoxLayout.Y_AXIS));
@@ -127,39 +128,25 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		_rightPanel.setBorder(rightTitledBorder);
 		
 		try {
-			_configPanel = new ConfigurationPanel(_sectionColChoiceFrame,_preProcess);
+			_configPanel = new ConfigurationPanel(this,_preProcess);
 		} catch (FatalErrorException e1) {
 			e1.printStackTrace();
 		}
 		
-//		JPanel changeConfigPanel = new JPanel();
-//		changeConfigPanel.setLayout(new BoxLayout(changeConfigPanel, BoxLayout.X_AXIS));
-//		_textField = new JTextField();
-//		_textField.setMaximumSize(new Dimension(_textField.getMaximumSize().width,_textField.getMinimumSize().height));
-//		_applyChangeBtn = new JButton("Apply Change.");
-//		_applyChangeBtn.addActionListener(this);
-//		_saveConfigBtn = new JButton("Save the config mapping...");
-//		_saveConfigBtn.addActionListener(this);
-//		changeConfigPanel.add(_textField);
-//		changeConfigPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-//		changeConfigPanel.add(_applyChangeBtn);
-//		changeConfigPanel.add(Box.createRigidArea(new Dimension(20, 0)));
-//		changeConfigPanel.add(_saveConfigBtn);
-		
 		_rightPanel.add(_configPanel);
-//		_rightPanel.add(changeConfigPanel);
 		_rightPanel.setPreferredSize(
- 				new Dimension(_sectionColChoiceFrame.getWidth()*2/5, _sectionColChoiceFrame.getHeight()));
-		this.add(_rightPanel);
+ 				new Dimension(this.getWidth()*2/5, this.getHeight()));
+		_contentPanel.add(_rightPanel);
 		
 		_southBtnsPanel = new JPanel();
-		_sectionColChoiceFrame.add(_southBtnsPanel, BorderLayout.SOUTH);
-		_finishChooseColBtn = new JButton("Start Conversion.");
-		_finishChooseColBtn.addActionListener(this);
-//		_saveConfigBtn = new JButton("Save the config mapping...");
-//		_saveConfigBtn.addActionListener(this);
-		_southBtnsPanel.add(_finishChooseColBtn);
-//		_southBtnsPanel.add(_saveConfigBtn);
+		_startConversionBtn = new JButton("Start Conversion.");
+		_startConversionBtn.addActionListener(this);
+		_southBtnsPanel.add(_startConversionBtn);
+		this.add(_southBtnsPanel, BorderLayout.SOUTH);
+		
+		this.add(_contentPanel, BorderLayout.CENTER);
+		
+		
 
 //		//TODO: change directory to be user input working directory.
 //		if (macOS) {
@@ -176,9 +163,23 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == _finishChooseColBtn) {
-			startConversion();
-			JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Output has been saved to ...");
+		if (e.getSource() == _startConversionBtn) {
+			String inputFile = Main.getHtmlFile();
+			String name = inputFile.substring(0, inputFile.indexOf(".html"));
+			while (name.contains(System.getProperty("file.separator"))){
+				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
+			}
+			String workingDir = Main.getWorkingDir();
+//			Main.setProcessedFile(workingDir + name + "_processed.html");
+			Main.setOutputFile(workingDir + name + ".tex");
+			System.out.println(Main.getProcessedFile() + "---" + Main.getOutputFile());
+			
+			//TODO: Prompt a file chooser to save output file.
+			
+			if (handleIfExist(Main.getOutputFile())) {
+				startConversion();
+				JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Output has been saved to ...");
+			}
 		} else if (e.getSource() == _upgradeLevelBtn) {
 			addSectionLevel(-1);
 		} else if (e.getSource() == _downgradeLevelBtn) {
@@ -191,17 +192,25 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 		} else if (e.getSource() == _setDefaultColBtn) {
 			_preProcess.resetCustomizedSectionParamsByColNums();
 			resetSectionParamListModel();
-		} 
-//		else if (e.getSource() == _saveConfigBtn) {
-//			saveConfig();
-//		} else if (e.getSource() == _applyChangeBtn) {
-//			//TODO:
-//		}
+		}
 
 		this.revalidate();
 		this.repaint();
 	}
-
+	
+	private boolean handleIfExist(String name) {
+		File file = new File(name);
+		if (file.exists()) {
+			int reply = JOptionPane.showConfirmDialog(null, "Replace existing output file?", 
+					"Replace exisitng output file?", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.NO_OPTION) {
+				//TODO: add optionpane to get file name.
+//				String name = JOptionPane.showInputDialog(frame, "What's your name?");
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	private void createSectionParamListModel() {
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
@@ -210,7 +219,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 	}
 	
 	private void resetSectionParamListModel() {
-		//TODO: non-ascii char in title.
 		int index = 0;
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
 			_sectionParamListModel.set(index, createListElem(entr));
@@ -263,6 +271,8 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 			Parser parser = new Parser();
 			parser.parse(new File(Main.getProcessedFile()), new ParserHandler(new File(Main.getOutputFile()), _preProcess));
 			LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
+//			File preProcessFile = new File(Main.getProcessedFile());
+//			preProcessFile.delete();
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

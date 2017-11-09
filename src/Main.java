@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -28,9 +27,9 @@ public class Main extends JPanel implements ActionListener{
 	private static String _inputFile = "";
 	/** Pre-processed HTML file. */
 	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify working directory.)
-	private static String _processedFile = "Catalogue_17_18_new_processed.html";
+	private static String _processedFile = "aaaaa_processedFile.html";
 	/** Output LaTeX file. */
-	private static String _outputFile = "Catalogue_17_18_.tex";
+	private static String _outputFile = "";
 	/** Configuration file. */
 	private static String _configFile = "";
 	/** Course XLS File. */
@@ -38,9 +37,10 @@ public class Main extends JPanel implements ActionListener{
 	/** Project Working directory. */
 	private static String _workingDir = "";
 	
-	private static JFrame _frame, _sectionColChoiceFrame;
+	private static JFrame _frame;//, _sectionColChoiceFrame;
+	private static UserSettingFrame _userSettingFrame;
 	private static Main _mainPanel;
-	private static SectionColChoicePanel _sectionColChoicePanel;
+//	private static UserSettingPanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
 	private static FileDialog _fileDialog;
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _chooseWorkingDirBtn, _startBtn;
@@ -208,16 +208,6 @@ public class Main extends JPanel implements ActionListener{
 			System.out.println("Working Directory is : " + _workingDir);
 		}else if (e.getSource() == _startBtn) {
 			System.out.println("Should Start Conversion now. Maybe add error etc.");
-			String name = _inputFile.substring(0, _inputFile.indexOf(".html"));
-			while (name.contains(System.getProperty("file.separator"))){
-				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
-			}
-			System.out.println("----" + name);
-			_processedFile = _workingDir + name + "_processed.html";
-			_outputFile = _workingDir + name + ".tex";
-			System.out.println(_processedFile + "---" + _outputFile);
-			checkIfExist(_processedFile);
-			checkIfExist(_outputFile);
 			startPreProcess();
 		}
 		
@@ -229,32 +219,22 @@ public class Main extends JPanel implements ActionListener{
 		this.validate();
 	}
 	
-	private void checkIfExist(String name) {
-		File file = new File(name);
-		if (file.exists()) {
-			int reply = JOptionPane.showConfirmDialog(null, "Replace existing output file?", 
-					"Replace exisitng output file?", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.NO_OPTION) {
-				//TODO: add optionpane to get file name.
-//				String name = JOptionPane.showInputDialog(frame, "What's your name?");
-				return;
-			}
-		}
-	}
-	
 	public void startPreProcess() {
 		_preProcess= new PreProcess();
 		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
 		
-		_sectionColChoiceFrame = new JFrame("USC Catalogue Print to PDF");
-		_sectionColChoiceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_sectionColChoiceFrame.setBounds(50, 50, 1500, 800);
+		_userSettingFrame = new UserSettingFrame("USC Catalogue Print to PDF", _preProcess);
 		
-		_sectionColChoicePanel = new SectionColChoicePanel(_sectionColChoiceFrame, _preProcess);
-		_sectionColChoiceFrame.add(_sectionColChoicePanel, BorderLayout.CENTER);
+//		_sectionColChoiceFrame = new JFrame("USC Catalogue Print to PDF");
+//		_sectionColChoiceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		_sectionColChoiceFrame.setBounds(50, 50, 1500, 800);
+		
+//		_sectionColChoicePanel = new UserSettingPanel(_sectionColChoiceFrame, _preProcess);
+//		_sectionColChoiceFrame.add(_sectionColChoicePanel, BorderLayout.CENTER);
 
 		_frame.setVisible(false);
-		_sectionColChoiceFrame.setVisible(true);
+//		_sectionColChoiceFrame.setVisible(true);
+		_userSettingFrame.setVisible(true);
 		
 	}
 	
@@ -268,9 +248,9 @@ public class Main extends JPanel implements ActionListener{
 	}
 	
 	/**
-	 * Returns name of the file with CSS.
+	 * Returns name of the file with XLS.
 	 * 
-	 * @return name of the file with CSS
+	 * @return name of the file with XLS
 	 */
 	public static String getCourseXlsFile() {
 		return _courseXlsFile;
@@ -303,7 +283,28 @@ public class Main extends JPanel implements ActionListener{
 		return _outputFile;
 	}
 	
+	/**
+	 * Returns working directory.
+	 * 
+	 * @return working directory
+	 */
+	public static String getWorkingDir() {
+		return _workingDir;
+	}
+	
 	public static void setConfigFile(String configFile) {
 		_configFile = configFile;
+	}
+	
+	public static void setProcessedFile(String processedFile) {
+		_processedFile = processedFile;
+	}
+	
+	public static void setOutputFile(String outputFile) {
+		_outputFile = outputFile;
+	}
+	
+	public static void setHTMLFile(String htmlFile) {
+		_inputFile = htmlFile;
 	}
 }

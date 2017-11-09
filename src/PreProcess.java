@@ -120,6 +120,7 @@ public class PreProcess {
 		System.out.println("Finish first round processing.");
 	}
 
+	//TODO: remove br in table
 	private void secondRoundPreProcessing() {
 		System.out.println("Start the second round processing.");
 		try {
@@ -161,6 +162,7 @@ public class PreProcess {
 				}
 
 				if (inTable) {
+					line = line.replaceAll("<br>", "");
 					line = line.replaceAll("<p>", "<table_p>");
 					line = line.replaceAll("</p>", "</table_p>");
 
