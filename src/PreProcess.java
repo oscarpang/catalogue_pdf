@@ -25,7 +25,7 @@ public class PreProcess {
 	private static BufferedReader _bufferedReader = null;
 	private static BufferedWriter _bufferedWriter = null;
 
-	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
+	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
 	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>",
 			"<h1></h1>", "<h2></h2>", "<h3></h3>", "<h4></h4>", "<h5></h5>", "<h6></h6>",
 			"<h1> </h1>", "<h2> </h2>", "<h3> </h3>", "<h4> </h4>", "<h5> </h5>", "<h6> </h6>",
@@ -45,7 +45,8 @@ public class PreProcess {
 	// the average character length for each column
 	private static ArrayList<ArrayList<Double>> _tableColWidth; 
 
-	// By default, 1 column for sections that contain tables, and 2 columns for other sections.
+	// By default, 1 column for sections that contain tables, 3 columns for course of instructions 
+	//	and 2 columns for other sections.
 	private static ArrayList<Map.Entry<String, int[]>> _defaultSectionParams; 
 
 	private static ArrayList<Map.Entry<String, int[]>> _customizedSectionParams;
@@ -68,8 +69,6 @@ public class PreProcess {
 		secondRoundPreProcessing();
 		thirdRoundPreProcessing();
 	}
-	
-	//TODO: change COI default to be in 3 columns.
 
 	private void firstRoundPreProcessing() {
 		System.out.println("Start the first round processing.");
@@ -120,7 +119,6 @@ public class PreProcess {
 		System.out.println("Finish first round processing.");
 	}
 
-	//TODO: remove br in table
 	private void secondRoundPreProcessing() {
 		System.out.println("Start the second round processing.");
 		try {
@@ -147,11 +145,13 @@ public class PreProcess {
 
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
+				line = new String(line.getBytes(), "UTF8");
 				for(char c : line.toCharArray()) {
 					if((int) c >= 128) {
 						_non_ascii_charset.add(c);
 					}
 				}
+				
 				if (line.contains("<tbody>")) {
 					inTable = true;
 				} else if (line.contains("</tbody>")) {
@@ -188,24 +188,16 @@ public class PreProcess {
 						- (countOccurence(line, "</h") - countOccurence(line, "</html>") - countOccurence(line,"</head>"));
 
 				if (line.contains("<br>")) {
-					// System.out.println(numStrong + "**" + numEm + "**" +
-					// numUnderline + "**" + numHeader + "*" + line);
 					if (numStrong > 0) {
 						line = line.replaceAll("<br>", "</strong><br><strong>");
-						// System.out.println("-----------" + line);
 					} else if (numEm > 0) {
 						line = line.replaceAll("<br>", "</em><br><em>");
-						// System.out.println("~~~~~~~~~~~" + line);
 					} else if (numUnderline > 0) {
 						line = line.replaceAll("<br>", "</u><br><u>");
-						// System.out.println("^^^^^^^^^^^" + line);
 					} else if (numHeader > 0) {
 						line = line.replaceAll("<br>", "");
-						// System.out.println("%%%%%%%%%%%" + line);
 					}
 				}
-				
-				
 
 				// remove empty list
 				if (line.equals("<ul>")) {
@@ -262,6 +254,7 @@ public class PreProcess {
 
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
+				line = new String(line.getBytes(), "UTF8");
 				//get sectionParams.
 				if (line.contains("<h") && !line.contains("<html>") && !line.contains("<head>")) {
 					curSectionName = line.substring(line.indexOf(">")+1);
@@ -269,6 +262,7 @@ public class PreProcess {
 					
 					while (!line.contains("</")) {
 						line = _bufferedReader.readLine();
+						line = new String(line.getBytes(), "UTF8");
 						curSectionName += " " + line;
 					}
 					curSectionName = curSectionName.contains("</") ?
@@ -277,6 +271,7 @@ public class PreProcess {
 					curSectionName = curSectionName.contains(">") ?
 							 curSectionName.substring(curSectionName.indexOf(">") + 1) : curSectionName;
 
+					//By default, Course Of Instructions should be shown in 3 columns.
 					if (curSectionName.equals("Courses of Instruction")) {
 						defaultColNum = 3;
 					}
@@ -287,7 +282,7 @@ public class PreProcess {
 				
 				if (line.contains("<tbody>")) {
 					inTable = true;
-					// By default, sections with tables is shown in one column.
+					// By default, sections with tables should be shown in one column.
 					Map.Entry<String, int[]> entr = _defaultSectionParams.get(_defaultSectionParams.size() - 1);
 					int[] curParam = entr.getValue();
 					curParam[1] = 1;
@@ -339,11 +334,6 @@ public class PreProcess {
 			}
 			System.out.println("_tableRowNum : " + _tableRowNum);
 			System.out.println("_tableColWidth : " + _tableColWidth);
-//			System.out.println("-----_default Section Params -----");
-//			for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
-//				System.out.println(entr.getValue()[0] + " " + entr.getValue()[1] + " " + entr.getKey());
-//			}
-//			System.out.println("----- end -----");
 			_bufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -404,6 +394,7 @@ public class PreProcess {
 				}
 				width++; // add the extra space.
 				line = _bufferedReader.readLine();
+				line = new String(line.getBytes(), "UTF8");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -421,8 +412,8 @@ public class PreProcess {
 		return entr;
 	}
 	
+	//Note: this function also upgrade/downgrade subsections.
 	public Map.Entry<String, int[]> addCustomizedSectionLevels(int index, int offset) {
-		//Note: this function also upgrade/downgrade subsections.
 		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
 		int oldLevel = entr.getValue()[0];
 		for (int i = index; i < _customizedSectionParams.size(); i++) {
@@ -441,13 +432,6 @@ public class PreProcess {
 		
 		return _customizedSectionParams.get(index);
 	}
-
-//	public void resetCustomizedSectionParams() {
-//		_customizedSectionParams = new ArrayList<Map.Entry<String, int[]>>();
-//		for (Map.Entry<String, int[]> entr : _defaultSectionParams) {
-//			_customizedSectionParams.add(new AbstractMap.SimpleEntry<String, int[]>(entr.getKey(), entr.getValue().clone()));
-//		}
-//	}
 	
 	public void resetCustomizedSectionParamsByLevels() {
 		for (int i = 0; i < _defaultSectionParams.size(); i++) {

@@ -25,10 +25,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 
 public class ConfigurationPanel extends JPanel implements ActionListener {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -3087284870831158695L;
+	
 	Configuration _config;
 	JTabbedPane _tabbed_pane;
 	JTable _element_table;
@@ -82,12 +81,12 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		macOS = osName.indexOf("Mac") >= 0 ? true : false;
 
 		if (macOS) {
-			_fileDialog = new FileDialog(_parent, "Save As...", FileDialog.SAVE);
-			_fileDialog.setDirectory(System.getProperty("user.dir"));
+			_fileDialog = new FileDialog(_parent, "Save the config file...", FileDialog.SAVE);
+			_fileDialog.setDirectory(Main.getWorkingDir());
 		} else {
 			_fileChooser = new JFileChooser();
-			_fileChooser.setDialogTitle("Save As...");
-			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			_fileChooser.setDialogTitle("Save the config file...");
+			_fileChooser.setCurrentDirectory(new File(Main.getWorkingDir()));
 			_fileChooser.setAcceptAllFileFilterUsed(false);
 		}
 	}
@@ -107,9 +106,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 		String[] column_names = { "Name", "Start", "End", "LeaveText", "IgnoreContent", "IgnoreStyles" };
 		_element_table = new JTable(elements_info, column_names) {
-			/**
-			 * 
-			 */
+			
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -235,34 +232,25 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		try {
 			config_to_save.saveConfiguration(filePath);
 		} catch (FatalErrorException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void saveConfig() {
-		String _newConfigFile = "";
+		String newConfigFile = "";
 		if (macOS) {
 			_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
-			//_fileDialog.setFile(Main.getConfigFile());
 			_fileDialog.setVisible(true);
-			_newConfigFile = _fileDialog.getFile() == null ? null: _fileDialog.getDirectory() + _fileDialog.getFile();
+			newConfigFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
 		} else {
-			// ??????????
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("xml", "xml"));
-			_fileChooser.setSelectedFile(new File(Main.getConfigFile()));
-
+			_fileChooser.setSelectedFile(new File(""));
 			if (_fileChooser.showSaveDialog(_parent) == JFileChooser.APPROVE_OPTION) {
-				_newConfigFile = _fileChooser.getSelectedFile().getPath();
-			}
-		}
-
-		if (_newConfigFile != null && !_newConfigFile.equals("")) {
-			_newConfigFile = _newConfigFile.replaceAll(".xml", "");
-			_newConfigFile += ".xml";
-			System.out.println("Save new Config File : " + _newConfigFile);
-			if (!macOS) {
-				File file = new File(_newConfigFile);
+				newConfigFile = _fileChooser.getSelectedFile().getPath();
+				newConfigFile = newConfigFile.replaceAll(".xml", "");
+				newConfigFile += ".xml";
+				//check if the file exist.
+				File file = new File(newConfigFile);
 				if (file.exists()) {
 					int choice = JOptionPane.showConfirmDialog(this, "Replace existing file?");
 					if (choice != JOptionPane.YES_OPTION) {
@@ -270,8 +258,14 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 					}
 				}
 			}
-			this.saveConfiguration(_newConfigFile);
-			Main.setConfigFile(_newConfigFile);
+		}
+
+		if (!newConfigFile.equals("")) {
+			newConfigFile = newConfigFile.replaceAll(".xml", "");
+			newConfigFile += ".xml";
+			System.out.println("Save new Config File : " + newConfigFile);
+			this.saveConfiguration(newConfigFile);
+			Main.setConfigFile(newConfigFile);
 		}
 	}
 

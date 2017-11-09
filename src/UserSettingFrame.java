@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,12 +14,14 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class UserSettingFrame extends JFrame implements ActionListener{
 	
@@ -34,6 +37,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	private static JList<String> _sectionParamList;
 	private static JComboBox<Integer> _sectionColChoiceCombobox;
 	private static DefaultListModel<String> _sectionParamListModel;
+	private static JFileChooser _fileChooser;
+	private static FileDialog _fileDialog;
 	
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
 	private static String _listDisplaySpacing = "                    ";
@@ -141,44 +146,30 @@ public class UserSettingFrame extends JFrame implements ActionListener{
  				new Dimension(this.getWidth()*2/5, this.getHeight()));
 		_contentPanel.add(_rightPanel);
 		
+		this.add(_contentPanel, BorderLayout.CENTER);
+		
 		_southBtnsPanel = new JPanel();
 		_startConversionBtn = new JButton("Start Conversion.");
 		_startConversionBtn.addActionListener(this);
 		_southBtnsPanel.add(_startConversionBtn);
 		this.add(_southBtnsPanel, BorderLayout.SOUTH);
-		
-		this.add(_contentPanel, BorderLayout.CENTER);
-		
-		
 
-//		//TODO: change directory to be user input working directory.
-//		if (macOS) {
-//			_fileDialog = new FileDialog(_sectionColChoiceFrame, "Save As...", FileDialog.SAVE);
-//			_fileDialog.setDirectory(System.getProperty("user.dir"));
-//		} else {
-//			_fileChooser = new JFileChooser();
-//			_fileChooser.setDialogTitle("Save As...");
-//			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-//			_fileChooser.setAcceptAllFileFilterUsed(false);
-//		}
-		
+		if (macOS) {
+			_fileDialog = new FileDialog(this, "Where to save the output file...", FileDialog.SAVE);
+			_fileDialog.setDirectory(Main.getWorkingDir());
+		} else {
+			_fileChooser = new JFileChooser();
+			_fileChooser.setDialogTitle("Where to save the output file...");
+			_fileChooser.setCurrentDirectory(new File(Main.getWorkingDir()));
+			_fileChooser.setAcceptAllFileFilterUsed(false);
+		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _startConversionBtn) {
-			String inputFile = Main.getHtmlFile();
-			String name = inputFile.substring(0, inputFile.indexOf(".html"));
-			while (name.contains(System.getProperty("file.separator"))){
-				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
-			}
-			String workingDir = Main.getWorkingDir();
-//			Main.setProcessedFile(workingDir + name + "_processed.html");
-			Main.setOutputFile(workingDir + name + ".tex");
-			System.out.println(Main.getProcessedFile() + "---" + Main.getOutputFile());
-			
-			//TODO: Prompt a file chooser to save output file.
-			if (macOS || handleIfExist(Main.getOutputFile())) {
+			boolean success = saveOutputFile();
+			if (success) {
 				startConversion();
 				JOptionPane.showMessageDialog(this, "Finish Conversion to Latex. Output has been saved to ...");
 			}
@@ -198,6 +189,50 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 
 		this.revalidate();
 		this.repaint();
+	}
+	
+	private boolean saveOutputFile() {
+		String inputFile = Main.getHtmlFile();
+		String filename = inputFile.substring(0, inputFile.indexOf(".html"));
+		while (filename.contains(System.getProperty("file.separator"))){
+			filename = filename.substring(filename.indexOf(System.getProperty("file.separator")) + 1);
+		}
+		
+		String outputFile = "";
+		if (macOS) {
+			_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".tex"));
+			_fileDialog.setDirectory(Main.getWorkingDir());
+			_fileDialog.setFile(filename + ".tex");
+			_fileDialog.setVisible(true);
+			outputFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
+		} else {
+			_fileChooser.setFileFilter(new FileNameExtensionFilter("tex", "tex"));
+			_fileChooser.setCurrentDirectory(new File(Main.getWorkingDir()));
+			_fileChooser.setSelectedFile(new File(filename + ".tex"));
+			if (_fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				outputFile = _fileChooser.getSelectedFile().getPath();
+				outputFile = outputFile.replaceAll(".tex", "");
+				outputFile += ".tex";
+				//check if the file exist.
+				File file = new File(outputFile);
+				if (file.exists()) {
+					int choice = JOptionPane.showConfirmDialog(null, "Replace existing output file?", 
+							"Replace exisitng output file?", JOptionPane.YES_NO_OPTION);
+					if (choice == JOptionPane.NO_OPTION) {
+						return false;
+					}
+				}
+			}
+		}
+
+		if (!outputFile.equals("")) {
+			outputFile = outputFile.replaceAll(".tex", "");
+			outputFile += ".tex";
+			System.out.println("Save output File : " + outputFile);
+			Main.setOutputFile(outputFile);
+			return true;
+		}
+		return false;
 	}
 	
 	private boolean handleIfExist(String name) {
@@ -272,9 +307,13 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		try {
 			Parser parser = new Parser();
 			parser.parse(new File(Main.getProcessedFile()), new ParserHandler(new File(Main.getOutputFile()), _preProcess));
+			
+			//Remove PreProcessed File.
 			File preProcessFile = new File(Main.getProcessedFile());
 			preProcessFile.delete();
+			
 			System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
+			//TODO: if failed, end the process.
 			LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());

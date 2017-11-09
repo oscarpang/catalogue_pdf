@@ -26,8 +26,7 @@ public class Main extends JPanel implements ActionListener{
 	/** Input HTML file*/
 	private static String _inputFile = "";
 	/** Pre-processed HTML file. */
-	//TODO: change place to save processed file and latex file and pdf. (i.e. need user to specify working directory.)
-	private static String _processedFile = "aaaaa_processedFile.html";
+	private static String _processedFile = "";
 	/** Output LaTeX file. */
 	private static String _outputFile = "";
 	/** Configuration file. */
@@ -37,10 +36,9 @@ public class Main extends JPanel implements ActionListener{
 	/** Project Working directory. */
 	private static String _workingDir = "";
 	
-	private static JFrame _frame;//, _sectionColChoiceFrame;
+	private static JFrame _frame;
 	private static UserSettingFrame _userSettingFrame;
 	private static Main _mainPanel;
-//	private static UserSettingPanel _sectionColChoicePanel;
 	private static JFileChooser _fileChooser;
 	private static FileDialog _fileDialog;
 	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _chooseWorkingDirBtn, _startBtn;
@@ -83,8 +81,6 @@ public class Main extends JPanel implements ActionListener{
 		
 		if (macOS) {
 			_fileDialog = new FileDialog(_frame, "Open File...", FileDialog.LOAD);
-			//TODO: see if the title is visible
-			_fileDialog.setTitle("Open File...");
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
 		} else {
 			_fileChooser = new JFileChooser();
@@ -106,6 +102,7 @@ public class Main extends JPanel implements ActionListener{
 		_startBtn.setEnabled(false);
 		
 		_btnPanel = new JPanel();
+		_btnPanel.setLayout(new BoxLayout(_btnPanel, BoxLayout.X_AXIS));
 		_btnPanel.add(_chooseHtmlBtn);
 		_btnPanel.add(_chooseXlsBtn);
 		_btnPanel.add(_chooseConfigBtn);
@@ -212,7 +209,7 @@ public class Main extends JPanel implements ActionListener{
 			while (name.contains(System.getProperty("file.separator"))){
 				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
 			}
-			setProcessedFile(_workingDir + name + "_processed.html");
+			_processedFile = _workingDir + name + "_processed.html";
 			System.out.println("Processed File: " + Main.getProcessedFile());
 			startPreProcess();
 		}
@@ -292,10 +289,6 @@ public class Main extends JPanel implements ActionListener{
 	
 	public static void setConfigFile(String configFile) {
 		_configFile = configFile;
-	}
-	
-	public static void setProcessedFile(String processedFile) {
-		_processedFile = processedFile;
 	}
 	
 	public static void setOutputFile(String outputFile) {
