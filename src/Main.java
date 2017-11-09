@@ -40,14 +40,14 @@ public class Main extends JPanel implements ActionListener{
 	private static String _workingDir = "";
 	
 	private static JFrame _frame;
-	private static UserSettingFrame _userSettingFrame;
 	private static Main _mainPanel;
-	private static JFileChooser _fileChooser;
-	private static FileDialog _fileDialog;
-	private static JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _chooseWorkingDirBtn, _startBtn;
-	private static JLabel _htmlLabel, _xlsLabel, _configLabel, _workingDirLabel;
-	private static JPanel _btnPanel, _labelPanel;
-	private static PreProcess _preProcess;
+	private UserSettingFrame _userSettingFrame;
+	private JFileChooser _fileChooser;
+	private FileDialog _fileDialog;
+	private JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _chooseWorkingDirBtn, _startBtn;
+	private JLabel _htmlLabel, _xlsLabel, _configLabel, _workingDirLabel;
+	private JPanel _btnPanel, _labelPanel;
+	private PreProcess _preProcess;
 	
 	private static boolean macOS;
 	
@@ -246,7 +246,6 @@ public class Main extends JPanel implements ActionListener{
 
 		_frame.setVisible(false);
 		_userSettingFrame.setVisible(true);
-		
 	}
 	
 	/**
@@ -301,6 +300,10 @@ public class Main extends JPanel implements ActionListener{
 	 */
 	public static String getWorkingDir() {
 		return _workingDir;
+	}
+	
+	public static boolean isMacOS() {
+		return macOS;
 	}
 	
 	public static void setConfigFile(String configFile) {

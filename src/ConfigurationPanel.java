@@ -36,9 +36,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 	PreProcess _preprocess;
 	JButton _applyChangeBtn;
 	JButton _saveConfigBtn;
-	private static JFileChooser _fileChooser;
-	private static FileDialog _fileDialog;
-	private static boolean macOS;
+	private JFileChooser _fileChooser;
+	private FileDialog _fileDialog;
 	JFrame _parent;
 
 	public ConfigurationPanel(JFrame parent, PreProcess preprocess) throws FatalErrorException {
@@ -77,10 +76,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 
 		this.add(changeConfigPanel, BorderLayout.SOUTH);
 
-		String osName = System.getProperty("os.name");
-		macOS = osName.indexOf("Mac") >= 0 ? true : false;
-
-		if (macOS) {
+		if (Main.isMacOS()) {
 			_fileDialog = new FileDialog(_parent, "Save the config file...", FileDialog.SAVE);
 			_fileDialog.setDirectory(Main.getWorkingDir());
 		} else {
@@ -238,7 +234,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 
 	private void saveConfig() {
 		String newConfigFile = "";
-		if (macOS) {
+		if (Main.isMacOS()) {
 			_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
 			_fileDialog.setVisible(true);
 			newConfigFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
@@ -252,13 +248,6 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				//check if the file exist.
 				File file = new File(newConfigFile);
 				if (file.exists()) {
-//					int confirm = JOptionPane.showOptionDialog(
-//				             null, "Replace existing file?", 
-//				             "File Replacement Confirmation", JOptionPane.YES_NO_OPTION, 
-//				             JOptionPane.QUESTION_MESSAGE, null, null, null);
-//					if (confirm == JOptionPane.NO_OPTION) {
-//						return;
-//					}
 					int choice = JOptionPane.showConfirmDialog(null, "Replace existing file?", 
 							"File Replacement Confirmation", JOptionPane.YES_NO_OPTION);
 					if (choice == JOptionPane.NO_OPTION) {

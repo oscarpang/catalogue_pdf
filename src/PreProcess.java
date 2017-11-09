@@ -13,17 +13,17 @@ import java.util.Map;
 public class PreProcess {
 
 	/** Input HTML file. */
-	private static String _inputFile = null;
+	private String _inputFile = null;
 	/** Input Xls file. */
-	private static String _courseXlsFile = null;
+	private String _courseXlsFile = null;
 	/** Output HTML file. */
-	private static String _processedFile = null;
+	private String _processedFile = null;
 
-	private static File _processedFileInProgress = null;
-	private static FileReader _fileReader = null;
-	private static FileWriter _fileWriter = null;
-	private static BufferedReader _bufferedReader = null;
-	private static BufferedWriter _bufferedWriter = null;
+	private File _processedFileInProgress = null;
+	private FileReader _fileReader = null;
+	private FileWriter _fileWriter = null;
+	private BufferedReader _bufferedReader = null;
+	private BufferedWriter _bufferedWriter = null;
 
 	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
 	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>",
@@ -37,21 +37,21 @@ public class PreProcess {
 			"Undergraduate Education", "Graduate and Professional Education", "The Graduate School" };
 
 	// the column number for each table
-	private static ArrayList<Integer> _tableColNum; 
+	private ArrayList<Integer> _tableColNum; 
 
 	// the row number for each table
-	private static ArrayList<Integer> _tableRowNum; 
+	private ArrayList<Integer> _tableRowNum; 
 
 	// the average character length for each column
-	private static ArrayList<ArrayList<Double>> _tableColWidth; 
+	private ArrayList<ArrayList<Double>> _tableColWidth; 
 
 	// By default, 1 column for sections that contain tables, 3 columns for course of instructions 
 	//	and 2 columns for other sections.
-	private static ArrayList<Map.Entry<String, int[]>> _defaultSectionParams; 
+	private ArrayList<Map.Entry<String, int[]>> _defaultSectionParams; 
 
-	private static ArrayList<Map.Entry<String, int[]>> _customizedSectionParams;
+	private ArrayList<Map.Entry<String, int[]>> _customizedSectionParams;
 	
-	private static HashSet<Character> _non_ascii_charset;
+	private HashSet<Character> _non_ascii_charset;
 
 	public void preProcess(String inputFile, String processedFile, String courseXlsFile) {
 		_inputFile = inputFile;
@@ -254,7 +254,6 @@ public class PreProcess {
 
 		try {
 			while ((line = _bufferedReader.readLine()) != null) {
-				line = new String(line.getBytes(), "UTF8");
 				//get sectionParams.
 				if (line.contains("<h") && !line.contains("<html>") && !line.contains("<head>")) {
 					curSectionName = line.substring(line.indexOf(">")+1);
@@ -262,7 +261,6 @@ public class PreProcess {
 					
 					while (!line.contains("</")) {
 						line = _bufferedReader.readLine();
-						line = new String(line.getBytes(), "UTF8");
 						curSectionName += " " + line;
 					}
 					curSectionName = curSectionName.contains("</") ?

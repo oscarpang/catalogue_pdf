@@ -29,25 +29,22 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static JButton _startConversionBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
+	private JButton _startConversionBtn, _upgradeLevelBtn, _downgradeLevelBtn, 
 						_setDefaultLevelBtn, _setDefaultColBtn, _changeColNumBtn;
-	private static JScrollPane _sectionParamPane;
-	private static JPanel _contentPanel, _leftPanel, _rightPanel,  _southBtnsPanel;
-	private static PreProcess _preProcess;
-	private static ConfigurationPanel _configPanel;
+	private JScrollPane _sectionParamPane;
+	private JPanel _contentPanel, _leftPanel, _rightPanel,  _southBtnsPanel;
+	private PreProcess _preProcess;
+	private ConfigurationPanel _configPanel;
 	
-	private static JList<String> _sectionParamList;
-	private static JComboBox<Integer> _sectionColChoiceCombobox;
-	private static DefaultListModel<String> _sectionParamListModel;
-	private static JFileChooser _fileChooser;
-	private static FileDialog _fileDialog;
+	private JList<String> _sectionParamList;
+	private JComboBox<Integer> _sectionColChoiceCombobox;
+	private DefaultListModel<String> _sectionParamListModel;
+	private JFileChooser _fileChooser;
+	private FileDialog _fileDialog;
 	
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
 	private static String _listDisplaySpacing = "                    ";
-	
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
-	
-	private static boolean macOS;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
@@ -71,8 +68,6 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		this.setBounds(50, 50, 1500, 800);
 		
 		_preProcess = preProcess;
-		String osName = System.getProperty("os.name");
-	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
 		
 		_contentPanel = new JPanel();
 		_contentPanel.setLayout(new BoxLayout(_contentPanel, BoxLayout.X_AXIS));
@@ -172,7 +167,7 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		_southBtnsPanel.add(_startConversionBtn);
 		this.add(_southBtnsPanel, BorderLayout.SOUTH);
 
-		if (macOS) {
+		if (Main.isMacOS()) {
 			_fileDialog = new FileDialog(this, "Where to save the output file...", FileDialog.SAVE);
 			_fileDialog.setDirectory(Main.getWorkingDir());
 		} else {
@@ -219,7 +214,7 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		}
 		
 		String outputFile = "";
-		if (macOS) {
+		if (Main.isMacOS()) {
 			_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".tex"));
 			_fileDialog.setDirectory(Main.getWorkingDir());
 			_fileDialog.setFile(filename + ".tex");
