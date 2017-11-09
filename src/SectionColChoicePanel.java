@@ -182,7 +182,6 @@ public class SectionColChoicePanel extends JPanel implements ActionListener{
 //			_fileChooser.setAcceptAllFileFilterUsed(false);
 //		}
 		
-		//TODO: 3. add save output file button???
 	}
 	
 	@Override
