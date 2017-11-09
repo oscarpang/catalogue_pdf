@@ -42,9 +42,42 @@ public class LatexCompilerExecutor {
 		File latexmk_bin_file = new File(latexmk_command);
 		if(latexmk_bin_file.exists())
 			return latexmk_command;
-		else
-			return null;
 		
+		String tex_install_path = "/usr/local/texlive/";
+		File dir = new File(tex_install_path);
+		boolean texlive_exist = dir.exists();
+		System.out.println(texlive_exist);
+		File subdir[] = dir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.matches("[0-9]+");
+			}
+		});
+		if(subdir.length > 0) {
+			Arrays.sort(subdir, (f1, f2) -> {return f2.getName().compareTo(f1.getName()); });
+			Path latexmk_path;
+			if(System.getProperty("os.arch").contains("x86_64"))
+				latexmk_path = Paths.get(subdir[0].getAbsolutePath(), "bin", "x86_64-darwin", "latexmk");
+			else
+				latexmk_path = Paths.get(subdir[0].getAbsolutePath(), "bin", "universal-darwin", "latexmk");
+			File latexmk_bin = latexmk_path.toFile();
+
+			if(latexmk_bin.exists()) {
+				return latexmk_bin.getAbsolutePath();
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+		
+	}
+	
+	public static boolean HasLatexInstalled() {
+		if(FindPdfLatexBinPath() != null && FindLatexMkBinPath() != null) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static String FindPdfLatexBinPath() {
