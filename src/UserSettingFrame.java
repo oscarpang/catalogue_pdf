@@ -45,18 +45,15 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
 	private static String _listDisplaySpacing = "                    ";
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
-	
-	private static JFrame _selfFrame;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
-		_selfFrame = this;
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 		    public void windowClosing(WindowEvent e) {
 		        int confirm = JOptionPane.showOptionDialog(
-		             _selfFrame, "Are You Sure to Close this Application?", 
+		             UserSettingFrame.this, "Are You Sure to Close this Application?", 
 		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
 		             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		        if (confirm == JOptionPane.YES_OPTION) {
@@ -78,8 +75,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		
 		_leftPanel = new JPanel();
 		_leftPanel.setLayout(new BoxLayout(_leftPanel, BoxLayout.Y_AXIS));
-		TitledBorder sectionParamPanelTitledBorder = 
-				new TitledBorder("Please select the sections that need to change title level or column number: ");
+		TitledBorder sectionParamPanelTitledBorder = new TitledBorder("Please select " +
+						"the sections that need to change title level or column number: ");
 		sectionParamPanelTitledBorder.setTitleFont(_titleFont);
 		_leftPanel.setBorder(sectionParamPanelTitledBorder);
 		
@@ -97,7 +94,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 
 		JPanel changeTitleBtnPanel = new JPanel();
 		changeTitleBtnPanel.setLayout(new BoxLayout(changeTitleBtnPanel, BoxLayout.X_AXIS));
-		TitledBorder changeTitledBtnBorder = new TitledBorder("Press the button to change selected sections' title level: ");
+		TitledBorder changeTitledBtnBorder = new TitledBorder("Press the button " +
+						"to change selected sections' title level: ");
 		changeTitledBtnBorder.setTitleFont(_titleFont);
 		changeTitleBtnPanel.setBorder(changeTitledBtnBorder);
 
@@ -127,7 +125,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		
 		JPanel changeColBtnPanel = new JPanel();
 		changeColBtnPanel.setLayout(new BoxLayout(changeColBtnPanel, BoxLayout.X_AXIS));
-		TitledBorder changeColBtnBorder = new TitledBorder("Press the button to change selected sections' column number: ");
+		TitledBorder changeColBtnBorder = new TitledBorder("Press the button " +
+						"to change selected sections' column number: ");
 		changeColBtnBorder.setTitleFont(_titleFont);
 		changeColBtnPanel.setBorder(changeColBtnBorder);
 		
@@ -147,7 +146,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 		
 		_rightPanel = new JPanel();
 		_rightPanel.setLayout(new BoxLayout(_rightPanel, BoxLayout.Y_AXIS));
-		TitledBorder rightTitledBorder = new TitledBorder("Please select the cell that needs to be changed: ");
+		TitledBorder rightTitledBorder = new TitledBorder("Please select the " + 
+						"cell that needs to be changed: ");
 		rightTitledBorder.setTitleFont(_titleFont);
 		_rightPanel.setBorder(rightTitledBorder);
 		
@@ -219,7 +219,8 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			_fileDialog.setDirectory(Main.getWorkingDir());
 			_fileDialog.setFile(filename + ".tex");
 			_fileDialog.setVisible(true);
-			outputFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
+			outputFile = _fileDialog.getFile() == null ? "" : 
+							_fileDialog.getDirectory() + _fileDialog.getFile();
 		} else {
 			_fileChooser.setFileFilter(new FileNameExtensionFilter("tex", "tex"));
 			_fileChooser.setCurrentDirectory(new File(Main.getWorkingDir()));
@@ -307,14 +308,16 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	public void startConversion() {
 		try {
 			Parser parser = new Parser();
-			parser.parse(new File(Main.getProcessedFile()), new ParserHandler(new File(Main.getOutputFile()), _preProcess));
+			parser.parse(new File(Main.getProcessedFile()), 
+						new ParserHandler(new File(Main.getOutputFile()), _preProcess));
 			
 			System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
 			//TODO: if failed, end the process.
 			boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
-			String pdfString = success ? "\nPDF has been saved as : " + Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
-			JOptionPane.showMessageDialog(this, "Finish Conversion.\nLatex output has been saved as : " 
-									+ Main.getOutputFile() + "." + pdfString);
+			String pdfString = success ? "\nPDF has been saved as : " 
+							+ Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
+			JOptionPane.showMessageDialog(this, "Finish Conversion.\nLatex output has been " + 
+							"saved as : " + Main.getOutputFile() + "." + pdfString);
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

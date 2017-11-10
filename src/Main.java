@@ -44,7 +44,8 @@ public class Main extends JPanel implements ActionListener{
 	private UserSettingFrame _userSettingFrame;
 	private JFileChooser _fileChooser;
 	private FileDialog _fileDialog;
-	private JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, _chooseWorkingDirBtn, _startBtn;
+	private JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, 
+					_chooseWorkingDirBtn, _startBtn;
 	private JLabel _htmlLabel, _xlsLabel, _configLabel, _workingDirLabel;
 	private JPanel _btnPanel, _labelPanel;
 	private PreProcess _preProcess;
@@ -155,7 +156,8 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".html"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
-				_inputFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
+				_inputFile = _fileDialog.getFile() == null ? "" : 
+									_fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
 				_fileChooser.setFileFilter(new FileNameExtensionFilter("html file","html"));
 				_fileChooser.setSelectedFile(new File(""));
@@ -170,7 +172,8 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xls"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
-				_courseXlsFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
+				_courseXlsFile = _fileDialog.getFile() == null ? "" : 
+									_fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
 				_fileChooser.setFileFilter(new FileNameExtensionFilter("xls file","xls", "xlsx"));
 				_fileChooser.setSelectedFile(new File(""));
@@ -185,7 +188,8 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
-				_configFile = _fileDialog.getFile() == null ? "" : _fileDialog.getDirectory() + _fileDialog.getFile();
+				_configFile = _fileDialog.getFile() == null ? "" : 
+									_fileDialog.getDirectory() + _fileDialog.getFile();
 			} else {
 				_fileChooser.setFileFilter(new FileNameExtensionFilter("xml","xml"));
 				_fileChooser.setSelectedFile(new File(""));
@@ -202,7 +206,8 @@ public class Main extends JPanel implements ActionListener{
 				_fileDialog.setTitle("Choose your project working directory...");
 				_fileDialog.setFilenameFilter(null);
 				_fileDialog.setVisible(true);
-				_workingDir = _fileDialog.getDirectory() + _fileDialog.getFile() + System.getProperty("file.separator");
+				_workingDir = _fileDialog.getDirectory() + _fileDialog.getFile() + 
+									System.getProperty("file.separator");
 				if (_fileDialog.getDirectory() == null && _fileDialog.getFile() == null) {
 					_workingDir = "";
 				}
@@ -213,7 +218,8 @@ public class Main extends JPanel implements ActionListener{
 				_fileChooser.resetChoosableFileFilters();
 				_fileChooser.setDialogTitle("Choose your project working directory...");
 				if (_fileChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-					_workingDir = _fileChooser.getSelectedFile().getPath() + System.getProperty("file.separator");
+					_workingDir = _fileChooser.getSelectedFile().getPath() + 
+									System.getProperty("file.separator");
 				}
 				_fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				_fileChooser.setDialogTitle("Open File...");
@@ -225,14 +231,16 @@ public class Main extends JPanel implements ActionListener{
 				int confirm = JOptionPane.showOptionDialog(
 			             _frame, "It seems like Latex Compiler is not installed on your computer. \n" + 
 			            		 "This may caused by installing Latex compiler in non-standard directories.\n\n" +
-			            		 "Press \"Yes\" to specify your installation path and then start conversion to both latex and pdf file.\n" +
+			            		 "Press \"Yes\" to specify your installation path and then start " +
+			            		 "conversion to both latex and pdf file.\n" +
 			            		 "Press \"No\"  to continue convert only to latex file (i.e. no pdf file.).\n" +
 			            		 "Press \"Cancel\" to stop conversion and exit the program.", 
 			             "Latex Compiler not installed", JOptionPane.YES_NO_CANCEL_OPTION, 
 			             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		        if (confirm == JOptionPane.YES_OPTION) {
 		        	//TODO: change to file chooser???? after user input, re-check if Latex is installed?
-		        	String path = JOptionPane.showInputDialog(_frame, "Please specify the Latex Compiler installation path on your computer.");
+		        	String path = JOptionPane.showInputDialog(_frame, "Please specify " +
+		        				"the Latex Compiler installation path on your computer.");
 		        	System.out.println("User Specifies Latex Installation path: "+ path);
 		        }else if (confirm == JOptionPane.NO_OPTION) {
 		        	//Do nothing, continue conversion only to Latex file.
@@ -251,8 +259,8 @@ public class Main extends JPanel implements ActionListener{
 			startPreProcess();
 		}
 		
-		if (!_inputFile.equals("") && !_courseXlsFile.equals("") && !_configFile.equals("") 
-				&& !_workingDir.equals("")) {
+		if (!_inputFile.equals("") && !_courseXlsFile.equals("") 
+				&& !_configFile.equals("") && !_workingDir.equals("")) {
 			_startBtn.setEnabled(true);
 		}
 		
