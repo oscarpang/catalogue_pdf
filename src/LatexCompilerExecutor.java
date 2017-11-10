@@ -26,7 +26,7 @@ public class LatexCompilerExecutor {
 			return false;
 		}
 		
-		return RunCommand(latexmk_bin_path + " -pdf -pdflatex=" + pdflatex_bin_path + " -outdir=" + Main.getWorkingDir() + " " + latex_file_path) == 0;
+		return RunCommand(latexmk_bin_path + " -pdf -pdflatex=" + pdflatex_bin_path + " -halt-on-error -outdir=" + Main.getWorkingDir() + " " + latex_file_path) == 0;
 
 	}
 	
@@ -142,13 +142,13 @@ public class LatexCompilerExecutor {
 		    }
 		}).start();
 
-		
+
 		return p.waitFor();
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		CompileLatexFile("test.tex");
-//		String latexmk_bin_path = FindLatexMkBinPath();
+		boolean success = CompileLatexFile("/Users/oscarpang/Documents/workspace/htmltolatex/Catalogue-17_18-5.tex");
+		//		String latexmk_bin_path = FindLatexMkBinPath();
 //		if(latexmk_bin_path == null) {
 //			System.out.println("No latexmk program found");
 //			return;
