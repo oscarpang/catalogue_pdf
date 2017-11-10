@@ -192,6 +192,11 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _startConversionBtn) {
+			// save config and output file
+			String tmp_config_filename = Main.getWorkingDir() + "working_config.xml";
+			_configPanel.saveConfiguration(tmp_config_filename);
+			Main.setConfigFile(tmp_config_filename);
+			
 			boolean success = saveOutputFile();
 			if (success) {
 				startConversion();
