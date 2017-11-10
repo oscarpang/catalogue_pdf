@@ -24,6 +24,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
@@ -339,6 +340,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 					}
 					char_config_table_model.setValueAt(_text_area.getText(), _char_config_table.getSelectedRow(),
 							_char_config_table.getSelectedColumn());
+					((AbstractTableModel) _char_config_table.getModel()).fireTableRowsUpdated(
+							_char_config_table.getSelectedRow(), _char_config_table.getSelectedRow());
 				}
 			}
 		} else if (e.getSource() == _saveConfigBtn) {
