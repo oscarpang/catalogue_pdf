@@ -85,7 +85,7 @@ public class Main extends JPanel implements ActionListener{
 		_frame.add(_mainPanel);
 		
 		_frame.pack();
-		_frame.setSize(_frame.getSize().width*2, _frame.getSize().height);
+		_frame.setSize(_frame.getSize().width*3/2, _frame.getSize().height);
 		_frame.setLocationRelativeTo(null); // appear centered 
 		_frame.setVisible(true);
 	}
@@ -114,6 +114,7 @@ public class Main extends JPanel implements ActionListener{
 		_startBtn = new JButton("Start");
 		_startBtn.addActionListener(this);
 		_startBtn.setEnabled(false);
+		_startBtn.setAlignmentX(CENTER_ALIGNMENT);
 		
 		_btnPanel = new JPanel();
 		_btnPanel.setLayout(new GridLayout(2,2));
