@@ -5,6 +5,7 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -19,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -47,6 +49,7 @@ public class Main extends JPanel implements ActionListener{
 	private JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, 
 					_chooseWorkingDirBtn, _startBtn;
 	private JLabel _htmlLabel, _xlsLabel, _configLabel, _workingDirLabel;
+	private JTextField _htmlTextField, _xlsTextField, _configTextField, _workingDirTextField;
 	private JPanel _btnPanel, _labelPanel;
 	private PreProcess _preProcess;
 	
@@ -87,8 +90,11 @@ public class Main extends JPanel implements ActionListener{
 		_frame.setVisible(true);
 	}
 	
+	//TODO: change font size of the whole program to fit the system's default setting?
+	
 	public Main() {
-		super(new BorderLayout());
+		super();
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -97,19 +103,9 @@ public class Main extends JPanel implements ActionListener{
 			System.out.println("Warning! Cross-platform L&F not used!");
 		}
 		
-		if (macOS) {
-			_fileDialog = new FileDialog(_frame, "Open File...", FileDialog.LOAD);
-			_fileDialog.setDirectory(System.getProperty("user.dir"));
-		} else {
-			_fileChooser = new JFileChooser();
-			_fileChooser.setDialogTitle("Open File...");
-			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-			_fileChooser.setAcceptAllFileFilterUsed(false);
-		}
-		
-		_chooseHtmlBtn = new JButton("Choose the html Catalogue file...");
+		_chooseHtmlBtn = new JButton("Choose the Catalogue html file...");
 		_chooseHtmlBtn.addActionListener(this);
-		_chooseXlsBtn = new JButton("Choose the Xls Course file...");
+		_chooseXlsBtn = new JButton("Choose the Course XLS file...");
 		_chooseXlsBtn.addActionListener(this);
 		_chooseConfigBtn = new JButton("Choose the Config XML file...");
 		_chooseConfigBtn.addActionListener(this);
@@ -120,33 +116,63 @@ public class Main extends JPanel implements ActionListener{
 		_startBtn.setEnabled(false);
 		
 		_btnPanel = new JPanel();
-		_btnPanel.setLayout(new BoxLayout(_btnPanel, BoxLayout.X_AXIS));
+//		_btnPanel.setLayout(new BoxLayout(_btnPanel, BoxLayout.X_AXIS));
+		_btnPanel.setLayout(new GridLayout(2,2));
 		_btnPanel.add(_chooseHtmlBtn);
 		_btnPanel.add(_chooseXlsBtn);
 		_btnPanel.add(_chooseConfigBtn);
 		_btnPanel.add(_chooseWorkingDirBtn);
-		_btnPanel.add(_startBtn);
+//		_btnPanel.add(_startBtn);
 		
-		this.add(_btnPanel, BorderLayout.NORTH);
+		this.add(Box.createRigidArea(new Dimension(0, 10)));
+		this.add(_btnPanel);
 		
-		_htmlLabel = new JLabel("  HTML Catalogue File : " + _inputFile);
-		_xlsLabel = new JLabel("  Course XLS File : " + _courseXlsFile);
-		_configLabel = new JLabel("  Config XML File : " + _configFile);
-		_workingDirLabel = new JLabel("  Working Directory is : " + _workingDir);
+		_htmlLabel = new JLabel("HTML Catalogue File : ");
+		_xlsLabel = new JLabel("Course XLS File : ");
+		_configLabel = new JLabel("Config XML File : ");
+		_workingDirLabel = new JLabel("Working Directory is : ");
+		
+		_htmlTextField = new JTextField(_inputFile);
+		_htmlTextField.setEnabled(false);
+		_xlsTextField = new JTextField(_courseXlsFile);
+		_xlsTextField.setEnabled(false);
+		_configTextField = new JTextField(_configFile);
+		_configTextField.setEnabled(false);
+		_workingDirTextField = new JTextField(_workingDir);
+		_workingDirTextField.setEnabled(false);
 		
 		_labelPanel = new JPanel();
 		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
 		
 		_labelPanel.add(_htmlLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_htmlTextField);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_xlsLabel);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_xlsTextField);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_configLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_configTextField);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_workingDirLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		_labelPanel.add(_workingDirTextField);
+		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 	
-		this.add(_labelPanel, BorderLayout.CENTER);
+		this.add(_labelPanel);
+		this.add(_startBtn);
+		
+		if (macOS) {
+			_fileDialog = new FileDialog(_frame, "Open File...", FileDialog.LOAD);
+			_fileDialog.setDirectory(System.getProperty("user.dir"));
+		} else {
+			_fileChooser = new JFileChooser();
+			_fileChooser.setDialogTitle("Open File...");
+			_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			_fileChooser.setAcceptAllFileFilterUsed(false);
+		}
 	}
 
 	@Override
@@ -165,7 +191,7 @@ public class Main extends JPanel implements ActionListener{
 					_inputFile = _fileChooser.getSelectedFile().getPath();
 				}
 			}
-			_htmlLabel.setText("  HTML Catalogue File : " + _inputFile);
+			_htmlTextField.setText(_inputFile);
 			System.out.println("Input File is: " + _inputFile);
 		}else if (e.getSource() == _chooseXlsBtn) {
 			if (macOS) {
@@ -181,7 +207,7 @@ public class Main extends JPanel implements ActionListener{
 					_courseXlsFile = _fileChooser.getSelectedFile().getPath();
 				}
 			}
-			_xlsLabel.setText("  Course XLS File : " + _courseXlsFile);
+			_xlsTextField.setText(_courseXlsFile);
 			System.out.println("CourseXLS File is: " + _courseXlsFile);
 		}else if (e.getSource() == _chooseConfigBtn) {
 			if (macOS) {
@@ -197,7 +223,7 @@ public class Main extends JPanel implements ActionListener{
 					_configFile = _fileChooser.getSelectedFile().getPath();
 				}
 			}
-			_configLabel.setText("  Config XML File : " + _configFile);
+			_configTextField.setText(_configFile);
 			System.out.println("Config File is: " + _configFile);
 		}else if (e.getSource() == _chooseWorkingDirBtn) {
 			if (macOS) {
@@ -224,7 +250,7 @@ public class Main extends JPanel implements ActionListener{
 				_fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				_fileChooser.setDialogTitle("Open File...");
 			}
-			_workingDirLabel.setText("  Working Directory is : " + _workingDir);
+			_workingDirTextField.setText(_workingDir);
 			System.out.println("Working Directory is : " + _workingDir);
 		}else if (e.getSource() == _startBtn) {	
 			if (!LatexCompilerExecutor.HasLatexInstalled()) {
