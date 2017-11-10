@@ -1,3 +1,4 @@
+package usc_catalogue_converter;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;

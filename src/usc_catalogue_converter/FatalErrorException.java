@@ -1,3 +1,4 @@
+package usc_catalogue_converter;
 /*
  * FatalErrorException.java
 */

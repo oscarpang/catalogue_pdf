@@ -1,3 +1,4 @@
+package usc_catalogue_converter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,7 +26,7 @@ public class PreProcess {
 	private BufferedReader _bufferedReader = null;
 	private BufferedWriter _bufferedWriter = null;
 
-	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
+	//lines that should be ignored. Note: � is the encoding of UTF8 none breaking space.
 	private static String[] _prefixIgnored = { "<ul></ul>", "<ul> </ul>", "<li></li>", "<li> </li>",
 			"<h1></h1>", "<h2></h2>", "<h3></h3>", "<h4></h4>", "<h5></h5>", "<h6></h6>",
 			"<h1> </h1>", "<h2> </h2>", "<h3> </h3>", "<h4> </h4>", "<h5> </h5>", "<h6> </h6>",

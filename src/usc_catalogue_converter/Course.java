@@ -1,3 +1,4 @@
+package usc_catalogue_converter;
 
 
 public class Course implements Comparable<Course>{
