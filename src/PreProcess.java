@@ -88,7 +88,6 @@ public class PreProcess {
 
 		String line = null;
 		try {
-			//TODO: get content based on URL and insert in correct place.
 			while ((line = _bufferedReader.readLine()) != null) {
 				if (shouldIgnore(line)) continue;
 				//remove <br> in header.

@@ -2,7 +2,6 @@
 /*
  * Main.java
  */
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
@@ -12,16 +11,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Main extends JPanel implements ActionListener{
@@ -48,7 +48,6 @@ public class Main extends JPanel implements ActionListener{
 	private FileDialog _fileDialog;
 	private JButton _chooseHtmlBtn, _chooseXlsBtn, _chooseConfigBtn, 
 					_chooseWorkingDirBtn, _startBtn;
-	private JLabel _htmlLabel, _xlsLabel, _configLabel, _workingDirLabel;
 	private JTextField _htmlTextField, _xlsTextField, _configTextField, _workingDirTextField;
 	private JPanel _btnPanel, _labelPanel;
 	private PreProcess _preProcess;
@@ -91,7 +90,7 @@ public class Main extends JPanel implements ActionListener{
 	}
 	
 	//TODO: change font size of the whole program to fit the system's default setting?
-	
+	//TODO: add USC background???
 	public Main() {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -116,47 +115,44 @@ public class Main extends JPanel implements ActionListener{
 		_startBtn.setEnabled(false);
 		
 		_btnPanel = new JPanel();
-//		_btnPanel.setLayout(new BoxLayout(_btnPanel, BoxLayout.X_AXIS));
 		_btnPanel.setLayout(new GridLayout(2,2));
 		_btnPanel.add(_chooseHtmlBtn);
 		_btnPanel.add(_chooseXlsBtn);
 		_btnPanel.add(_chooseConfigBtn);
 		_btnPanel.add(_chooseWorkingDirBtn);
-//		_btnPanel.add(_startBtn);
 		
 		this.add(Box.createRigidArea(new Dimension(0, 10)));
 		this.add(_btnPanel);
 		
-		_htmlLabel = new JLabel("HTML Catalogue File : ");
-		_xlsLabel = new JLabel("Course XLS File : ");
-		_configLabel = new JLabel("Config XML File : ");
-		_workingDirLabel = new JLabel("Working Directory is : ");
-		
 		_htmlTextField = new JTextField(_inputFile);
+		_htmlTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("HTML Catalogue File : "), 
+				_htmlTextField.getBorder()));
 		_htmlTextField.setEnabled(false);
+		
 		_xlsTextField = new JTextField(_courseXlsFile);
+		_xlsTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
+				_xlsTextField.getBorder()));
 		_xlsTextField.setEnabled(false);
+		
 		_configTextField = new JTextField(_configFile);
+		_configTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Config XML File : "), 
+				_configTextField.getBorder()));
 		_configTextField.setEnabled(false);
+		
 		_workingDirTextField = new JTextField(_workingDir);
+		_workingDirTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Working Directory is : "), 
+				_workingDirTextField.getBorder()));
 		_workingDirTextField.setEnabled(false);
 		
 		_labelPanel = new JPanel();
 		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
 		
-		_labelPanel.add(_htmlLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_htmlTextField);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_xlsLabel);
-		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_xlsTextField);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_configLabel);
-		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_configTextField);
-		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_workingDirLabel);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		_labelPanel.add(_workingDirTextField);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));

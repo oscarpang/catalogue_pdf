@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -333,7 +334,7 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		progressBar.setStringPainted(true);
 		progressBar.setIndeterminate(true);
 		
-		JLabel statusLabel = new JLabel("Converting...");
+		JLabel statusLabel = new JLabel("Converting...", SwingConstants.CENTER);
 		
 		_statusDialog = new JDialog(this, "Conversion");
 		_statusDialog.setUndecorated(true);
@@ -343,7 +344,7 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		_statusDialog.add(statusLabel);
 		
 		_statusDialog.pack();
-		_statusDialog.setSize(400, 200);
+		_statusDialog.setSize(500, 200);
 		
 		_statusDialog.setLocationRelativeTo(null);
 		_statusDialog.setVisible(true);
