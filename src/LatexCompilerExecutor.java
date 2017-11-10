@@ -26,7 +26,7 @@ public class LatexCompilerExecutor {
 			return false;
 		}
 		
-		return RunCommand(latexmk_bin_path + " -pvc -gg -pdf -pdflatex=" + pdflatex_bin_path + " -halt-on-error -outdir=" + Main.getWorkingDir() + " " + latex_file_path) == 0;
+		return RunCommand(latexmk_bin_path + " -gg -pdf -pdflatex=" + pdflatex_bin_path + " -halt-on-error -outdir=" + Main.getWorkingDir() + " " + latex_file_path) == 0;
 
 	}
 	

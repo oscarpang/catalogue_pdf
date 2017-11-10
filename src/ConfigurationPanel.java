@@ -160,8 +160,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		int row_idx = 0;
 		for (Map.Entry<Integer, String> entry : elements.entrySet()) {
 			elements_info[row_idx][0] = entry.getKey();
-			elements_info[row_idx][1] = entry.getValue();
-			elements_info[row_idx][2] = new String(Character.toChars(entry.getKey()));
+			elements_info[row_idx][1] = new String(Character.toChars(entry.getKey()));
+			elements_info[row_idx][2] = entry.getValue();
 			row_idx++;
 		}
 
@@ -170,8 +170,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		for (Character c : non_config_chars) {
 			System.out.println("Not found: " + (int) c);
 			elements_info[row_idx][0] = (int) c;
-			elements_info[row_idx][1] = "";
-			elements_info[row_idx][2] = new String(Character.toChars(c));
+			elements_info[row_idx][1] = new String(Character.toChars(c));
+			elements_info[row_idx][2] = "";
 			row_idx++;
 			_undefined_count++;
 		}
@@ -200,11 +200,11 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				JTable target = (JTable) e.getSource();
 				if (target == _char_config_table) {
-					if (_char_config_table.getSelectedRow() > -1 && _char_config_table.getSelectedColumn() > 0
-							&& _char_config_table.getSelectedColumn() < 2) {
+					if (_char_config_table.getSelectedRow() > -1 && _char_config_table.getSelectedColumn() >= 0
+							&& _char_config_table.getSelectedColumn() < 3) {
 						TableModel char_config_table_model = _char_config_table.getModel();
-						_text_area.setText((String) char_config_table_model.getValueAt(
-								_char_config_table.getSelectedRow(), _char_config_table.getSelectedColumn()));
+						_text_area.setText(
+								(String) char_config_table_model.getValueAt(_char_config_table.getSelectedRow(), 2));
 					}
 				}
 			}
@@ -222,15 +222,13 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 
 				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
-				if (col == 0) {
-					Integer status = (Integer) table.getModel().getValueAt(row, col);
-					if (!_config.get_charsNum().containsKey(status)) {
-						setBackground(Color.BLACK);
-						setForeground(Color.WHITE);
-					} else {
-						setBackground(table.getBackground());
-						setForeground(table.getForeground());
-					}
+				Integer status = (Integer) table.getModel().getValueAt(row, 0);
+				if (!_config.get_charsNum().containsKey(status)) {
+					setBackground(Color.BLACK);
+					setForeground(Color.WHITE);
+				} else {
+					setBackground(table.getBackground());
+					setForeground(table.getForeground());
 				}
 				return this;
 			}
@@ -244,7 +242,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		int row_count = char_config_table_model.getRowCount();
 		for (int i = 0; i < row_count; i++) {
 			Integer charNum = (Integer) char_config_table_model.getValueAt(i, 0);
-			String convertTo = (String) char_config_table_model.getValueAt(i, 1);
+			String convertTo = (String) char_config_table_model.getValueAt(i, 2);
 			config_to_save.get_charsNum().put(charNum, convertTo);
 		}
 	}
@@ -329,8 +327,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 							_element_table.getSelectedColumn());
 				}
 			} else if (tab_ind == 1) {
-				if (_char_config_table.getSelectedRow() > -1 && _char_config_table.getSelectedColumn() > 0
-						&& _char_config_table.getSelectedColumn() < 2) {
+				if (_char_config_table.getSelectedRow() > -1 && _char_config_table.getSelectedColumn() >= 0
+						&& _char_config_table.getSelectedColumn() < 3) {
 					TableModel char_config_table_model = _char_config_table.getModel();
 					Integer val = (Integer) char_config_table_model.getValueAt(_char_config_table.getSelectedRow(), 0);
 					if (!_config.get_charsNum().containsKey(val)) {
@@ -338,8 +336,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 						_undefined_count--;
 						assert _config.get_charsNum().containsKey(val);
 					}
-					char_config_table_model.setValueAt(_text_area.getText(), _char_config_table.getSelectedRow(),
-							_char_config_table.getSelectedColumn());
+					char_config_table_model.setValueAt(_text_area.getText(), _char_config_table.getSelectedRow(), 2);
 					((AbstractTableModel) _char_config_table.getModel()).fireTableRowsUpdated(
 							_char_config_table.getSelectedRow(), _char_config_table.getSelectedRow());
 				}
