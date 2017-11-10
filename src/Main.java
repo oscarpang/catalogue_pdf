@@ -233,8 +233,7 @@ public class Main extends JPanel implements ActionListener{
 			            		 "This may caused by installing Latex compiler in non-standard directories.\n\n" +
 			            		 "Press \"Yes\" to specify your installation path and then start " +
 			            		 "conversion to both latex and pdf file.\n" +
-			            		 "Press \"No\"  to continue convert only to latex file (i.e. no pdf file.).\n" +
-			            		 "Press \"Cancel\" to stop conversion and exit the program.", 
+			            		 "Press \"No\"  to continue convert only to latex file (i.e. no pdf file.).\n", 
 			             "Latex Compiler not installed", JOptionPane.YES_NO_CANCEL_OPTION, 
 			             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		        if (confirm == JOptionPane.YES_OPTION) {
@@ -245,7 +244,7 @@ public class Main extends JPanel implements ActionListener{
 		        }else if (confirm == JOptionPane.NO_OPTION) {
 		        	//Do nothing, continue conversion only to Latex file.
 		        }else if (confirm == JOptionPane.CANCEL_OPTION) {
-		        	System.exit(0);
+		        	return;
 		        }
 			}
 			
