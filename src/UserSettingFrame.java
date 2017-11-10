@@ -45,15 +45,18 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
 	private static String _listDisplaySpacing = "                    ";
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
+	
+	private static JFrame _selfFrame;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
+		_selfFrame = this;
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 		    public void windowClosing(WindowEvent e) {
 		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Are You Sure to Close this Application?", 
+		             _selfFrame, "Are You Sure to Close this Application?", 
 		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
 		             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		        if (confirm == JOptionPane.YES_OPTION) {
@@ -184,9 +187,6 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			boolean success = saveOutputFile();
 			if (success) {
 				startConversion();
-				String pdfName = Main.getOutputFile().replaceAll("\\.tex", ".pdf");
-				JOptionPane.showMessageDialog(this, "Finish Conversion.\n Latex output has been saved as : " 
-										+ Main.getOutputFile() + ".\n PDF has been saved as : " + pdfName);
 			}
 		} else if (e.getSource() == _upgradeLevelBtn) {
 			addSectionLevel(-1);
@@ -312,6 +312,9 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 			System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
 			//TODO: if failed, end the process.
 			boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
+			String pdfString = success ? "\nPDF has been saved as : " + Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
+			JOptionPane.showMessageDialog(this, "Finish Conversion.\nLatex output has been saved as : " 
+									+ Main.getOutputFile() + "." + pdfString);
 		} catch (FatalErrorException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);

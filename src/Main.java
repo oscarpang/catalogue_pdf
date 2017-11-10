@@ -69,7 +69,7 @@ public class Main extends JPanel implements ActionListener{
 			@Override
 		    public void windowClosing(WindowEvent e) {
 		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Are You Sure to Close this Application?", 
+		             _frame, "Are You Sure to Close this Application?", 
 		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
 		             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		        if (confirm == JOptionPane.YES_OPTION) {
@@ -82,6 +82,7 @@ public class Main extends JPanel implements ActionListener{
 		_frame.add(_mainPanel);
 		
 		_frame.pack();
+		_frame.setLocationRelativeTo(null); // appear centered 
 		_frame.setVisible(true);
 	}
 	
@@ -219,8 +220,28 @@ public class Main extends JPanel implements ActionListener{
 			}
 			_workingDirLabel.setText("  Working Directory is : " + _workingDir);
 			System.out.println("Working Directory is : " + _workingDir);
-		}else if (e.getSource() == _startBtn) {
-			System.out.println("Should Start Conversion now. Maybe add error etc.");
+		}else if (e.getSource() == _startBtn) {	
+			if (!LatexCompilerExecutor.HasLatexInstalled()) {
+				int confirm = JOptionPane.showOptionDialog(
+			             _frame, "It seems like Latex Compiler is not installed on your computer. \n" + 
+			            		 "This may caused by installing Latex compiler in non-standard directories.\n\n" +
+			            		 "Press \"Yes\" to specify your installation path and then start conversion to both latex and pdf file.\n" +
+			            		 "Press \"No\"  to continue convert only to latex file (i.e. no pdf file.).\n" +
+			            		 "Press \"Cancel\" to stop conversion and exit the program.", 
+			             "Latex Compiler not installed", JOptionPane.YES_NO_CANCEL_OPTION, 
+			             JOptionPane.QUESTION_MESSAGE, null, null, null);
+		        if (confirm == JOptionPane.YES_OPTION) {
+		        	//TODO: change to file chooser???? after user input, re-check if Latex is installed?
+		        	String path = JOptionPane.showInputDialog(_frame, "Please specify the Latex Compiler installation path on your computer.");
+		        	System.out.println("User Specifies Latex Installation path: "+ path);
+		        }else if (confirm == JOptionPane.NO_OPTION) {
+		        	//Do nothing, continue conversion only to Latex file.
+		        }else if (confirm == JOptionPane.CANCEL_OPTION) {
+		        	System.exit(0);
+		        }
+			}
+			
+			System.out.println("Start Pre-processing now.");
 			String name = _inputFile.substring(0, _inputFile.indexOf(".html"));
 			while (name.contains(System.getProperty("file.separator"))){
 				name = name.substring(name.indexOf(System.getProperty("file.separator")) + 1);
@@ -243,6 +264,7 @@ public class Main extends JPanel implements ActionListener{
 		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
 		
 		_userSettingFrame = new UserSettingFrame("USC Catalogue Print to PDF", _preProcess);
+		_userSettingFrame.setLocationRelativeTo(null); // appear centered 
 
 		_frame.setVisible(false);
 		_userSettingFrame.setVisible(true);

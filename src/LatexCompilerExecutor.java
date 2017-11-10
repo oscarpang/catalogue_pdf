@@ -91,7 +91,7 @@ public class LatexCompilerExecutor {
 				return name.matches("[0-9]+");
 			}
 		});
-		if(subdir.length > 0) {
+		if(subdir != null && subdir.length > 0) {
 			Arrays.sort(subdir, (f1, f2) -> {return f2.getName().compareTo(f1.getName()); });
 			Path pdflatex_path;
 			if(System.getProperty("os.arch").contains("x86_64"))
