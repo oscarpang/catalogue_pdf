@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
@@ -22,12 +24,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 public class ConfigurationPanel extends JPanel implements ActionListener {
-	
+
 	private static final long serialVersionUID = -3087284870831158695L;
-	
+
 	Configuration _config;
 	JTabbedPane _tabbed_pane;
 	JTable _element_table;
@@ -39,6 +43,8 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 	private JFileChooser _fileChooser;
 	private FileDialog _fileDialog;
 	JFrame _parent;
+
+	int _undefined_count;
 
 	public ConfigurationPanel(JFrame parent, PreProcess preprocess) throws FatalErrorException {
 		super();
@@ -61,17 +67,16 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		_text_area = new JTextArea(10, changeConfigPanel.getWidth());
 		_text_area.setLineWrap(true);
 		JScrollPane textAreaScrollPane = new JScrollPane(_text_area);
-		
 
 		changeConfigPanel.add(textAreaScrollPane);
-		
+
 		JPanel btnPanel = new JPanel();
-		btnPanel.setLayout(new BoxLayout(btnPanel,BoxLayout.X_AXIS));
+		btnPanel.setLayout(new BoxLayout(btnPanel, BoxLayout.X_AXIS));
 		btnPanel.add(Box.createRigidArea(new Dimension(80, 0)));
 		btnPanel.add(_applyChangeBtn);
 		btnPanel.add(Box.createRigidArea(new Dimension(20, 0)));
 		btnPanel.add(_saveConfigBtn);
-		
+
 		changeConfigPanel.add(btnPanel);
 
 		this.add(changeConfigPanel, BorderLayout.SOUTH);
@@ -102,7 +107,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 		String[] column_names = { "Name", "Start", "End", "LeaveText", "IgnoreContent", "IgnoreStyles" };
 		_element_table = new JTable(elements_info, column_names) {
-			
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -151,22 +156,34 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			}
 		}
 
-		Object[][] elements_info = new Object[elements.size() + non_config_chars.size()][2];
+		Object[][] elements_info = new Object[elements.size() + non_config_chars.size()][3];
 		int row_idx = 0;
 		for (Map.Entry<Integer, String> entry : elements.entrySet()) {
 			elements_info[row_idx][0] = entry.getKey();
 			elements_info[row_idx][1] = entry.getValue();
+			elements_info[row_idx][2] = new String(Character.toChars(entry.getKey()));
 			row_idx++;
 		}
 
+		// Sort the matrix based on character value
+		_undefined_count = 0;
 		for (Character c : non_config_chars) {
 			System.out.println("Not found: " + (int) c);
 			elements_info[row_idx][0] = (int) c;
-			elements_info[row_idx][1] = "UNDEFINED";
+			elements_info[row_idx][1] = "";
+			elements_info[row_idx][2] = new String(Character.toChars(c));
 			row_idx++;
+			_undefined_count++;
 		}
 
-		String[] column_names = { "Char Num", "convertTo" };
+		java.util.Arrays.sort(elements_info, new java.util.Comparator<Object[]>() {
+			@Override
+			public int compare(Object[] o1, Object[] o2) {
+				return Integer.compare((Integer) o1[0], (Integer) o2[0]);
+			}
+		});
+
+		String[] column_names = { "Char Num", "convertTo", "Unicode Character" };
 		_char_config_table = new JTable(elements_info, column_names) {
 			/**
 			 * 
@@ -192,6 +209,33 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				}
 			}
 		});
+
+		_char_config_table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int col) {
+
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+				if (col == 0) {
+					Integer status = (Integer) table.getModel().getValueAt(row, col);
+					if (!_config.get_charsNum().containsKey(status)) {
+						setBackground(Color.BLACK);
+						setForeground(Color.WHITE);
+					} else {
+						setBackground(table.getBackground());
+						setForeground(table.getForeground());
+					}
+				}
+				return this;
+			}
+		});
+
 		_tabbed_pane.addTab("Config", scrollPane);
 	}
 
@@ -245,10 +289,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				newConfigFile = _fileChooser.getSelectedFile().getPath();
 				newConfigFile = newConfigFile.replaceAll("\\.xml", "");
 				newConfigFile += ".xml";
-				//check if the file exist.
+				// check if the file exist.
 				File file = new File(newConfigFile);
 				if (file.exists()) {
-					int choice = JOptionPane.showConfirmDialog(null, "Replace existing file?", 
+					int choice = JOptionPane.showConfirmDialog(null, "Replace existing file?",
 							"File Replacement Confirmation", JOptionPane.YES_NO_OPTION);
 					if (choice == JOptionPane.NO_OPTION) {
 						return;
@@ -264,6 +308,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			this.saveConfiguration(newConfigFile);
 			Main.setConfigFile(newConfigFile);
 		}
+	}
+
+	public int getUndefinedCount() {
+		return _undefined_count;
 	}
 
 	@Override
@@ -284,8 +332,16 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 				if (_char_config_table.getSelectedRow() > -1 && _char_config_table.getSelectedColumn() > 0
 						&& _char_config_table.getSelectedColumn() < 2) {
 					TableModel char_config_table_model = _char_config_table.getModel();
+					Integer val = (Integer) char_config_table_model.getValueAt(_char_config_table.getSelectedRow(), 0);
+					if (!_config.get_charsNum().containsKey(val)) {
+						_config.get_charsNum().put(val, _text_area.getText());
+						_undefined_count--;
+						assert _config.get_charsNum().containsKey(val);
+					}
 					char_config_table_model.setValueAt(_text_area.getText(), _char_config_table.getSelectedRow(),
 							_char_config_table.getSelectedColumn());
+					((AbstractTableModel) _char_config_table.getModel()).fireTableRowsUpdated(
+							_char_config_table.getSelectedRow(), _char_config_table.getSelectedRow());
 				}
 			}
 		} else if (e.getSource() == _saveConfigBtn) {

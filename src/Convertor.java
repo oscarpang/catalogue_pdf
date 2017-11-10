@@ -234,7 +234,6 @@ class Convertor {
 	 */
 	private String convertCharEntitites(String str) {
 		StringBuffer entity = new StringBuffer("");
-		String entityStr = "";
 
 		int len = str.length();
 		boolean addToBuffer = false;

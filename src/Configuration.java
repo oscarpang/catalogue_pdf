@@ -239,11 +239,11 @@ class Configuration {
 		Element links = doc.createElement("links");
 		root.appendChild(links);
 		
-		if (_linksConversion == _linksConversion.FOOTNOTES)
+		if (_linksConversion == LinksConversion.FOOTNOTES)
 			links.setAttribute("conversion", "footnotes");
-		else if (_linksConversion == _linksConversion.BIBLIO)
+		else if (_linksConversion == LinksConversion.BIBLIO)
 			links.setAttribute("conversion", "biblio");
-		else if (_linksConversion == _linksConversion.HYPERTEX)
+		else if (_linksConversion == LinksConversion.HYPERTEX)
 			links.setAttribute("conversion", "hypertex");
 		else
 			links.setAttribute("conversion", "ignore");
@@ -263,13 +263,13 @@ class Configuration {
 		String type = links.getAttribute("conversion");
 
 		if (type.equals("footnotes"))
-			_linksConversion = _linksConversion.FOOTNOTES;
+			_linksConversion = LinksConversion.FOOTNOTES;
 		else if (type.equals("biblio"))
-			_linksConversion = _linksConversion.BIBLIO;
+			_linksConversion = LinksConversion.BIBLIO;
 		else if (type.equals("hypertex"))
-			_linksConversion = _linksConversion.HYPERTEX;
+			_linksConversion = LinksConversion.HYPERTEX;
 		else
-			_linksConversion = _linksConversion.IGNORE;
+			_linksConversion = LinksConversion.IGNORE;
 	}
 
 	private String generateSpecialString(String str) {
