@@ -132,9 +132,8 @@ public class Main extends JPanel implements ActionListener{
 		_htmlTextField.setEnabled(false);
 		
 		_xlsTextField = new JTextField(_courseXlsFile);
-//		_xlsTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
-//				_xlsTextField.getBorder()));
-		_xlsTextField.setBorder(BorderFactory.createTitledBorder("Course XLS File : "));
+		_xlsTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
+				_xlsTextField.getBorder()));
 		_xlsTextField.setEnabled(false);
 		
 		_configTextField = new JTextField(_configFile);
