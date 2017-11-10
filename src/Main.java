@@ -19,7 +19,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -127,37 +129,44 @@ public class Main extends JPanel implements ActionListener{
 		this.add(_btnPanel);
 		
 		_htmlTextField = new JTextField(_inputFile);
-		_htmlTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("HTML Catalogue File : "), 
-				_htmlTextField.getBorder()));
-		_htmlTextField.setEnabled(false);
+		JScrollPane htmlScrollPane = new JScrollPane(_htmlTextField);
+		htmlScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		htmlScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("HTML Catalogue File : "), 
+				htmlScrollPane.getBorder()));
+		_htmlTextField.setEditable(false);
 		
 		_xlsTextField = new JTextField(_courseXlsFile);
-//		_xlsTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
-//				_xlsTextField.getBorder()));
-		_xlsTextField.setBorder(BorderFactory.createTitledBorder("Course XLS File : "));
-		_xlsTextField.setEnabled(false);
+		JScrollPane xlsScrollPane = new JScrollPane(_xlsTextField);
+		xlsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		xlsScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
+				xlsScrollPane.getBorder()));
+		_xlsTextField.setEditable(false);
 		
 		_configTextField = new JTextField(_configFile);
-		_configTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Config XML File : "), 
-				_configTextField.getBorder()));
-		_configTextField.setEnabled(false);
+		JScrollPane configScrollPane = new JScrollPane(_configTextField);
+		configScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		configScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Config XML File : "), 
+				configScrollPane.getBorder()));
+		_configTextField.setEditable(false);
 		
 		_workingDirTextField = new JTextField(_workingDir);
-		_workingDirTextField.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Working Directory is : "), 
-				_workingDirTextField.getBorder()));
-		_workingDirTextField.setEnabled(false);
+		JScrollPane workingDirScrollPane = new JScrollPane(_workingDirTextField);
+		workingDirScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		workingDirScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Working Directory is : "), 
+				workingDirScrollPane.getBorder()));
+		_workingDirTextField.setEditable(false);
 		
 		_labelPanel = new JPanel();
 		_labelPanel.setLayout(new BoxLayout(_labelPanel, BoxLayout.Y_AXIS));
 		
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_htmlTextField);
+		_labelPanel.add(htmlScrollPane);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_xlsTextField);
+		_labelPanel.add(xlsScrollPane);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_configTextField);
+		_labelPanel.add(configScrollPane);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-		_labelPanel.add(_workingDirTextField);
+		_labelPanel.add(workingDirScrollPane);
 		_labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 	
 		this.add(_labelPanel);
