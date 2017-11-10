@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -50,9 +49,7 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 	private static String _listDisplaySpacing = "                    ";
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 	
-	private JDialog _statusDialog; 
-	
-//	private JFrame _statusFrame;
+	private JDialog _statusDialog;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
@@ -67,6 +64,9 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 					// Remove PreProcessed File.
 					File preProcessFile = new File(Main.getProcessedFile());
 					preProcessFile.delete();
+					
+					File tmpConfigFile = new File(Main.getConfigFile());
+					tmpConfigFile.delete();
 
 					System.exit(0);
 				}
@@ -195,11 +195,17 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 				return;
 			}
 
-			// save config and output file
-			String tmp_config_filename = Main.getWorkingDir() + "working_config.xml";
-			_configPanel.saveConfiguration(tmp_config_filename);
-			Main.setConfigFile(tmp_config_filename);
+			// save tmp-config file
+			String inputFile = Main.getHtmlFile();
+			String filename = inputFile.substring(0, inputFile.indexOf(".html"));
+			while (filename.contains(System.getProperty("file.separator"))) {
+				filename = filename.substring(filename.indexOf(System.getProperty("file.separator")) + 1);
+			}
+			String tmpConfigFile = Main.getWorkingDir() + filename + "_tmp.xml";
+			_configPanel.saveConfiguration(tmpConfigFile);
+			Main.setConfigFile(tmpConfigFile);
 
+			//let user specify output file name
 			boolean success = saveOutputFile();
 			if (success) {
 				startConversion();
@@ -321,66 +327,37 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 	}
 
 	public void startConversion() {
-
-//		_startConversionBtn.setEnabled(false);
-//		JTextArea status_text_area = new JTextArea();
-//		status_text_area.setEditable(false);
-//		status_text_area.setLineWrap(true);
-//		JScrollPane status_scroll_pane = new JScrollPane(status_text_area);
 		JProgressBar progressBar;
 		progressBar = new JProgressBar(0, 100);
 		progressBar.setValue(0);
 		progressBar.setStringPainted(true);
 		progressBar.setIndeterminate(true);
-
 		
 		JLabel statusLabel = new JLabel("Converting...");
-		
-//		_statusFrame = new JFrame();
-//		_statusFrame.setUndecorated(true);
-//		_statusFrame.setLayout(new BoxLayout(_statusFrame.getContentPane(), BoxLayout.Y_AXIS));
-//		
-//		_statusFrame.getContentPane().add(progressBar);
-//		_statusFrame.getContentPane().add(statusLabel);
-//		
-//		_statusFrame.pack();
-//		_statusFrame.setSize(400, 200);
-//		_statusFrame.setLocationRelativeTo(null);
-//		_statusFrame.setVisible(true);
-//		this.setVisible(false);
 		
 		_statusDialog = new JDialog(this, "Conversion");
 		_statusDialog.setUndecorated(true);
 		_statusDialog.setLayout(new BorderLayout());
-		
-//		JLabel conversion_progress = new JLabel("Converting In Progress");
-		
+
 		_statusDialog.add(progressBar, BorderLayout.NORTH);
 		_statusDialog.add(statusLabel);
 		
-//		statusDialog.add(status_scroll_pane, BorderLayout.CENTER);
 		_statusDialog.pack();
 		_statusDialog.setSize(400, 200);
 		
-//		_statusDialog.setModal(true);
-		_statusDialog.setLocationRelativeTo(null); // appear centered 
+		_statusDialog.setLocationRelativeTo(null);
 		_statusDialog.setVisible(true);
-//		this.setVisible(false);
 		this.setEnabled(false);
 		
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-
-//					status_text_area.append("Conversion Start\n");
 					statusLabel.setText("Converting to Latex File...");
 					
 					Parser parser = new Parser();
 					parser.parse(new File(Main.getProcessedFile()), 
 								new ParserHandler(new File(Main.getOutputFile()), _preProcess));
 					
-//					status_text_area.append("Finish Convertion to Latex. Latex file save as: " + Main.getOutputFile() + "\n");
-//					status_text_area.append("Start compile latex file to PDF");
 					statusLabel.setText("Converting to PDF...");
 
 					System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
@@ -388,16 +365,15 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 					boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
 					String pdfString = success ? "\nPDF has been saved as : " 
 									+ Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
-//					status_text_area.append("Finish Latex Compilation. PDF file save as: " + pdfString + "\n");
+
 					statusLabel.setText("Finish Latex Compilation. PDF file save as : " + pdfString);
-//					_statusFrame.dispose();
+					
 					_statusDialog.dispose();
 					JOptionPane.showMessageDialog(UserSettingFrame.this, "Finish Conversion.\nLatex output has been " + 
 									"saved as : " + Main.getOutputFile() + "." + pdfString);
-//					_startConversionBtn.setEnabled(true);
+
 					UserSettingFrame.this.setVisible(true);
-					UserSettingFrame.this.setEnabled(true);
-					
+					UserSettingFrame.this.setEnabled(true);	
 				} catch (FatalErrorException e) {
 					System.err.println(e.getMessage());
 					System.exit(-1);
