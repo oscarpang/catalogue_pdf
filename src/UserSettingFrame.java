@@ -50,9 +50,9 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 	private static String _listDisplaySpacing = "                    ";
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 	
-//	private static JDialog statusDialog; 
+	private JDialog _statusDialog; 
 	
-	private JFrame _statusFrame;
+//	private JFrame _statusFrame;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
@@ -269,7 +269,6 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 	private void createSectionParamListModel() {
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
 			_sectionParamListModel.addElement(createListElem(entr));
-			;
 		}
 	}
 
@@ -337,34 +336,37 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		
 		JLabel statusLabel = new JLabel("Converting...");
 		
-		_statusFrame = new JFrame();
-		_statusFrame.setUndecorated(true);
-		_statusFrame.setLayout(new BoxLayout(_statusFrame.getContentPane(), BoxLayout.Y_AXIS));
-		
-		_statusFrame.getContentPane().add(progressBar);
-		_statusFrame.getContentPane().add(statusLabel);
-		
-		_statusFrame.pack();
-		_statusFrame.setSize(400, 200);
-		_statusFrame.setLocationRelativeTo(null);
-		_statusFrame.setVisible(true);
-		this.setVisible(false);
-		
-//		statusDialog = new JDialog(null, "Conversion");
-//		statusDialog.setLayout(new BorderLayout());
-//		JLabel conversion_progress = new JLabel("Converting In Progress");
-//		statusDialog.add(progressBar, BorderLayout.NORTH);
-//		statusDialog.add(statusLabel);
-//		statusDialog.add(status_scroll_pane, BorderLayout.CENTER);
-//		statusDialog.pack();
-//		statusDialog.setSize(400, 200);
-		
-//		statusDialog.setModal(true);
-//		statusDialog.setUndecorated(true);
-		
-//		statusDialog.setLocationRelativeTo(null); // appear centered 
-//		statusDialog.setVisible(true);
+//		_statusFrame = new JFrame();
+//		_statusFrame.setUndecorated(true);
+//		_statusFrame.setLayout(new BoxLayout(_statusFrame.getContentPane(), BoxLayout.Y_AXIS));
+//		
+//		_statusFrame.getContentPane().add(progressBar);
+//		_statusFrame.getContentPane().add(statusLabel);
+//		
+//		_statusFrame.pack();
+//		_statusFrame.setSize(400, 200);
+//		_statusFrame.setLocationRelativeTo(null);
+//		_statusFrame.setVisible(true);
 //		this.setVisible(false);
+		
+		_statusDialog = new JDialog(this, "Conversion");
+		_statusDialog.setUndecorated(true);
+		_statusDialog.setLayout(new BorderLayout());
+		
+//		JLabel conversion_progress = new JLabel("Converting In Progress");
+		
+		_statusDialog.add(progressBar, BorderLayout.NORTH);
+		_statusDialog.add(statusLabel);
+		
+//		statusDialog.add(status_scroll_pane, BorderLayout.CENTER);
+		_statusDialog.pack();
+		_statusDialog.setSize(400, 200);
+		
+//		_statusDialog.setModal(true);
+		_statusDialog.setLocationRelativeTo(null); // appear centered 
+		_statusDialog.setVisible(true);
+//		this.setVisible(false);
+		this.setEnabled(false);
 		
 		new Thread(new Runnable() {
 			public void run() {
@@ -388,12 +390,14 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 									+ Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
 //					status_text_area.append("Finish Latex Compilation. PDF file save as: " + pdfString + "\n");
 					statusLabel.setText("Finish Latex Compilation. PDF file save as : " + pdfString);
+//					_statusFrame.dispose();
+					_statusDialog.dispose();
 					JOptionPane.showMessageDialog(UserSettingFrame.this, "Finish Conversion.\nLatex output has been " + 
 									"saved as : " + Main.getOutputFile() + "." + pdfString);
 //					_startConversionBtn.setEnabled(true);
 					UserSettingFrame.this.setVisible(true);
-//					statusDialog.dispose();
-					_statusFrame.dispose();
+					UserSettingFrame.this.setEnabled(true);
+					
 				} catch (FatalErrorException e) {
 					System.err.println(e.getMessage());
 					System.exit(-1);
