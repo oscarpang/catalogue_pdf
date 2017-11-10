@@ -7,7 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -16,12 +19,16 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -45,6 +52,7 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	private static Integer[] _sectionColChoice = { 1, 2, 3};
 	private static String _listDisplaySpacing = "                    ";
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
+	private static JDialog statusDialog; 
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
@@ -306,24 +314,63 @@ public class UserSettingFrame extends JFrame implements ActionListener{
 	}
 
 	public void startConversion() {
-		try {
-			Parser parser = new Parser();
-			parser.parse(new File(Main.getProcessedFile()), 
-						new ParserHandler(new File(Main.getOutputFile()), _preProcess));
-			
-			System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
-			//TODO: if failed, end the process.
-			boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
-			String pdfString = success ? "\nPDF has been saved as : " 
-							+ Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
-			JOptionPane.showMessageDialog(this, "Finish Conversion.\nLatex output has been " + 
-							"saved as : " + Main.getOutputFile() + "." + pdfString);
-		} catch (FatalErrorException e) {
-			System.err.println(e.getMessage());
-			System.exit(-1);
-		} catch (Exception e) {
-			e.getMessage();
-			e.printStackTrace();
-		}
+		_startConversionBtn.setEnabled(false);
+		JTextArea status_text_area = new JTextArea();
+		status_text_area.setEditable(false);
+		status_text_area.setLineWrap(true);
+		JScrollPane status_scroll_pane = new JScrollPane(status_text_area);
+		
+		JProgressBar progressBar;
+		progressBar = new JProgressBar(0, 100);
+		progressBar.setValue(0);
+		progressBar.setStringPainted(true);
+		progressBar.setIndeterminate(true);
+		
+		statusDialog = new JDialog(this, "Conversion");
+		statusDialog.setLayout(new BorderLayout());
+		JLabel conversion_progress = new JLabel("Converting In Progress");
+		statusDialog.add(progressBar, BorderLayout.NORTH);
+		statusDialog.add(status_scroll_pane, BorderLayout.CENTER);
+		statusDialog.pack();
+		statusDialog.setSize(300, 400);
+		statusDialog.setVisible(true);
+		statusDialog.setModal(true);
+		
+		
+		new Thread(new Runnable() {
+		    public void run() {
+				try {
+					status_text_area.append("Conversion Start\n");;
+					
+					Parser parser = new Parser();
+					parser.parse(new File(Main.getProcessedFile()), 
+								new ParserHandler(new File(Main.getOutputFile()), _preProcess));
+					
+					status_text_area.append("Finish Convertion to Latex. Latex file save as: " + Main.getOutputFile() + "\n");
+					status_text_area.append("Start compile latex file to PDF");
+					
+					System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
+					//TODO: if failed, end the process.
+					boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
+					String pdfString = success ? "\nPDF has been saved as : " 
+									+ Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
+					status_text_area.append("Finish Latex Compilation. PDF file save as: " + pdfString + "\n");
+
+					JOptionPane.showMessageDialog(UserSettingFrame.this, "Finish Conversion.\nLatex output has been " + 
+									"saved as : " + Main.getOutputFile() + "." + pdfString);
+					_startConversionBtn.setEnabled(true);
+				} catch (FatalErrorException e) {
+					System.err.println(e.getMessage());
+					System.exit(-1);
+				} catch (Exception e) {
+					e.getMessage();
+					e.printStackTrace();
+				}
+		    }
+		}).start();
+		
+		
+		
+		
 	}
 }
