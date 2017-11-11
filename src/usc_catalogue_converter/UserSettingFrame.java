@@ -355,24 +355,39 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 			public void run() {
 				try {
 					statusLabel.setText("Converting to Latex File...");
+					progressBar.setString("1/2");
 					
 					Parser parser = new Parser();
 					parser.parse(new File(Main.getProcessedFile()), 
 								new ParserHandler(new File(Main.getOutputFile()), _preProcess));
 					
 					statusLabel.setText("Converting to PDF...");
+					progressBar.setString("2/2");
 
 					System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
 					//TODO: tell user that conversion failed or success, with reason.
 					boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
-					String pdfString = success ? "\nPDF has been saved as : " 
-									+ Main.getOutputFile().replaceAll("\\.tex", ".pdf") : "";
-
-					statusLabel.setText("Finish Latex Compilation. PDF file save as : " + pdfString);
-					
 					_statusDialog.dispose();
-					JOptionPane.showMessageDialog(UserSettingFrame.this, "Finish Conversion.\nLatex output has been " + 
-									"saved as : " + Main.getOutputFile() + "." + pdfString);
+					if (!success && Main.hasLatexInstalled()) {
+						JOptionPane.showMessageDialog(UserSettingFrame.this, 
+								"Latex Compilation failure.\nLatex output has been saved as : "
+								+ Main.getOutputFile() + ".\nPlease use other Latex Compiler to " +
+								"compile this Latex file to PDF.", 
+								"Latex Compilation failure.", JOptionPane.ERROR_MESSAGE);
+					} else if (! success && !Main.hasLatexInstalled()) {
+						JOptionPane.showMessageDialog(UserSettingFrame.this, 
+								"Finish Conversion.\nLatex output has been saved as : "
+								+ Main.getOutputFile() + ".\nSince Latex Compiler is not installed " +
+								"on your computer, please use other Latex Compiler to " +
+								"compile this Latex file to PDF.", 
+								"Finish Conversion.", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(UserSettingFrame.this, 
+								"Finish Conversion.\nLatex output has been saved as : "
+								+ Main.getOutputFile() + ".\nPDF has been saved as : " +
+								Main.getOutputFile().replaceAll("\\.tex", ".pdf"), 
+								"Finish Conversion.", JOptionPane.INFORMATION_MESSAGE);
+					}
 
 					UserSettingFrame.this.setVisible(true);
 					UserSettingFrame.this.setEnabled(true);	

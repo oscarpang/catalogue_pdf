@@ -1,5 +1,6 @@
 package usc_catalogue_converter;
 
+import java.awt.Color;
 /*
  * Main.java
  */
@@ -55,7 +56,8 @@ public class Main extends JPanel implements ActionListener{
 	private JPanel _btnPanel, _labelPanel;
 	private PreProcess _preProcess;
 	
-	private static boolean macOS;
+	private static boolean _macOS;
+	private static boolean _hasLatexInstalled;
 	
 	/**
 	 * Creates {@link Parser Parser} instance and runs its
@@ -67,7 +69,7 @@ public class Main extends JPanel implements ActionListener{
 	public static void main(String[] args) {
 		
 		String osName = System.getProperty("os.name");
-	    macOS = osName.indexOf("Mac") >= 0 ? true : false;
+	    _macOS = osName.indexOf("Mac") >= 0 ? true : false;
 		
 		_frame = new JFrame("USC Catalogue Print to PDF");
 		_frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -130,6 +132,7 @@ public class Main extends JPanel implements ActionListener{
 		this.add(_btnPanel);
 		
 		_htmlTextField = new JTextField(_inputFile);
+		_htmlTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane htmlScrollPane = new JScrollPane(_htmlTextField);
 		htmlScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		htmlScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("HTML Catalogue File : "), 
@@ -137,6 +140,7 @@ public class Main extends JPanel implements ActionListener{
 		_htmlTextField.setEditable(false);
 		
 		_xlsTextField = new JTextField(_courseXlsFile);
+		_xlsTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane xlsScrollPane = new JScrollPane(_xlsTextField);
 		xlsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		xlsScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
@@ -144,6 +148,7 @@ public class Main extends JPanel implements ActionListener{
 		_xlsTextField.setEditable(false);
 		
 		_configTextField = new JTextField(_configFile);
+		_configTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane configScrollPane = new JScrollPane(_configTextField);
 		configScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		configScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Config XML File : "), 
@@ -151,6 +156,7 @@ public class Main extends JPanel implements ActionListener{
 		_configTextField.setEditable(false);
 		
 		_workingDirTextField = new JTextField(_workingDir);
+		_workingDirTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane workingDirScrollPane = new JScrollPane(_workingDirTextField);
 		workingDirScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		workingDirScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Working Directory is : "), 
@@ -173,7 +179,7 @@ public class Main extends JPanel implements ActionListener{
 		this.add(_labelPanel);
 		this.add(_startBtn);
 		
-		if (macOS) {
+		if (_macOS) {
 			_fileDialog = new FileDialog(_frame, "Open File...", FileDialog.LOAD);
 			_fileDialog.setDirectory(System.getProperty("user.dir"));
 		} else {
@@ -187,7 +193,7 @@ public class Main extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _chooseHtmlBtn) {
-			if (macOS) {
+			if (_macOS) {
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".html"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
@@ -203,7 +209,7 @@ public class Main extends JPanel implements ActionListener{
 			_htmlTextField.setText(_inputFile);
 			System.out.println("Input File is: " + _inputFile);
 		}else if (e.getSource() == _chooseXlsBtn) {
-			if (macOS) {
+			if (_macOS) {
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xls"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
@@ -219,7 +225,7 @@ public class Main extends JPanel implements ActionListener{
 			_xlsTextField.setText(_courseXlsFile);
 			System.out.println("CourseXLS File is: " + _courseXlsFile);
 		}else if (e.getSource() == _chooseConfigBtn) {
-			if (macOS) {
+			if (_macOS) {
 				_fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".xml"));
 				_fileDialog.setFile("");
 				_fileDialog.setVisible(true);
@@ -235,7 +241,7 @@ public class Main extends JPanel implements ActionListener{
 			_configTextField.setText(_configFile);
 			System.out.println("Config File is: " + _configFile);
 		}else if (e.getSource() == _chooseWorkingDirBtn) {
-			if (macOS) {
+			if (_macOS) {
 				System.setProperty("apple.awt.fileDialogForDirectories", "true");
 				_fileDialog.setFile("");
 				_fileDialog.setTitle("Choose your project working directory...");
@@ -262,15 +268,19 @@ public class Main extends JPanel implements ActionListener{
 			_workingDirTextField.setText(_workingDir);
 			System.out.println("Working Directory is : " + _workingDir);
 		}else if (e.getSource() == _startBtn) {	
-			if (!LatexCompilerExecutor.HasLatexInstalled()) {
+			_hasLatexInstalled = LatexCompilerExecutor.HasLatexInstalled();
+			if (!_hasLatexInstalled) {
 				int confirm = JOptionPane.showOptionDialog(
 			             _frame, "It seems like Latex Compiler is not installed on your computer. \n" + 
 			            		 "This may caused by installing Latex compiler in non-standard directories.\n\n" +
-			            		 "Press \"Yes\" to specify your installation path and then start " +
+			            		 "Press \"Specify installation path\" to specify your installation path and then start " +
 			            		 "conversion to both latex and pdf file.\n" +
-			            		 "Press \"No\"  to continue convert only to latex file (i.e. no pdf file.).\n", 
+			            		 "Press \"Continue converting only to Latex\"  to continue convert only to latex file " +
+			            		 "(i.e. no pdf file.).\n", 
 			             "Latex Compiler not installed", JOptionPane.YES_NO_CANCEL_OPTION, 
-			             JOptionPane.QUESTION_MESSAGE, null, null, null);
+			             JOptionPane.QUESTION_MESSAGE, null, 
+			             new String[]{"Specify installation path", "Continue converting only to Latex", "Cancel"},
+			             null);
 		        if (confirm == JOptionPane.YES_OPTION) {
 		        	//TODO: change to file chooser???? after user input, re-check if Latex is installed?
 		        	String path = JOptionPane.showInputDialog(_frame, "Please specify " +
@@ -367,7 +377,11 @@ public class Main extends JPanel implements ActionListener{
 	}
 	
 	public static boolean isMacOS() {
-		return macOS;
+		return _macOS;
+	}
+	
+	public static boolean hasLatexInstalled() {
+		return _hasLatexInstalled;
 	}
 	
 	public static void setConfigFile(String configFile) {
