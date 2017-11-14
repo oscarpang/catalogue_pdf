@@ -46,12 +46,13 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 	private DefaultListModel<String> _sectionParamListModel;
 	private JFileChooser _fileChooser;
 	private FileDialog _fileDialog;
+	private JDialog _statusDialog;
 
 	private static Integer[] _sectionColChoice = { 1, 2, 3 };
 	private static String _listDisplaySpacing = "                    ";
 	private static Font _titleFont = new Font("Arial", Font.ITALIC, 18);
 	
-	private JDialog _statusDialog;
+	private boolean _savedTmpConfig = false;
 
 	public UserSettingFrame(String name, PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
@@ -67,8 +68,10 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 					File preProcessFile = new File(Main.getProcessedFile());
 					preProcessFile.delete();
 					
-					File tmpConfigFile = new File(Main.getConfigFile());
-					tmpConfigFile.delete();
+					if (_savedTmpConfig) {
+						File tmpConfigFile = new File(Main.getConfigFile());
+						tmpConfigFile.delete();
+					}
 
 					System.exit(0);
 				}
@@ -205,6 +208,7 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 			}
 			String tmpConfigFile = Main.getWorkingDir() + filename + "_tmp.xml";
 			_configPanel.saveConfiguration(tmpConfigFile);
+			_savedTmpConfig =  true;
 			Main.setConfigFile(tmpConfigFile);
 
 			//let user specify output file name
