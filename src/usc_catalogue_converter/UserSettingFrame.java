@@ -54,7 +54,12 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 	
 	private boolean _savedTmpConfig = false;
 
-	public UserSettingFrame(String name, PreProcess preProcess) {
+	/**
+	 * Creates a user setting frame.
+	 * 
+	 * @param PreProcess the preProcess instance
+	 */
+	public UserSettingFrame(PreProcess preProcess) {
 		super("USC Catalogue Print to PDF");
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
@@ -234,6 +239,10 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		this.repaint();
 	}
 
+	/**
+	 * Prompt out a file dialog based on operating system and let user specify 
+	 * the output file they want to saved as.
+	 */
 	private boolean saveOutputFile() {
 		String inputFile = Main.getHtmlFile();
 		String filename = inputFile.substring(0, inputFile.indexOf(".html"));
@@ -278,12 +287,18 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		return false;
 	}
 
+	/**
+	 * create a sectionParamListModel based on preProcessed customized sectionParams.
+	 */
 	private void createSectionParamListModel() {
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
 			_sectionParamListModel.addElement(createListElem(entr));
 		}
 	}
 
+	/**
+	 * reset the sectionParamListModel based on preProcessed customized sectionParams.
+	 */
 	private void resetSectionParamListModel() {
 		int index = 0;
 		for (Map.Entry<String, int[]> entr : _preProcess.getCustomizedSectionParams()) {
@@ -292,6 +307,10 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * create list elem for the sectionParamList.
+	 * @param Map.Entry<String, int[]> the Map Entry in the user sectionList.
+	 */
 	private String createListElem(Map.Entry<String, int[]> entr) {
 		String elem = "";
 		for (int i = 0; i < entr.getValue()[0]; i++) {
@@ -301,6 +320,10 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		return elem;
 	}
 
+	/**
+	 * change section level by offset.
+	 * @param int the title level offset that user want to change for the selected sections.
+	 */
 	private void addSectionLevel(int offset) {
 		int[] selectedIndices = _sectionParamList.getSelectedIndices();
 		for (int index : selectedIndices) {
@@ -324,6 +347,10 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * change column number by colNum.
+	 * @param int the column number that user want to change for the selected sections.
+	 */
 	private void changeColNum(int colNum) {
 		int[] selectedIndices = _sectionParamList.getSelectedIndices();
 		for (int index : selectedIndices) {
@@ -332,6 +359,9 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * creates the progress bar and use the latex compiler.
+	 */
 	public void startConversion() {
 		JProgressBar progressBar;
 		progressBar = new JProgressBar(0, 100);
@@ -369,7 +399,6 @@ public class UserSettingFrame extends JFrame implements ActionListener {
 					progressBar.setString("2/2");
 
 					System.out.println("-----BEFORE CONVERT LATEX TO PDF-----");
-					//TODO: tell user that conversion failed or success, with reason.
 					boolean success = LatexCompilerExecutor.CompileLatexFile(Main.getOutputFile());
 					_statusDialog.dispose();
 					if (!success && Main.hasLatexInstalled()) {

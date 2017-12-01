@@ -95,8 +95,6 @@ public class Main extends JPanel implements ActionListener{
 		_frame.setVisible(true);
 	}
 	
-	//TODO: change font size of the whole program to fit the system's default setting?
-	//TODO: add USC background???
 	public Main() {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -320,7 +318,7 @@ public class Main extends JPanel implements ActionListener{
 		_preProcess= new PreProcess();
 		_preProcess.preProcess(_inputFile, _processedFile, _courseXlsFile);
 		
-		_userSettingFrame = new UserSettingFrame("USC Catalogue Print to PDF", _preProcess);
+		_userSettingFrame = new UserSettingFrame(_preProcess);
 		_userSettingFrame.setLocationRelativeTo(null); // appear centered 
 
 		_frame.setVisible(false);

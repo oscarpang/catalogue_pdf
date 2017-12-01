@@ -58,6 +58,13 @@ public class PreProcess {
 	
 	private HashSet<Character> _non_ascii_charset;
 
+	/**
+	 * Creates a preProcess instance.
+	 * 
+	 * @param String the input html file name
+	 * @param String the processedFile name
+	 * @param String the course XLS file name
+	 */
 	public void preProcess(String inputFile, String processedFile, String courseXlsFile) {
 		_inputFile = inputFile;
 		_courseXlsFile = courseXlsFile;
@@ -75,6 +82,10 @@ public class PreProcess {
 		thirdRoundPreProcessing();
 	}
 
+	/**
+	 * First Round PreProcessing, which combines the input files, upgrade some section headers
+	 *  and remove unnecessary content.
+	 */
 	private void firstRoundPreProcessing() {
 		System.out.println("Start the first round processing.");
 
@@ -123,6 +134,9 @@ public class PreProcess {
 		System.out.println("Finish first round processing.");
 	}
 
+	/**
+	 * Second Round PreProcessing, which convert html element to be in Latex acceptable format.
+	 */
 	private void secondRoundPreProcessing() {
 		System.out.println("Start the second round processing.");
 		try {
@@ -232,6 +246,9 @@ public class PreProcess {
 		System.out.println("Finish second round processing.");
 	}
 
+	/**
+	 * Third Round PreProcessing, which generate the sectionParam list.
+	 */
 	private void thirdRoundPreProcessing() {
 		System.out.println("Start the third round processing.");
 		try {
@@ -343,6 +360,10 @@ public class PreProcess {
 		System.out.println("Finish third round processing.");
 	}
 
+	/**
+	 * check if the line should be ignored.
+	 * @param String the string that we want to search on
+	 */
 	private boolean shouldIgnore(String line) {
 		for (String str : _prefixIgnored) {
 			if (line.equals(str)) {
@@ -352,6 +373,10 @@ public class PreProcess {
 		return false;
 	}
 
+	/**
+	 * check if line has chapter title.
+	 * @param String the string that we want to search on
+	 */
 	private boolean isChapter(String line) {
 		for (String str : _chapterNames) {
 			if (line.contains(str)) {
@@ -361,6 +386,11 @@ public class PreProcess {
 		return false;
 	}
 
+	/**
+	 * count occurrence of target in string.
+	 * @param str the string that we want to search on.
+	 * @param target the target want to find.
+	 */
 	private int countOccurence(String str, String target) {
 		int index = str.indexOf(target, 0);
 		int count = 0;
@@ -372,6 +402,11 @@ public class PreProcess {
 		return count;
 	}
 
+	/**
+	 * get rowspan or colspan number.
+	 * @param line the string that we want to search on.
+	 * @param str the target want to find.
+	 */
 	private int getSpan(String line, String str) {
 		if (line.contains(str)) {
 			// 2 = length of "=\""
@@ -381,6 +416,10 @@ public class PreProcess {
 		return 1;
 	}
 
+	/**
+	 * calculate column width.
+	 * @param String the line that needs to count column width.
+	 */
 	private int getCurColWidth(String line) {
 		int width = 0;
 		boolean ignore = false;
@@ -404,6 +443,11 @@ public class PreProcess {
 		return width;
 	}
 	
+	/**
+	 * set the customized section column number.
+	 * @param index index in the customized sectionParams array.
+	 * @param value the new value that want to set.
+	 */
 	public Map.Entry<String, int[]> setCustomizedSectionColNums(int index, int value) {
 		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
 		int[] curParam = entr.getValue();
@@ -413,8 +457,12 @@ public class PreProcess {
 							+ "--" + oldColNum+ "->" + value);
 		return entr;
 	}
-	
-	//Note: this function also upgrade/downgrade subsections.
+
+	/**
+	 * change the customized section levels. Note: this function also upgrade/downgrade subsections.
+	 * @param index index in the customized sectionParams array.
+	 * @param offset the new value that want to set.
+	 */
 	public Map.Entry<String, int[]> addCustomizedSectionLevels(int index, int offset) {
 		Map.Entry<String, int[]> entr = _customizedSectionParams.get(index);
 		int oldLevel = entr.getValue()[0];
@@ -435,6 +483,10 @@ public class PreProcess {
 		return _customizedSectionParams.get(index);
 	}
 	
+	/**
+	 * reset the customized sectionParams by title levels.
+	 * 
+	 */
 	public void resetCustomizedSectionParamsByLevels() {
 		for (int i = 0; i < _defaultSectionParams.size(); i++) {
 			Map.Entry<String, int[]> defaultEntr = _defaultSectionParams.get(i);
@@ -448,6 +500,10 @@ public class PreProcess {
 		}
 	}
 	
+	/**
+	 * reset the customized sectionParams by column number.
+	 * 
+	 */
 	public void resetCustomizedSectionParamsByColNums() {
 		for (int i = 0; i < _defaultSectionParams.size(); i++) {
 			Map.Entry<String, int[]> defaultEntr = _defaultSectionParams.get(i);
@@ -461,26 +517,50 @@ public class PreProcess {
 		}
 	}
 
+	/**
+	 * get the table col number arraylist.
+	 * 
+	 */
 	public ArrayList<Integer> getTableColNum() {
 		return _tableColNum;
 	}
 
+	/**
+	 * get the table row number arraylist.
+	 * 
+	 */
 	public ArrayList<Integer> getTableRowNum() {
 		return _tableRowNum;
 	}
 
+	/**
+	 * get the table col width arraylist.
+	 * 
+	 */
 	public ArrayList<ArrayList<Double>> getTableColWidth() {
 		return _tableColWidth;
 	}
 
+	/**
+	 * get the _defaultSectionParams.
+	 * 
+	 */
 	public ArrayList<Map.Entry<String, int[]>> getDefaultSectionParams() {
 		return _defaultSectionParams;
 	}
 
+	/**
+	 * get the _customizedSectionParams.
+	 * 
+	 */
 	public ArrayList<Map.Entry<String, int[]>> getCustomizedSectionParams() {
 		return _customizedSectionParams;
 	}
 	
+	/**
+	 * get the getNonAsciiSet.
+	 * 
+	 */
 	public HashSet<Character> getNonAsciiSet(){
 		return _non_ascii_charset;
 	}
