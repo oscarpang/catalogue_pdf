@@ -8,8 +8,17 @@ import java.util.Arrays;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
+
+/**
+ *  Use latex and latexmk to 
+ */
+
 public class LatexCompilerExecutor {
-	
+	/**
+	 * Compile the given latex file
+	 * @param latex_file_path
+	 *			the file to be compile by latex.
+	 */
 	public static boolean CompileLatexFile(String latex_file_path) throws IOException, InterruptedException {
 		String latexmk_bin_path = FindLatexMkBinPath();
 		if(latexmk_bin_path == null) {
@@ -31,11 +40,21 @@ public class LatexCompilerExecutor {
 
 	}
 	
+	/**
+	 * Check whether the latex file exist
+	 * @param latex_file_path
+	 *			the file path of latex file
+	 * @return existence of the file
+	 */
 	public static boolean CheckLatexFileExist(String latex_file_path) {
 		File latex_file = new File(latex_file_path);
 		return latex_file.exists();
 	}
 	
+	/**
+	 * Find the latexmk binary path
+	 * @return the string that indicates latexmk binary's path
+	 */
 	public static String FindLatexMkBinPath() {
 		// Normally installed here
 		String latexmk_command = "/Library/TeX/texbin/latexmk";
@@ -73,6 +92,9 @@ public class LatexCompilerExecutor {
 		
 	}
 	
+	/**
+	 * Check whether latex is installed
+	 */
 	public static boolean HasLatexInstalled() {
 		if(FindPdfLatexBinPath() != null && FindLatexMkBinPath() != null) {
 			return true;
@@ -80,6 +102,10 @@ public class LatexCompilerExecutor {
 		return false;
 	}
 	
+	/**
+	 * Find the pdflatex binary path
+	 * @return the string that indicates pdflatex binary's path
+	 */
 	public static String FindPdfLatexBinPath() {
 		// Normally installed here
 		String tex_install_path = "/usr/local/texlive/";
@@ -111,7 +137,10 @@ public class LatexCompilerExecutor {
 		}
 	}
 
-	
+	/**
+	 * Run command and return the status of running
+	 * @return integer that indicates exiting status
+	 */
 	public static int RunCommand(String command) throws IOException, InterruptedException {
 		final Process p = Runtime.getRuntime().exec(command);
 
@@ -145,23 +174,5 @@ public class LatexCompilerExecutor {
 
 
 		return p.waitFor();
-	}
-	
-	public static void main(String[] args) throws IOException, InterruptedException {
-		boolean success = CompileLatexFile("/Users/oscarpang/Documents/workspace/htmltolatex/Catalogue-17_18-5.tex");
-		//		String latexmk_bin_path = FindLatexMkBinPath();
-//		if(latexmk_bin_path == null) {
-//			System.out.println("No latexmk program found");
-//			return;
-//		}
-//
-//		String pdflatex_bin_path = FindPdfLatexBinPath();
-//		if(pdflatex_bin_path == null) {
-//			System.out.println("No pdflatex program found");
-//			return;
-//		}
-//		
-//		RunCommand(latexmk_bin_path + " -CA");
-//		RunCommand(latexmk_bin_path + " -pdf -pdflatex=" + pdflatex_bin_path + " test.tex");
 	}
 }

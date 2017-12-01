@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
+
+/**
+ *  Preprocess and generate formated html file.
+ */
 public class PreProcess {
 
 	/** Input HTML file. */

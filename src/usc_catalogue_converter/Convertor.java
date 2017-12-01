@@ -313,85 +313,6 @@ class Convertor {
 			_writer.write("\\footnote{" + map.get("cite") + "}");
 	}
 
-//	/**
-//	 * Prints CSS style converted to LaTeX command. Called when HTML start element
-//	 * is reached.
-//	 * 
-//	 * @param e
-//	 *            HTML start element
-//	 * @throws IOException
-//	 *             when output error occurs
-//	 */
-//	public void cssStyleStart(ElementStart e) throws IOException {
-//		CSSStyle[] styles = findStyles(e);
-//		for (int i = 0; i < styles.length; ++i) {
-//			if (styles[i] == null)
-//				continue;
-//			if (_config.getMakeCmdsFromCSS())
-//				_writer.write(_config.getCmdStyleName(styles[i].getName()) + "{");
-//			else
-//				_writer.write(styles[i].getStart());
-//		}
-//	}
-
-//	/**
-//	 * Prints CSS style converted to LaTeX command. Called when HTML end element is
-//	 * reached.
-//	 * 
-//	 * @param e
-//	 *            corresponding HTML start element
-//	 * @throws IOException
-//	 *             when output error occurs
-//	 */
-//	public void cssStyleEnd(ElementStart e) throws IOException {
-//		CSSStyle[] styles = findStyles(e);
-//		for (int i = styles.length - 1; i >= 0; --i) {
-//			if (styles[i] == null)
-//				continue;
-//			if (_config.getMakeCmdsFromCSS())
-//				_writer.write("}");
-//			else
-//				_writer.write(styles[i].getEnd());
-//		}
-//	}
-
-//	/**
-//	 * Finds styles for the specified element.
-//	 * 
-//	 * @param e
-//	 *            HTML element
-//	 * @return array with styles in this order: element name style, 'class' style,
-//	 *         'id' style (if style not found null is stored in the array)
-//	 */
-//	private CSSStyle[] findStyles(ElementStart e) {
-//		try {
-//			if (_config.getElement(e.getElementName()).ignoreStyles())
-//				return null;
-//		} catch (NoItemException ex) {
-//		}
-//
-//		String[] styleNames = { e.getElementName(), "", "" };
-//		CSSStyle[] styles = { null, null, null };
-//		CSSStyle style;
-//
-//		if (e.getAttributes().get("class") != null)
-//			styleNames[1] = e.getAttributes().get("class");
-//
-//		if (e.getAttributes().get("id") != null)
-//			styleNames[2] = e.getAttributes().get("id");
-//
-//		if ((style = _config.findStyle(styleNames[0])) != null)
-//			styles[0] = style;
-//
-//		if ((style = _config.findStyleClass(styleNames[1], e.getElementName())) != null)
-//			styles[1] = style;
-//
-//		if ((style = _config.findStyleId(styleNames[2], e.getElementName())) != null)
-//			styles[2] = style;
-//
-//		return styles;
-//	}
-
 	/**
 	 * Called when A start element is reached.
 	 * 
@@ -971,6 +892,9 @@ class Convertor {
 
 }
 
+/**
+* A Pair class that supports HashMap and HashSet
+*/
 class Pair<A, B> {
 	private A first;
 	private B second;
@@ -1021,7 +945,9 @@ class Pair<A, B> {
 	}
 }
 
-
+/**
+* UnionFind class that supports table format.
+*/
 class UnionFind {
 
 	  private int[] _parent;

@@ -1,6 +1,12 @@
 package usc_catalogue_converter;
+/*
+ * Course.java
+ *
+ */
 
-
+/**
+ *  A wrapper class for course information parsed from {@link CourseXlsParser CourseXlsParser} class
+ */
 public class Course implements Comparable<Course>{
 	private static String CONCURRENT_ENROLLMENT_PREFIX =  "Concurrent enrollment";
 	private static String LATEX_SEPERATOR = " | ";
@@ -17,7 +23,7 @@ public class Course implements Comparable<Course>{
 	private String prerequisite_str_;
 	private String recommend_prep_;
 	private String corequisite_str_;
-	private String concurrent_enrollment_; //Neet to check whether "concurrent enrollment" string exist
+	private String concurrent_enrollment_; //Need to check whether "concurrent enrollment" string exist
 	private String sat_new_ge_req_;
 	private String sat_global_per_;
 	private String sat_old_ge_req_;

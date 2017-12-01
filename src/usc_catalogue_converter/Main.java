@@ -131,25 +131,29 @@ public class Main extends JPanel implements ActionListener{
 		this.add(Box.createRigidArea(new Dimension(0, 10)));
 		this.add(_btnPanel);
 		
+		Color bg_color = new Color(238, 238, 238);
+		
 		_htmlTextField = new JTextField(_inputFile);
-		_htmlTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane htmlScrollPane = new JScrollPane(_htmlTextField);
 		htmlScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		htmlScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("HTML Catalogue File : "), 
 				htmlScrollPane.getBorder()));
+		htmlScrollPane.setBackground(bg_color);
+		htmlScrollPane.getHorizontalScrollBar().setOpaque(true);
 		_htmlTextField.setEditable(false);
 		
 		_xlsTextField = new JTextField(_courseXlsFile);
-		_xlsTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane xlsScrollPane = new JScrollPane(_xlsTextField);
 		xlsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		xlsScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Course XLS File : "), 
 				xlsScrollPane.getBorder()));
+		xlsScrollPane.setBackground(bg_color);
 		_xlsTextField.setEditable(false);
 		
 		_configTextField = new JTextField(_configFile);
 		_configTextField.setBackground(UIManager.getColor ( "Panel.background" ));
 		JScrollPane configScrollPane = new JScrollPane(_configTextField);
+		configScrollPane.getHorizontalScrollBar().setBackground(bg_color);
 		configScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		configScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Config XML File : "), 
 				configScrollPane.getBorder()));
@@ -161,6 +165,7 @@ public class Main extends JPanel implements ActionListener{
 		workingDirScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		workingDirScrollPane.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Working Directory is : "), 
 				workingDirScrollPane.getBorder()));
+		workingDirScrollPane.setBackground(bg_color);
 		_workingDirTextField.setEditable(false);
 		
 		_labelPanel = new JPanel();

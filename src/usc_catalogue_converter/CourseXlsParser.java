@@ -1,5 +1,8 @@
 package usc_catalogue_converter;
-
+/*
+ * CourseXlsParser.java
+ *
+ */
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +19,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+/**
+ *  A parser class for course information from excel sheet generated from Catalogue beckend server
+ */
 public class CourseXlsParser {
 	private File input_file_;
 	private List<Course> course_list;
@@ -24,6 +30,11 @@ public class CourseXlsParser {
 	private Iterator<Row> course_iterator_;
 	private static int COLUMN_NUMBER = 76;
 
+	/**
+	 * Constructor for CourseXlsParser
+	 * @param File object of the excel file
+	 * @throws IOException if the file is not found.
+	 */
 	public CourseXlsParser(File inputFile) throws IOException {
 		input_file_ = inputFile;
 		course_list = new ArrayList<Course>();
@@ -34,12 +45,25 @@ public class CourseXlsParser {
 		course_iterator_ = firstSheet.iterator();
 	}
 
+	/**
+	 * Start parsing the file and store all course information in course_list
+	 */
 	public void Parse() {
 		if (!ParseHeader())
 			return;
 		ParseContent();
 	}
 	
+
+	/**
+	 * Parse a given file and dump all latex content to a Writer object
+	 * @param filepath
+	 *			the filepath of the course excel sheet
+	 * @param writer
+	 *			the writer object that will store the output
+	 * @param standalone
+	 *			if true, the writer will contain a standalone document.
+	 */
 	public static void ParseToLatexWriter(String filepath, Writer writer, boolean standalone) throws IOException {
 		File csv_file = new File(filepath);
 		
@@ -99,6 +123,13 @@ public class CourseXlsParser {
         writer.flush();
 	}
 	
+	/**
+	 * Parse a given file and dump all html to a Writer object
+	 * @param filepath
+	 *			the filepath of the course excel sheet
+	 * @param writer
+	 *			the writer object that will store the output
+	 */
 	public static void ParseToHTMLWriter(String filepath, Writer writer) throws IOException {
 		File csv_file = new File(filepath);
 		
@@ -120,10 +151,19 @@ public class CourseXlsParser {
         writer.flush();
 	}
 	
+
+	/**
+	 * Return the course list of the parser/
+	 * @return course_list
+	 *			the list of courses.
+	 */
 	public List<Course> GetCourseList() {
 		return course_list;
 	}
 
+	/**
+	 * Parse the header of excel file.
+	 */
 	private boolean ParseHeader() {
 		if (course_iterator_.hasNext()) {
 			Row nextRow = course_iterator_.next();
@@ -141,6 +181,9 @@ public class CourseXlsParser {
 		return true;
 	}
 
+	/**
+	 * Parse the remaining content of the excel file
+	 */
 	private void ParseContent() {
 		while (course_iterator_.hasNext()) {
 			Row nextRow = course_iterator_.next();
@@ -153,7 +196,11 @@ public class CourseXlsParser {
 			course_list.add(c);
 		}
 	}
-
+	/**
+	 * Read all cells of a given row
+	 * @param row
+	 *			the row to be read
+	 */
 	public List<String> ReadRow(Row row) {
 		List<String> words = new ArrayList<String>();
 		for (int cn = 0; cn < row.getLastCellNum(); cn++) {

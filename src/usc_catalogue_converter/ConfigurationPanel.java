@@ -1,4 +1,9 @@
 package usc_catalogue_converter;
+
+/*
+ * ConfigurationPanel.java
+*/
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -29,6 +34,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
+
+/**
+ * ConfigurationPanel shows all configuration settings.
+ */
 public class ConfigurationPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -3087284870831158695L;
@@ -47,6 +56,16 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 
 	int _undefined_count;
 
+	/**
+	 * Loads all the configuration.
+	 * @param parent
+	 *			   parent of the panel
+	 * @param preprocess
+	 *			   preprocess object that contains information of the html file.
+	 * 
+	 * @throws FatalErrorException
+	 *             when error during processing configuration occurs
+	 */
 	public ConfigurationPanel(JFrame parent, PreProcess preprocess) throws FatalErrorException {
 		super();
 		_parent = parent;
@@ -93,6 +112,9 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Load command mapping configuration to GUI.
+	 */
 	private void PopulateCommandConfig() {
 		HashMap<String, ElementConfigItem> elements = _config.get_elements();
 		Object[][] elements_info = new Object[elements.size()][6];
@@ -147,6 +169,9 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		_tabbed_pane.addTab("HTML Element", scrollPane);
 	}
 
+	/**
+	 * Load character mapping configuration to GUI.
+	 */
 	private void PopulateCharConfig() {
 		HashMap<Integer, String> elements = _config.get_charsNum();
 		HashSet<Character> non_ascii_set = _preprocess.getNonAsciiSet();
@@ -238,6 +263,11 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		_tabbed_pane.addTab("Config", scrollPane);
 	}
 
+	/**
+	 * Save current character mapping to output configuration.
+	 * @param config_to_save
+	 *				configuration to save on file.
+	 */
 	public void saveCharConfig(Configuration config_to_save) {
 		TableModel char_config_table_model = _char_config_table.getModel();
 		int row_count = char_config_table_model.getRowCount();
@@ -248,6 +278,11 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Save current command mapping to output configuration.
+	 * @param config_to_save
+	 *				configuration to save on file.
+	 */
 	public void saveCommandConfig(Configuration config_to_save) {
 		TableModel element_table_model = _element_table.getModel();
 		int row_count = element_table_model.getRowCount();
@@ -261,7 +296,11 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 							(boolean) element_table_model.getValueAt(i, 5) ? "yes" : "no"));
 		}
 	}
-
+	/**
+	 * Save current character mapping to output configuration.
+	 * @param filePath
+	 *			the file path of the configuration file
+	 */
 	public void saveConfiguration(String filePath) {
 		if (filePath == null || filePath.isEmpty())
 			return;
@@ -275,6 +314,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 	}
 
+
+	/**
+	 * Save current config setting, and prompt user to indicate a file path.
+	 */
 	private void saveConfig() {
 		String newConfigFile = "";
 		if (Main.isMacOS()) {
@@ -309,6 +352,10 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Return the number of undefined character mapping in the current html file.
+	 * @return Number of undefined elements in the current file
+	 */
 	public int getUndefinedCount() {
 		return _undefined_count;
 	}

@@ -73,6 +73,9 @@ class Configuration {
 		}
 	}
 	
+	/**
+	 * Copy constructor for Configuration class
+	 */
 	public Configuration(Configuration other) {
 		_elements = other._elements;
 		_chars = other._chars;
@@ -80,6 +83,12 @@ class Configuration {
 		_charsName = other._charsName;
 	}
 
+	/**
+	 * Save configuration to indicated file path
+	 * 
+	 * @param filepath
+	 *            file path of the output config file
+	 */
 	public void saveConfiguration(String filepath) throws FatalErrorException {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -112,6 +121,15 @@ class Configuration {
 		}
 	}
 	
+
+	/**
+	 * Save Element converting configuration to output
+	 * 
+	 * @param doc
+	 *            XML configuration file
+	 * @param root
+	 *            root element of the output XML configuration file
+	 */
 	private void saveElementsConfiguration(Document doc, Element root) {
 		Element elements = doc.createElement("elements");
 		root.appendChild(elements);
@@ -130,14 +148,6 @@ class Configuration {
 			element_instance.appendChild(end);
 			elements.appendChild(element_instance);
 		}
-	}
-
-	public HashMap<String, String> get_charsName() {
-		return _charsName;
-	}
-
-	public void set_charsName(HashMap<String, String> _charsName) {
-		this._charsName = _charsName;
 	}
 
 	/**
@@ -166,6 +176,14 @@ class Configuration {
 		}
 	}
 	
+	/**
+	 * Save mapping between HTML elements and LaTeX commands.
+	 * 
+	 * @param doc
+	 *            XML configuration file
+	 * @param root
+	 *            root element of the XML configuration file
+	 */
 	private void saveCharsConfiguration(Document doc, Element root) {
 		Element chars = doc.createElement("chars");
 		Element charsNum = doc.createElement("charsNum");
@@ -236,6 +254,16 @@ class Configuration {
 		}
 	}
 	
+	/**
+	 * Save mapping between HTML named entities (ie. &amp;lt;) and LaTeX commands.
+	 * Mappings between HTML decimal decimal entities and LaTeX commands are also
+	 * save.
+	 * 
+	 * @param doc
+	 *            XML configuration file
+	 * @param root
+	 *            root element of the XML configuration file
+	 */
 	private void saveLinksConfiguration(Document doc, Element root) {
 		Element links = doc.createElement("links");
 		root.appendChild(links);
@@ -273,6 +301,15 @@ class Configuration {
 			_linksConversion = LinksConversion.IGNORE;
 	}
 
+	
+	/**
+	 * Generate special @-strings with appropriate strings (ie. &quot;\n&quot; with
+	 * &quot;@NL&quot;).
+	 * 
+	 * @return string with special @-strings
+	 * @param str
+	 *            input string
+	 */
 	private String generateSpecialString(String str) {
 		str = str.replaceAll(">", "@GT").replace( "<", "@LT").replace("&","@AMP").replace("\"","@DOUBLEQUOT")
 				.replace("'","@QUOT").replace("\t","@TAB").replace("\n","@NL");
@@ -368,28 +405,72 @@ class Configuration {
 		return "\\" + _commandsPrefix + styleName.replaceAll("\\W", "").replaceAll("\\d", "").replace("_", "");
 	}
 
+	/**
+	 * Getter for Elements Mapping
+	 */
 	public HashMap<String, ElementConfigItem> get_elements() {
 		return _elements;
 	}
 
+	/**
+	 * Setter for Elements Mapping
+	 * 
+	 * @param _element
+	 *            mapping to set
+	 */
 	public void set_elements(HashMap<String, ElementConfigItem> _elements) {
 		this._elements = _elements;
 	}
 
+	/**
+	 * Getter for character Mapping
+	 */
 	public HashMap<String, String> get_chars() {
 		return _chars;
 	}
 
+	/**
+	 * Setter for Characrer Mapping
+	 * 
+	 * @param _chars
+	 *            mapping to set
+	 */
 	public void set_chars(HashMap<String, String> _chars) {
 		this._chars = _chars;
 	}
 
+	/**
+	 * Getter for character and string Mapping
+	 */
 	public HashMap<Integer, String> get_charsNum() {
 		return _charsNum;
 	}
 
+	/**
+	 * Setter for charNum Mapping
+	 * 
+	 * @param _chars
+	 *            mapping to set
+	 */
 	public void set_charsNum(HashMap<Integer, String> _charsNum) {
 		this._charsNum = _charsNum;
+	}
+
+	/**
+	 * Getter for character names
+	 */
+	public HashMap<String, String> get_charsName() {
+		return _charsName;
+	}
+
+	/**
+	 * Setter for character name mapping
+	 * 
+	 * @param _charName
+	 *            mapping to set
+	 */
+	public void set_charsName(HashMap<String, String> _charsName) {
+		this._charsName = _charsName;
 	}
 
 }
