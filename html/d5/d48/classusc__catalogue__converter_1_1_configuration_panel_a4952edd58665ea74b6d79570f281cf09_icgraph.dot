@@ -1,0 +1,11 @@
+digraph "usc_catalogue_converter.ConfigurationPanel.saveCommandConfig"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node15 [label="usc_catalogue_converter.\lConfigurationPanel.saveCommand\lConfig",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node15 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="usc_catalogue_converter.\lConfigurationPanel.saveConfiguration",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d48/classusc__catalogue__converter_1_1_configuration_panel.html#aac28a212896c86e3e34ea3d340e87858"];
+  Node16 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="usc_catalogue_converter.\lUserSettingFrame.actionPerformed",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html#a57130353766afa50b1f9b0cb377d7442"];
+}

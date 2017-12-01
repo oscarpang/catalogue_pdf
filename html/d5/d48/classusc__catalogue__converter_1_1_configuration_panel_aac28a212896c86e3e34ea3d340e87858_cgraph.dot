@@ -1,0 +1,15 @@
+digraph "usc_catalogue_converter.ConfigurationPanel.saveConfiguration"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node18 [label="usc_catalogue_converter.\lConfigurationPanel.saveConfiguration",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node18 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="usc_catalogue_converter.\lConfigurationPanel.saveCommand\lConfig",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d48/classusc__catalogue__converter_1_1_configuration_panel.html#a4952edd58665ea74b6d79570f281cf09"];
+  Node18 -> Node20 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="usc_catalogue_converter.\lConfigurationPanel.saveCharConfig",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d48/classusc__catalogue__converter_1_1_configuration_panel.html#a0401691bed129773bd2972a409b388d2"];
+  Node18 -> Node21 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="usc_catalogue_converter.\lMain.isMacOS",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d8/de1/classusc__catalogue__converter_1_1_main.html#aec4ba56d971c068a75401a80747e29e1"];
+  Node18 -> Node22 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="usc_catalogue_converter.\lMain.setConfigFile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d8/de1/classusc__catalogue__converter_1_1_main.html#ac99107b0a71315f820211c23cc9f8ff9"];
+}

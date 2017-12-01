@@ -1,0 +1,41 @@
+digraph "usc_catalogue_converter.Course.GetParagraph"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node37 [label="usc_catalogue_converter.\lCourse.GetParagraph",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node37 -> Node38 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node38 [label="usc_catalogue_converter.\lCourse.GetUnitsStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a1aecf07b2ecbc1301b1109f7c0e2cf82"];
+  Node37 -> Node39 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node39 [label="usc_catalogue_converter.\lCourse.GetTermsOfferedStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#ad8234272f2e3b1ac5d11d4ecfae49cde"];
+  Node37 -> Node40 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node40 [label="usc_catalogue_converter.\lCourse.GetMaxUnitsStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#af9d42f4c7ed3764ec6cb74c9fe94fd08"];
+  Node37 -> Node41 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node41 [label="usc_catalogue_converter.\lCourse.GetDescriptionStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#adcf7bc33ac530c273191513431c24248"];
+  Node37 -> Node42 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node42 [label="usc_catalogue_converter.\lCourse.GetPrerequisiteStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#ab49853ade1c1886bfc5a75d4d93a6347"];
+  Node37 -> Node43 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node43 [label="usc_catalogue_converter.\lCourse.GetRecommenPrepStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a65b3dbd231ff15745cf88267be4e53be"];
+  Node37 -> Node44 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node44 [label="usc_catalogue_converter.\lCourse.GetCorequisiteStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#aa15b84c6fa876a62bc0629858d4fafe7"];
+  Node37 -> Node45 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node45 [label="usc_catalogue_converter.\lCourse.GetConcurrentEnrollmentStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#aed2c00631d2a226a203593c89f922d06"];
+  Node37 -> Node46 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node46 [label="usc_catalogue_converter.\lCourse.GetSatNewGeReqStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#afdc811edeee17a108d875887a8cf70e8"];
+  Node37 -> Node47 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node47 [label="usc_catalogue_converter.\lCourse.GetGlobalPerStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#aa52bb35f7a5dc6c8ebd95c6bcc389664"];
+  Node37 -> Node48 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node48 [label="usc_catalogue_converter.\lCourse.GetSatOldGeReqStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a5a2c8f22d964512523a9cbeca49c735c"];
+  Node37 -> Node49 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node49 [label="usc_catalogue_converter.\lCourse.GetRegRestrictionStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a6b44df8cc6bbc234fc04c6f0e08c2731"];
+  Node37 -> Node50 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node50 [label="usc_catalogue_converter.\lCourse.GetCreditRestrictionStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a39eb562dc3ee82f77f27ee85385f8ff8"];
+  Node37 -> Node51 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node51 [label="usc_catalogue_converter.\lCourse.GetDuplicateCreditStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a739eb15c98236cbfc25e9c87989dd471"];
+  Node37 -> Node52 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node52 [label="usc_catalogue_converter.\lCourse.GetInstructionModeStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#aabaa234c32b805ef3fcef38473c1e88b"];
+  Node37 -> Node53 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node53 [label="usc_catalogue_converter.\lCourse.GetGradingOptionsStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#a5be3f6a96bf7c371caab1a0c3b9bac4f"];
+  Node37 -> Node54 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node54 [label="usc_catalogue_converter.\lCourse.GetCrossListAsStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d58/classusc__catalogue__converter_1_1_course.html#adae0f08603d099491d2ee7d824f9e985"];
+}

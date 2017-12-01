@@ -1,0 +1,25 @@
+digraph "usc_catalogue_converter.ConfigurationPanel"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node3 [label="usc_catalogue_converter.\lConfigurationPanel",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node4 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="JPanel",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node5 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="ActionListener",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node6 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _applyChangeBtn\n_saveConfigBtn" ,fontname="Helvetica"];
+  Node6 [label="JButton",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node7 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _preprocess" ,fontname="Helvetica"];
+  Node7 [label="usc_catalogue_converter.\lPreProcess",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d9/df9/classusc__catalogue__converter_1_1_pre_process.html"];
+  Node8 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _text_area" ,fontname="Helvetica"];
+  Node8 [label="JTextArea",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node9 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _tabbed_pane" ,fontname="Helvetica"];
+  Node9 [label="JTabbedPane",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node10 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _parent" ,fontname="Helvetica"];
+  Node10 [label="JFrame",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node11 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _config" ,fontname="Helvetica"];
+  Node11 [label="usc_catalogue_converter.\lConfiguration",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node12 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" _char_config_table\n_element_table" ,fontname="Helvetica"];
+  Node12 [label="JTable",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+}

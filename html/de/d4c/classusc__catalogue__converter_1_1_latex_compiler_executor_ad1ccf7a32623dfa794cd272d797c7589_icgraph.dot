@@ -1,0 +1,19 @@
+digraph "usc_catalogue_converter.LatexCompilerExecutor.FindLatexMkBinPath"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node12 [label="usc_catalogue_converter.\lLatexCompilerExecutor.FindLatex\lMkBinPath",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node12 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="usc_catalogue_converter.\lLatexCompilerExecutor.Compile\lLatexFile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d4c/classusc__catalogue__converter_1_1_latex_compiler_executor.html#a8c72aa47f1bc8ebb1575d6f46510c5c2"];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="usc_catalogue_converter.\lLatexCompilerExecutor.main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d4c/classusc__catalogue__converter_1_1_latex_compiler_executor.html#ab1841f67c7cb81845c7df98e1b147313"];
+  Node13 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="usc_catalogue_converter.\lUserSettingFrame.startConversion",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html#aab418e562314bd98c4cd5cd18805ba03"];
+  Node15 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="usc_catalogue_converter.\lUserSettingFrame.actionPerformed",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html#a57130353766afa50b1f9b0cb377d7442"];
+  Node12 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="usc_catalogue_converter.\lLatexCompilerExecutor.HasLatex\lInstalled",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d4c/classusc__catalogue__converter_1_1_latex_compiler_executor.html#a4e25f0007d624093dd1875227a8ef7cf"];
+  Node17 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="usc_catalogue_converter.\lMain.actionPerformed",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d8/de1/classusc__catalogue__converter_1_1_main.html#a8e60b8d00e07d663eecb115e42122216"];
+}

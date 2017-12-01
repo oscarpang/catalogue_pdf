@@ -1,0 +1,20 @@
+digraph "usc_catalogue_converter.Main.getWorkingDir"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node35 [label="usc_catalogue_converter.\lMain.getWorkingDir",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node35 -> Node36 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node36 [label="usc_catalogue_converter.\lConfigurationPanel.ConfigurationPanel",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d48/classusc__catalogue__converter_1_1_configuration_panel.html#afd725060a6e983879cd662fa74895243"];
+  Node35 -> Node37 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node37 [label="usc_catalogue_converter.\lLatexCompilerExecutor.Compile\lLatexFile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d4c/classusc__catalogue__converter_1_1_latex_compiler_executor.html#a8c72aa47f1bc8ebb1575d6f46510c5c2"];
+  Node37 -> Node38 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node38 [label="usc_catalogue_converter.\lLatexCompilerExecutor.main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d4c/classusc__catalogue__converter_1_1_latex_compiler_executor.html#ab1841f67c7cb81845c7df98e1b147313"];
+  Node37 -> Node39 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node39 [label="usc_catalogue_converter.\lUserSettingFrame.startConversion",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html#aab418e562314bd98c4cd5cd18805ba03"];
+  Node39 -> Node40 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node40 [label="usc_catalogue_converter.\lUserSettingFrame.actionPerformed",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html#a57130353766afa50b1f9b0cb377d7442"];
+  Node35 -> Node41 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node41 [label="usc_catalogue_converter.\lUserSettingFrame.UserSettingFrame",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html#a7cedcdeffd1bf9d7fe841e1119342479"];
+  Node35 -> Node40 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

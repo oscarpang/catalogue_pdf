@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+<elements>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="dd">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="small">
+<start>\scriptsize </start>
+<end> \normalsize</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="tt">
+<start>\texttt{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="big">
+<start>\LARGE </start>
+<end> \normalsize</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="col">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="optgroup">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="select">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="legend">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="tbody">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="dl">
+<start>@NL\begin{description}</start>
+<end>@NL\end{description}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="fieldset">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="caption">
+<start>@NL% if you want to use \caption the tabular must be enclosed in@NL% table or figure environment@NL% \caption{</start>
+<end>}@NL</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="textarea">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="del">
+<start>\sout{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="hr">
+<start>@NL@NL\line(1,0){300}@NL</start>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="body">
+<start>@NL@NL\begin{document}@NL\tableofcontents@NL\newpage@NL\tiny</start>
+<end>@NL\end{document}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="dir">
+<start>@NL\begin{itemize}@NL\itemsep0pt</start>
+<end>@NL\end{itemize}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="dt">
+<start>@NL@TAB\item[</start>
+<end>] </end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="div">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="ul">
+<start>@NL\begin{itemize}@NL\itemsep0pt</start>
+<end>@NL\end{itemize}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="html">
+<start>\documentclass[a4paper,11pt,twoside]{book}@NL\usepackage{ulem}@NL\usepackage{multirow}@NL            @NL\usepackage{a4wide}@NL\usepackage[dvipsnames,svgnames]{xcolor}@NL\usepackage[pdftex]{graphicx}@NL\usepackage{textcomp}@NL            @NL\usepackage{tabulary}@NL\usepackage{makecell}@NL\usepackage{amssymb}@NL\usepackage{geometry}@NL\usepackage{multicol}@NL            @NL\usepackage[document]{ragged2e}@NL\usepackage{indentfirst}@NL\setlength\RaggedRightParindent{15pt}@NL\usepackage[T1]{fontenc}@NL            @NL\RaggedRight@NL\raggedcolumns@NL\geometry{letterpaper, left=0.8in, right=0.8in, top=.8in, bottom=.8in}@NL            @NL\usepackage{paralist}@NL            @NL\usepackage[compact]{titlesec}@NL            @NL\usepackage{needspace}@NL            @NL\widowpenalty=10000@NL\clubpenalty=10000@NL            @NL\newcommand{\dehyphenate}{\tolerance=1\emergencystretch=\maxdimen\hyphenpenalty=10000\hbadness=10000}@NL            @NL\titleclass{\chapter}{straight}@NL\titleformat{\chapter}[display]{\sloppy\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}@NL            @NL\titlespacing{\section}{0pt}{0pt}{0pt}@NL            @NL\titlespacing{\subsection}{0pt}{1em}{1em}@NL\titlespacing{\subsubsection}{0pt}{1em}{0pt}@NL\titlespacing{\subparagraph}{0pt}{0pt}{0pt}@NL            @NL\titleformat*{\paragraph}{\sloppy\sffamily\bfseries\scriptsize}@NL            @NL\titleformat*{\subparagraph}{\sloppy\sffamily\bfseries\tiny}@NL            @NL\titleformat{\section}{\dehyphenate\sloppy\rmfamily\LARGE\bfseries\hyphenchar\font=-1}{\thesection}{1em}{}[{\titlerule[0.8pt]}]@NL            @NL\titleformat{\subsection}{\dehyphenate\sloppy\sffamily\large\bfseries\hyphenchar\font=-1}{\thesection}{1em}{}[]@NL            @NL\titleformat{\subsubsection}{\dehyphenate\sloppy\sffamily\small\itshape}{\thesection}{1em}{}[]@NL            @NL\setlength{\parskip}{0cm}@NL\setcounter{secnumdepth}{-2}@NL\setcounter{tocdepth}{2}@NL            @NL\renewcommand{\familydefault}{\sfdefault}@NL\usepackage{fancyhdr}@NL\pagestyle{fancy}@NL            @NL\fancyhf{}@NL\fancyhead[RE,LO]{\thepage / \rightmark}@NL            @NL\newcolumntype{L}[1]{@GT{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}@NL            @NL\setcounter{secnumdepth}{-1}</start>
+<end>@NL</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="abbr">
+<start>\texttt{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="area">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="blockquote">
+<start>@NL\begin{quotation}</start>
+<end>@NL\end{quotation}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="yes" name="pre">
+<start>@NL\begin{verbatim}@NL</start>
+<end>\end{verbatim}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="frameset">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="var">
+<start>\texttt{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="em">
+<start>\textit{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="dfn">
+<start>\textit{</start>
+<end>}</end>
+</element>
+<element ignoreContent="yes" ignoreStyle="no" leaveText="no" name="script">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="noframes">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="input">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="noscript">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="meta">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="!doctype">
+<start/>
+<end/>
+</element>
+<element ignoreContent="yes" ignoreStyle="no" leaveText="no" name="style">
+<start/>
+<end/>
+</element>
+<element ignoreContent="yes" ignoreStyle="no" leaveText="no" name="applet">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="frame">
+<start/>
+<end/>
+</element>
+<element ignoreContent="yes" ignoreStyle="no" leaveText="no" name="object">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="option">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="sub">
+<start>$_</start>
+<end>$</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="img">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="strong">
+<start>\textbf{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="code">
+<start>@NL\texttt{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="samp">
+<start>@NL\texttt{</start>
+<end>@NL}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="thead">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h0">
+<start>@NL\needspace{40\baselineskip}@NL\chapter{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="link">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h1">
+<start>@NL\needspace{20\baselineskip}@NL\section{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h2">
+<start>@NL\needspace{5\baselineskip}@NL\subsection{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h3">
+<start>@NL\needspace{3\baselineskip}@NL\subsubsection{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="basefont">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h4">
+<start>@NL\needspace{2\baselineskip}@NL\paragraph{</start>
+<end>}\mbox{}\\</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="title">
+<start>\title{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h5">
+<start>@NL\needspace{2\baselineskip}@NL\subparagraph{</start>
+<end>}\mbox{}\\</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="h6">
+<start>@NL\needspace{2\baselineskip}@NL\subparagraph{</start>
+<end>}\mbox{}\\</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="isindex">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="table_p">
+<start>\\</start>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="sup">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="br">
+<start>@NL@NL</start>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="button">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="head">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="param">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="iframe">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="map">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="ol">
+<start>@NL\begin{itemize}@NL\itemsep0pt</start>
+<end>@NL\end{itemize}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="table">
+<start>@NL@NL\begin{tabulary}{\linewidth}</start>
+<end>@NL\end{tabulary}@NL@NL</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="a">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="b">
+<start>\textbf{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="address">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="acronym">
+<start>\texttt{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="center">
+<start>@NL\begin{center}@NL</start>
+<end>@NL\end{center}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="strike">
+<start>\sout{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="i">
+<start>\textit{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="label">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="colgroup">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="bdo">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="menu">
+<start>@NL\begin{itemize}@NL\itemsep0pt</start>
+<end>@NL\end{itemize}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="kbd">
+<start>\texttt{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="ins">
+<start>\textbf{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="p">
+<start>@NL</start>
+<end>@NL</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="td">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="tfoot">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="q">
+<start>\begin{quote}</start>
+<end>\end{quote}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="s">
+<start>\sout{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="form">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="th">
+<start>\textbf{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="u">
+<start>\underline{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="cite">
+<start>\textit{</start>
+<end>}</end>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="li">
+<start>@NL@TAB\item[] </start>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="tr">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="base">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="font">
+<start/>
+<end/>
+</element>
+<element ignoreContent="no" ignoreStyle="no" leaveText="no" name="span">
+<start/>
+<end/>
+</element>
+</elements>
+<chars>
+<char convertTo="$\forall$" name="forall" num="8704"/>
+<char convertTo="$\partial$" name="part" num="8706"/>
+<char convertTo="$\exists$" name="exist" num="8707"/>
+<char convertTo="$\emptyset$" name="empty" num="8709"/>
+<char convertTo="$\nabla$" name="nabla" num="8711"/>
+<char convertTo="$\in$" name="isin" num="8712"/>
+<char convertTo="$\notin$" name="notin" num="8713"/>
+<char convertTo="$\ni$" name="ni" num="8715"/>
+<char convertTo="$\prod$" name="prod" num="8719"/>
+<char convertTo="$\sum$" name="sum" num="8721"/>
+<char convertTo="$-$" name="minus" num="8722"/>
+<char convertTo="--" name="ndash" num="8211"/>
+<char convertTo="---" name="mdash" num="8212"/>
+<char convertTo="$\ast$" name="lowast" num="8727"/>
+<char convertTo="`" name="lsquo" num="8216"/>
+<char convertTo="@QUOT" name="rsquo" num="8217"/>
+<char convertTo="$\surd$" name="radic" num="8730"/>
+<char convertTo="``" name="ldquo" num="8220"/>
+<char convertTo="$\propto$" name="prop" num="8733"/>
+<char convertTo="@QUOT@QUOT" name="rdquo" num="8221"/>
+<char convertTo="$\infty$" name="infin" num="8734"/>
+<char convertTo="$\angle$" name="ang" num="8736"/>
+<char convertTo="\dag " name="dagger" num="8224"/>
+<char convertTo="\ddag" name="Dagger" num="8225"/>
+<char convertTo="$\bullet$" name="bull" num="8226"/>
+<char convertTo="@DOUBLEQUOT" name="quot" num="34"/>
+<char convertTo="\#" name="NumberSign" num="35"/>
+<char convertTo="\ldots" name="hellip" num="8230"/>
+<char convertTo="\@AMP" name="amp" num="38"/>
+<char convertTo="$\wedge$" name="and" num="8743"/>
+<char convertTo="$\vee$" name="or" num="8744"/>
+<char convertTo="$\cup$" name="cup" num="8745"/>
+<char convertTo="$\cap$" name="cap" num="8746"/>
+<char convertTo="$\int$" name="int" num="8747"/>
+<char convertTo="\permil" name="permil" num="8240"/>
+<char convertTo="$\prime$" name="prime" num="8242"/>
+<char convertTo="$\therefore$" name="there4" num="8756"/>
+<char convertTo="\guilsinglleft" name="lsaquo" num="8249"/>
+<char convertTo="\guilsinglright" name="rsaquo" num="8250"/>
+<char convertTo="$\sim$" name="sim" num="8764"/>
+<char convertTo="$@LT$" name="lt" num="60"/>
+<char convertTo="-" name="oline" num="8254"/>
+<char convertTo="$@GT$" name="gt" num="62"/>
+<char convertTo="/" name="frasl" num="8260"/>
+<char convertTo="$\cong$" name="cong" num="8773"/>
+<char convertTo="$\approx$" name="asymp" num="8776"/>
+<char convertTo="$\neq$" name="ne" num="8800"/>
+<char convertTo="$\spadesuit$" name="spades" num="9824"/>
+<char convertTo="$\equiv$" name="equiv" num="8801"/>
+<char convertTo="$\clubsuit$" name="clubs" num="9827"/>
+<char convertTo="$\leq$" name="le" num="8804"/>
+<char convertTo="$\geq$" name="ge" num="8805"/>
+<char convertTo="$\heartsuit$" name="hearts" num="9829"/>
+<char convertTo="$\diamondsuit$" name="diams" num="9830"/>
+<char convertTo="$|$" name="Pipe" num="124"/>
+<char convertTo="$\subset$" name="sub" num="8834"/>
+<char convertTo="$\supset$" name="sup" num="8835"/>
+<char convertTo="$\nsubset$" name="nsub" num="8836"/>
+<char convertTo="$\subseteq$" name="sube" num="8838"/>
+<char convertTo="$\supseteq$" name="supe" num="8839"/>
+<char convertTo="$\oplus$" name="oplus" num="8853"/>
+<char convertTo="$\otimes$" name="otimes" num="8855"/>
+<char convertTo=" " name="nbsp" num="160"/>
+<char convertTo="\textexclamdown" name="iexcl" num="161"/>
+<char convertTo="\cent" name="cent" num="162"/>
+<char convertTo="\pounds" name="pound" num="163"/>
+<char convertTo="\currency" name="curren" num="164"/>
+<char convertTo="$\perp$" name="perp" num="8869"/>
+<char convertTo="\textyen" name="yen" num="165"/>
+<char convertTo="\brokenvert" name="brvbar" num="166"/>
+<char convertTo="\S" name="sect" num="167"/>
+<char convertTo="\copyright" name="copy" num="169"/>
+<char convertTo="\textordfeminine" name="ordf" num="170"/>
+<char convertTo="\guillemotleft" name="laquo" num="171"/>
+<char convertTo="\euro" name="euro" num="8364"/>
+<char convertTo="$\neg$" name="not" num="172"/>
+<char convertTo="\textregistered" name="reg" num="174"/>
+<char convertTo="$\degree$" name="deg" num="176"/>
+<char convertTo="$\pm$" name="plusmn" num="177"/>
+<char convertTo="$^2$" name="sup2" num="178"/>
+<char convertTo="$^3$" name="sup3" num="179"/>
+<char convertTo="@QUOT" name="acute" num="180"/>
+<char convertTo="$\mu$" name="micro" num="181"/>
+<char convertTo="\P" name="para" num="182"/>
+<char convertTo="$\cdot$" name="middot" num="183"/>
+<char convertTo="$^1$" name="sup1" num="185"/>
+<char convertTo="\guillemotright" name="ordm" num="186"/>
+<char convertTo="\guillemotright" name="raquo" num="187"/>
+<char convertTo="$\frac{1}{4}$" name="frac14" num="188"/>
+<char convertTo="$\frac{1}{2}$" name="frac12" num="189"/>
+<char convertTo="$\frac{3}{4}" name="frac34" num="190"/>
+<char convertTo="\`A" name="Agrave" num="192"/>
+<char convertTo="\@QUOTA" name="Aacute" num="193"/>
+<char convertTo="\^A" name="Acirc" num="194"/>
+<char convertTo="\~A" name="Atilde" num="195"/>
+<char convertTo="\@DOUBLEQUOTA" name="Auml" num="196"/>
+<char convertTo="$\cdot$" name="sdot" num="8901"/>
+<char convertTo="\AA" name="Aring" num="197"/>
+<char convertTo="\textasciicircum" name="circ" num="710"/>
+<char convertTo="\AE" name="AElig" num="198"/>
+<char convertTo="\cC" name="Ccedil" num="199"/>
+<char convertTo="\`E" name="Egrave" num="200"/>
+<char convertTo="\@QUOTE" name="Eacute" num="201"/>
+<char convertTo="\^E" name="Ecirc" num="202"/>
+<char convertTo="\@DOUBLEQUOTE" name="Euml" num="203"/>
+<char convertTo="\`I" name="Igrave" num="204"/>
+<char convertTo="\@QUOTI" name="Iacute" num="205"/>
+<char convertTo="\^I" name="Icirc" num="206"/>
+<char convertTo="\@DOUBLEQUOTI" name="Iuml" num="207"/>
+<char convertTo="$\eth$" name="ETH" num="208"/>
+<char convertTo="\~N" name="Ntilde" num="209"/>
+<char convertTo="\`O" name="Ograve" num="210"/>
+<char convertTo="\@QUOTO" name="Oacute" num="211"/>
+<char convertTo="\^O" name="Ocirc" num="212"/>
+<char convertTo="\~O" name="Otilde" num="213"/>
+<char convertTo="\@DOUBLEQUOTO" name="Ouml" num="214"/>
+<char convertTo="$\times$" name="times" num="215"/>
+<char convertTo="\O" name="Oslash" num="216"/>
+<char convertTo="\`U" name="Ugrave" num="217"/>
+<char convertTo="\@QUOTU" name="Uacute" num="218"/>
+<char convertTo="\^U" name="Ucirc" num="219"/>
+<char convertTo="\textasciitilde" name="tilde" num="732"/>
+<char convertTo="\@DOUBLEQUOTU" name="Uuml" num="220"/>
+<char convertTo="\@QUOTY" name="Yacute" num="221"/>
+<char convertTo="\Thorn" name="THORN" num="222"/>
+<char convertTo="\ss" name="szlig" num="223"/>
+<char convertTo="\`a" name="agrave" num="224"/>
+<char convertTo="\@QUOTa" name="aacute" num="225"/>
+<char convertTo="\^a" name="acirc" num="226"/>
+<char convertTo="\~a" name="atilde" num="227"/>
+<char convertTo="\@DOUBLEQUOTa" name="auml" num="228"/>
+<char convertTo="\aa" name="aring" num="229"/>
+<char convertTo="\ae" name="aelig" num="230"/>
+<char convertTo="\c{c}" name="ccedil" num="231"/>
+<char convertTo="\`e" name="egrave" num="232"/>
+<char convertTo="\@QUOTe" name="eacute" num="233"/>
+<char convertTo="\^e" name="ecirc" num="234"/>
+<char convertTo="\@DOUBLEQUOTe" name="euml" num="235"/>
+<char convertTo="\`i" name="igrave" num="236"/>
+<char convertTo="\@QUOTi" name="iacute" num="237"/>
+<char convertTo="\^i" name="icirc" num="238"/>
+<char convertTo="\@DOUBLEQUOTi" name="iuml" num="239"/>
+<char convertTo="$\eth$" name="eth" num="240"/>
+<char convertTo="\~n" name="ntilde" num="241"/>
+<char convertTo="\`o" name="ograve" num="242"/>
+<char convertTo="\@QUOTo" name="oacute" num="243"/>
+<char convertTo="\^o" name="ocirc" num="244"/>
+<char convertTo="\~o" name="otilde" num="245"/>
+<char convertTo="\@DOUBLEQUOTo" name="ouml" num="246"/>
+<char convertTo="$\divide$" name="divide" num="247"/>
+<char convertTo="\o" name="oslash" num="248"/>
+<char convertTo="\`u" name="ugrave" num="249"/>
+<char convertTo="\@QUOTu" name="uacute" num="250"/>
+<char convertTo="\^u" name="ucirc" num="251"/>
+<char convertTo="\@DOUBLEQUOTu" name="uuml" num="252"/>
+<char convertTo="\@QUOTy" name="yacute" num="253"/>
+<char convertTo="\thorn" name="thorn" num="254"/>
+<char convertTo="\@DOUBLEQUOTy" name="yuml" num="255"/>
+<char convertTo="$\rceil$" name="rceil" num="8968"/>
+<char convertTo="$\lceil$" name="lceil" num="8969"/>
+<char convertTo="$\lfloor$" name="lfloor" num="8970"/>
+<char convertTo="$\rfloor$" name="rfloor" num="8971"/>
+<char convertTo="$\Im$" name="image" num="8465"/>
+<char convertTo="$\wp$" name="weierp" num="8472"/>
+<char convertTo="$\Re$" name="real" num="8476"/>
+<char convertTo="$^{\rm TM}$" name="trade" num="8482"/>
+<char convertTo="$\rangle$" name="rang" num="9001"/>
+<char convertTo="$\langle$" name="lang" num="9002"/>
+<char convertTo="$\aleph$" name="alefsym" num="8501"/>
+<char convertTo="\OE" name="OElig" num="338"/>
+<char convertTo="\oe" name="oelig" num="339"/>
+<char convertTo="\v{S}" name="Scaron" num="352"/>
+<char convertTo="\v{s}" name="scaron" num="353"/>
+<char convertTo="\@DOUBLEQUOTY" name="Yuml" num="376"/>
+<char convertTo="$\leftarrow$" name="larr" num="8592"/>
+<char convertTo="$A$" name="Alpha" num="913"/>
+<char convertTo="$\uparrow$" name="uarr" num="8593"/>
+<char convertTo="$B$" name="Beta" num="914"/>
+<char convertTo="$\rightarrow$" name="rarr" num="8594"/>
+<char convertTo="$\Gamma$" name="Gamma" num="915"/>
+<char convertTo="$\downarrow$" name="darr" num="8595"/>
+<char convertTo="$\Delta$" name="Delta" num="916"/>
+<char convertTo="$\leftrightarrow$" name="harr" num="8596"/>
+<char convertTo="$E$" name="Epsilon" num="917"/>
+<char convertTo="$Z$" name="Zeta" num="918"/>
+<char convertTo="$H$" name="Eta" num="919"/>
+<char convertTo="$\Theta$" name="Theta" num="920"/>
+<char convertTo="$I$" name="Iota" num="921"/>
+<char convertTo="$K$" name="Kappa" num="922"/>
+<char convertTo="$\Lambda$" name="Lambda" num="923"/>
+<char convertTo="$M$" name="Mu" num="924"/>
+<char convertTo="$N$" name="Nu" num="925"/>
+<char convertTo="$\Xi$" name="Xi" num="926"/>
+<char convertTo="$O$" name="Omicron" num="927"/>
+<char convertTo="$\Pi$" name="Pi" num="928"/>
+<char convertTo="$P$" name="Rho" num="929"/>
+<char convertTo="$\Sigma$" name="Sigma" num="931"/>
+<char convertTo="$T$" name="Tau" num="932"/>
+<char convertTo="$Y$" name="Upsilon" num="933"/>
+<char convertTo="$\Phi$" name="Phi" num="934"/>
+<char convertTo="$X$" name="Chi" num="935"/>
+<char convertTo="$\Psi$" name="Psi" num="936"/>
+<char convertTo="$\Omega$" name="Omega" num="937"/>
+<char convertTo="$\alpha$" name="alpha" num="945"/>
+<char convertTo="$\beta$" name="beta" num="946"/>
+<char convertTo="$\gamma$" name="gamma" num="947"/>
+<char convertTo="$\delta$" name="delta" num="948"/>
+<char convertTo="$\epsilon$" name="epsilon" num="949"/>
+<char convertTo="$\hookleftarrow$" name="crarr" num="8629"/>
+<char convertTo="$\zeta$" name="zeta" num="950"/>
+<char convertTo="$\eta$" name="eta" num="951"/>
+<char convertTo="$\theta$" name="theta" num="952"/>
+<char convertTo="$\iota$" name="iota" num="953"/>
+<char convertTo="$\kappa$" name="kappa" num="954"/>
+<char convertTo="$\lambda$" name="lambda" num="955"/>
+<char convertTo="$\mu$" name="mu" num="956"/>
+<char convertTo="$\nu$" name="nu" num="957"/>
+<char convertTo="$\xi$" name="xi" num="958"/>
+<char convertTo="$o$" name="omicron" num="959"/>
+<char convertTo="$\pi$" name="pi" num="960"/>
+<char convertTo="$\rho$" name="rho" num="961"/>
+<char convertTo="$\varsigma$" name="sigmaf" num="962"/>
+<char convertTo="$\sigma$" name="sigma" num="963"/>
+<char convertTo="$\tau$" name="tau" num="964"/>
+<char convertTo="$\upsilon$" name="upsilon" num="965"/>
+<char convertTo="$\phi$" name="phi" num="966"/>
+<char convertTo="$\chi$" name="chi" num="967"/>
+<char convertTo="$\psi$" name="psi" num="968"/>
+<char convertTo="$\omega$" name="omega" num="969"/>
+<char convertTo="$\lozenge$" name="loz" num="9674"/>
+<char convertTo="$\Leftarrow$" name="lArr" num="8656"/>
+<char convertTo="$\vartheta$" name="thetasym" num="977"/>
+<char convertTo="$\Uparrow$" name="uArr" num="8657"/>
+<char convertTo="$\Rightarrow$" name="rArr" num="8658"/>
+<char convertTo="$\Downarrow$" name="dArr" num="8659"/>
+<char convertTo="$\Leftrightarrow$" name="hArr" num="8660"/>
+<char convertTo="$\varpi$" name="piv" num="982"/>
+</chars>
+<charsNum>
+<charNum convertTo="" num="8203"/>
+<charNum convertTo="\-" num="8208"/>
+<charNum convertTo="\-" num="8209"/>
+<charNum convertTo="////" num="8232"/>
+<charNum convertTo="$\iint$" num="8748"/>
+<charNum convertTo="$\iiint$" num="8749"/>
+<charNum convertTo="$\varoint$" num="8750"/>
+<charNum convertTo="@QUOT@QUOT" num="8243"/>
+<charNum convertTo="A" num="65"/>
+<charNum convertTo="B" num="66"/>
+<charNum convertTo="\textlira" num="8356"/>
+<charNum convertTo="\textnaira" num="8358"/>
+<charNum convertTo="\textwon" num="8361"/>
+<charNum convertTo="\textdong" num="8363"/>
+<charNum convertTo="\-" num="173"/>
+<charNum convertTo="fi" num="64257"/>
+<charNum convertTo="\@QUOT{c}" num="263"/>
+<charNum convertTo="" num="287"/>
+<charNum convertTo="\textservicemark" num="8480"/>
+<charNum convertTo="\FilledSquare" num="9632"/>
+<charNum convertTo="\Square" num="9633"/>
+<charNum convertTo="" num="65533"/>
+</charsNum>
+<links conversion="ignore"/>
+</configuration>

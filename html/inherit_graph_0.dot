@@ -1,0 +1,18 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node14 [label="ActionListener",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node14 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node0 [label="usc_catalogue_converter.\lConfigurationPanel",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d48/classusc__catalogue__converter_1_1_configuration_panel.html"];
+  Node14 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="usc_catalogue_converter.Main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d8/de1/classusc__catalogue__converter_1_1_main.html"];
+  Node14 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="usc_catalogue_converter.\lUserSettingFrame",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dd8/classusc__catalogue__converter_1_1_user_setting_frame.html"];
+  Node12 [label="JFrame",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node12 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="JPanel",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node9 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

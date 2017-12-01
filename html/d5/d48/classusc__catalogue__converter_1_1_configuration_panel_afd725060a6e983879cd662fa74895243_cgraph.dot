@@ -1,0 +1,13 @@
+digraph "usc_catalogue_converter.ConfigurationPanel.ConfigurationPanel"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="usc_catalogue_converter.\lConfigurationPanel.ConfigurationPanel",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="usc_catalogue_converter.\lMain.isMacOS",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d8/de1/classusc__catalogue__converter_1_1_main.html#aec4ba56d971c068a75401a80747e29e1"];
+  Node0 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="usc_catalogue_converter.\lMain.getWorkingDir",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d8/de1/classusc__catalogue__converter_1_1_main.html#ada5273687e9c082a6e3520aae20f03b9"];
+  Node0 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="usc_catalogue_converter.\lPreProcess.getNonAsciiSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d9/df9/classusc__catalogue__converter_1_1_pre_process.html#a28d458cd950cc91d1977232f311958bf"];
+}
