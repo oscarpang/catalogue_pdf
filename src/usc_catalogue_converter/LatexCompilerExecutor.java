@@ -32,10 +32,6 @@ public class LatexCompilerExecutor {
 			return false;
 		}
 		
-		if(RunCommand(latexmk_bin_path + " -CA") != 0) {
-			return false;
-		}
-		
 		return RunCommand(latexmk_bin_path + " -gg -pdf -pdflatex=" + pdflatex_bin_path + " -halt-on-error -outdir=" + Main.getWorkingDir() + " " + latex_file_path) == 0;
 
 	}
@@ -142,6 +138,7 @@ public class LatexCompilerExecutor {
 	 * @return integer that indicates exiting status
 	 */
 	public static int RunCommand(String command) throws IOException, InterruptedException {
+		System.out.println(command);
 		final Process p = Runtime.getRuntime().exec(command);
 
 		new Thread(new Runnable() {
